@@ -22,4 +22,7 @@
       <_Parameter1>Opperis.SAST.UnitTests</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="RoslynObjectExtensions\" />
+  </ItemGroup>
 </Project>

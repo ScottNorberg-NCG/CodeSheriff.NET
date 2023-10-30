@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Locator" Version="1.6.10" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Opperis.SAST.Engine\Opperis.SAST.Engine.csproj" />
   </ItemGroup>
 
