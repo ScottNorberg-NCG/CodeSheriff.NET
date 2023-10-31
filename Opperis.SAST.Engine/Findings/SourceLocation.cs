@@ -14,10 +14,13 @@ namespace Opperis.SAST.Engine.Findings
         public enum SyntaxType
         { 
             MethodCall,
+            MethodDeclaration,
             NamedItem,
             InterpolatedString,
             VariableCreation,
-            VariableAssignment
+            VariableAssignment,
+            ClassDeclaration,
+            MethodParameter
         }
 
         public string Text { get; set; }
@@ -72,14 +75,12 @@ namespace Opperis.SAST.Engine.Findings
 
         public SourceLocation(MethodDeclarationSyntax symbol)
         {
-            throw new NotImplementedException();
-
             var lineSpan = symbol.SyntaxTree.GetLineSpan(symbol.Span);
 
-            //this.Text = symbol.GetDisplayText();
+            this.Text = symbol.Identifier.Text;
             this.LineNumber = lineSpan.StartLinePosition.Line + 1;
             this.FilePath = symbol.SyntaxTree.FilePath;
-            //this.LocationType = symbol.GetType().Name;
+            this.LocationType = SyntaxType.MethodDeclaration;
         }
 
         public SourceLocation(SyntaxNode symbol)
@@ -92,6 +93,16 @@ namespace Opperis.SAST.Engine.Findings
             {
                 this.Text = symbol.ToString();
                 this.LocationType = SyntaxType.VariableCreation;
+            }
+            else if (symbol is ClassDeclarationSyntax)
+            {
+                this.Text = symbol.ToString();
+                this.LocationType = SyntaxType.ClassDeclaration;
+            }
+            else if (symbol is ParameterSyntax)
+            {
+                this.Text = symbol.ToString();
+                this.LocationType = SyntaxType.MethodParameter;
             }
             else
                 throw new NotImplementedException();

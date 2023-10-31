@@ -9,7 +9,7 @@ namespace Opperis.SAST.Engine.Findings
 {
     internal abstract class BaseFinding
     {
-        protected private Priority? _priority;
+        protected Priority? _priority;
         internal abstract Priority Priority { get; }
         internal abstract string FindingText { get; }
         internal abstract string Description { get; }

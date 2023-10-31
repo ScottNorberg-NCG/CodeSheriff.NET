@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Opperis.SAST.Engine.Findings;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -39,6 +40,25 @@ namespace Opperis.SAST.IntegrationTests
                 {
                     Console.WriteLine($"FAILED: IsTrue Failed, {message}");
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"FAILED: IsTrue for test {message} threw exception {ex.Message}");
+            }
+        }
+
+        internal static void AllRootLocationsSet(List<BaseFinding> findings, string message)
+        {
+            try
+            {
+                if (findings.Count(f => f.RootLocation == null) == 0)
+                {
+                    Console.WriteLine($"PASSED: No null RootLocation values for {message}");
+                }
+                else
+                {
+                    Console.WriteLine($"FAILED: Null RootLocation values for {message}");
+                } 
             }
             catch (Exception ex)
             {

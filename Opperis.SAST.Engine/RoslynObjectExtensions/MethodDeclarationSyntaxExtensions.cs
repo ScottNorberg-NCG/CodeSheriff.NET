@@ -18,33 +18,99 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
 
             if (method.Parent is ClassDeclarationSyntax classDeclaration)
             {
-                var model = Globals.Compilation.GetSemanticModel(classDeclaration.SyntaxTree);
-                var symbol = model.GetDeclaredSymbol(classDeclaration) as INamedTypeSymbol;
-                INamedTypeSymbol pageType = model.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Mvc.RazorPages.PageModel");
-                INamedTypeSymbol controllerType = model.Compilation.GetTypeByMetadataName("Microsoft.AspNetCore.Mvc.Controller");
-
-                var baseType = symbol.BaseType;
-
-                while (baseType != null)
+                if (classDeclaration.InheritsFrom("Microsoft.AspNetCore.Mvc.RazorPages.PageModel"))
                 {
-                    if (baseType.Equals(pageType, SymbolEqualityComparer.Default)) 
-                    {
-                        var methodName = method.Identifier.Text;
+                    var methodName = method.Identifier.Text;
 
-                        if (methodName == "OnPostAsync" || methodName == "OnGetAsync")
-                            return true;
-                    }
-                    else if (baseType.Equals(controllerType, SymbolEqualityComparer.Default)) 
-                    {
-                        //TODO: look at return type too to be sure
+                    if (methodName == "OnPostAsync" || methodName == "OnGetAsync")
                         return true;
-                    }
-
-                    baseType = baseType.BaseType;
+                }
+                else if (classDeclaration.InheritsFrom("Microsoft.AspNetCore.Mvc.Controller"))
+                { 
+                    //TODO: look at return type too to be sure
+                    return true;                
                 }
             }
 
             return false;
+        }
+
+        internal static List<HttpMethodInfo> GetMethodVerbs(this MethodDeclarationSyntax syntax)
+        {
+            var retVal = new List<HttpMethodInfo>();
+
+            var model = Globals.Compilation.GetSemanticModel(syntax.SyntaxTree);
+
+            if (syntax.AttributeLists.Any(al => al.Attributes.Any(a => model.GetTypeInfo(a).Type.ToString() == "Microsoft.AspNetCore.Mvc.HttpPostAttribute" ||
+                                                                       model.GetTypeInfo(a).Type.ToString() == "System.Web.Mvc.HttpPostAttribute")))
+                retVal.Add(new HttpMethodInfo(HttpMethodInfo.HttpMethod.Post));
+            if (syntax.AttributeLists.Any(al => al.Attributes.Any(a => model.GetTypeInfo(a).Type.ToString() == "Microsoft.AspNetCore.Mvc.HttpDeleteAttribute" ||
+                                                                            model.GetTypeInfo(a).Type.ToString() == "System.Web.Mvc.HttpDeleteAttribute")))
+                retVal.Add(new HttpMethodInfo(HttpMethodInfo.HttpMethod.Delete));
+            if (syntax.AttributeLists.Any(al => al.Attributes.Any(a => model.GetTypeInfo(a).Type.ToString() == "Microsoft.AspNetCore.Mvc.HttpGetAttribute" ||
+                                                                            model.GetTypeInfo(a).Type.ToString() == "System.Web.Mvc.HttpGetAttribute")))
+                retVal.Add(new HttpMethodInfo(HttpMethodInfo.HttpMethod.Get));
+            if (syntax.AttributeLists.Any(al => al.Attributes.Any(a => model.GetTypeInfo(a).Type.ToString() == "Microsoft.AspNetCore.Mvc.HttpOptionsAttribute" ||
+                                                                            model.GetTypeInfo(a).Type.ToString() == "System.Web.Mvc.HttpOptionsAttribute")))
+                retVal.Add(new HttpMethodInfo(HttpMethodInfo.HttpMethod.Options));
+            if (syntax.AttributeLists.Any(al => al.Attributes.Any(a => model.GetTypeInfo(a).Type.ToString() == "Microsoft.AspNetCore.Mvc.HttpPatchAttribute" ||
+                                                                            model.GetTypeInfo(a).Type.ToString() == "System.Web.Mvc.HttpPatchAttribute")))
+                retVal.Add(new HttpMethodInfo(HttpMethodInfo.HttpMethod.Patch));
+            if (syntax.AttributeLists.Any(al => al.Attributes.Any(a => model.GetTypeInfo(a).Type.ToString() == "Microsoft.AspNetCore.Mvc.HttpPutAttribute" ||
+                                                                            model.GetTypeInfo(a).Type.ToString() == "System.Web.Mvc.HttpPutAttribute")))
+                retVal.Add(new HttpMethodInfo(HttpMethodInfo.HttpMethod.Put));
+            if (syntax.AttributeLists.Any(al => al.Attributes.Any(a => model.GetTypeInfo(a).Type.ToString() == "Microsoft.AspNetCore.Mvc.HttpHeadAttribute" ||
+                                                                            model.GetTypeInfo(a).Type.ToString() == "System.Web.Mvc.HttpHeadAttribute")))
+                retVal.Add(new HttpMethodInfo(HttpMethodInfo.HttpMethod.Head));
+
+            return retVal;
+        }
+
+        //TODO: Check to see if the attribute has been applied globally
+        internal static bool HasCsrfProtection(this MethodDeclarationSyntax syntax)
+        {
+            var model = Globals.Compilation.GetSemanticModel(syntax.SyntaxTree);
+
+            if (syntax.AttributeLists.Any(al => al.Attributes.Any(a => a.HasCsrfAttribute(model))))
+                return true;
+
+            var parentClass = syntax.Parent as ClassDeclarationSyntax;
+
+            if (parentClass.AttributeLists.Any(al => al.Attributes.Any(a => a.HasCsrfAttribute(model))))
+                return true;
+
+            return false;
+        }
+
+        internal class HttpMethodInfo
+        {
+            public enum HttpMethod
+            {
+                Get,
+                Put,
+                Delete,
+                Post,
+                Head,
+                Trace,
+                Patch,
+                Connect,
+                Options
+            }
+
+            public HttpMethod Method { get; set; }
+
+            public bool SkipsCsrfChecks
+            {
+                get
+                {
+                    return Method == HttpMethod.Get || Method == HttpMethod.Head || Method == HttpMethod.Options || Method == HttpMethod.Trace;
+                }
+            }
+
+            public HttpMethodInfo(HttpMethod method)
+            {
+                this.Method = method;
+            }
         }
     }
 }
