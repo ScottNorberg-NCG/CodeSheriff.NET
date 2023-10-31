@@ -8,7 +8,6 @@ namespace Opperis.SAST.Engine.Findings.ProgramFlow
 {
     internal class UnprotectedExternalRedirect : BaseFinding
     {
-        private Priority? _priority;
         internal override Priority Priority
         {
             get

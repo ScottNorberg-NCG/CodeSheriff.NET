@@ -9,7 +9,6 @@ namespace Opperis.SAST.Engine.Findings.Cryptography
 {
     internal class UseOfDeprecatedAlgorithm : BaseFinding
     {
-        private Priority? _priority;
         internal override Priority Priority
         {
             get
