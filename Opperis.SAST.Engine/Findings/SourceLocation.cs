@@ -39,7 +39,7 @@ namespace Opperis.SAST.Engine.Findings
             if (symbol is MemberAccessExpressionSyntax memberAccess)
             {
                 this.Text = memberAccess.Name.Identifier.Text;
-                this.LocationType = SyntaxType.MethodCall;
+                this.LocationType = SyntaxType.MethodCall; //Is this always true?
             }
             else if (symbol is IdentifierNameSyntax id)
             { 
@@ -60,6 +60,11 @@ namespace Opperis.SAST.Engine.Findings
             {
                 this.Text = assignment.ToString();
                 this.LocationType = SyntaxType.VariableAssignment;
+            }
+            else if (symbol is InvocationExpressionSyntax invocation)
+            {
+                this.Text = invocation.ToString();
+                this.LocationType = SyntaxType.MethodCall;
             }
             else
                 throw new NotImplementedException();
