@@ -12,7 +12,9 @@ namespace Opperis.SAST.Engine.Findings
     {
         public enum SyntaxType
         { 
-            MethodCall
+            MethodCall,
+            NamedItem,
+            InterpolatedString
         }
 
         public string Text { get; set; }
@@ -36,7 +38,16 @@ namespace Opperis.SAST.Engine.Findings
                 this.Text = memberAccess.Name.Identifier.Text;
                 this.LocationType = SyntaxType.MethodCall;
             }
-
+            else if (symbol is IdentifierNameSyntax id)
+            { 
+                this.Text = id.Identifier.Text;
+                this.LocationType = SyntaxType.NamedItem;
+            }
+            else if (symbol is InterpolatedStringExpressionSyntax interpolated)
+            {
+                this.Text = interpolated.GetText().ToString();
+                this.LocationType = SyntaxType.InterpolatedString;
+            }
             else
                 throw new NotImplementedException();
         }

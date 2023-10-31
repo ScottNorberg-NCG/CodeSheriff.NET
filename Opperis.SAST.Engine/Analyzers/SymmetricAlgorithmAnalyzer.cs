@@ -34,10 +34,7 @@ namespace Opperis.SAST.Engine.Analyzers
                 if (!type.Name.StartsWith("Aes") && !type.Name.StartsWith("Rijndael"))
                 {
                     var finding = new UseOfDeprecatedAlgorithm();
-
-                    var callStack = new CallStack();
-                    callStack.Locations.Add(new SourceLocation(algorithm));
-                    finding.CallStacks.Add(callStack);
+                    finding.RootLocation = new SourceLocation(algorithm);
 
                     finding.AdditionalInformation = $"Algorithm found: {type.Name}";
 
