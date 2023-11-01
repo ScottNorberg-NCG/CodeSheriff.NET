@@ -71,7 +71,7 @@ namespace Opperis.SAST.Engine.Analyzers
         {
             var underlyingType = arg.GetUnderlyingType();
 
-            if (underlyingType.ToDisplayString() == "string" && ValueCameFromExternallyFacingMethodParam(arg, root))
+            if (underlyingType != null && underlyingType.ToDisplayString() == "string" && ValueCameFromExternallyFacingMethodParam(arg, root))
             {
                 var finding = new UnprotectedExternalRedirect();
                 finding.RootLocation = new SourceLocation(arg);

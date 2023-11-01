@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.Operations;
+using Opperis.SAST.Engine.RoslynObjectExtensions;
 
 namespace Opperis.SAST.Engine.Findings
 {
@@ -20,13 +21,15 @@ namespace Opperis.SAST.Engine.Findings
             VariableCreation,
             VariableAssignment,
             ClassDeclaration,
-            MethodParameter
+            MethodParameter,
+            Property
         }
 
         public string Text { get; set; }
-        public int LineNumber { get; set; }
-        public string FilePath { get; set; }
-        public SyntaxType LocationType { get; set; }
+        public int LineNumber { get; private set; }
+        public string FilePath { get; private set; }
+        public SyntaxType LocationType { get; private set; }
+        public object Symbol { get; private set; }
 
         public SourceLocation() { }
 
@@ -38,6 +41,7 @@ namespace Opperis.SAST.Engine.Findings
             this.LineNumber = lineSpan.StartLinePosition.Line + 1;
             this.FilePath = symbol.SyntaxTree.FilePath;
             //this.LocationType = symbol.GetType().Name;
+            this.Symbol = symbol;
 
             if (symbol is MemberAccessExpressionSyntax memberAccess)
             {
@@ -69,6 +73,11 @@ namespace Opperis.SAST.Engine.Findings
                 this.Text = invocation.ToString();
                 this.LocationType = SyntaxType.MethodCall;
             }
+            else if (symbol is BinaryExpressionSyntax binary)
+            {
+                this.Text = binary.ToString();
+                this.LocationType = SyntaxType.InterpolatedString; //TODO: Is this always true?
+            }
             else
                 throw new NotImplementedException();
         }
@@ -81,6 +90,7 @@ namespace Opperis.SAST.Engine.Findings
             this.LineNumber = lineSpan.StartLinePosition.Line + 1;
             this.FilePath = symbol.SyntaxTree.FilePath;
             this.LocationType = SyntaxType.MethodDeclaration;
+            this.Symbol = symbol;
         }
 
         public SourceLocation(SyntaxNode symbol)
@@ -88,6 +98,7 @@ namespace Opperis.SAST.Engine.Findings
             var lineSpan = symbol.SyntaxTree.GetLineSpan(symbol.Span);
             this.LineNumber = lineSpan.StartLinePosition.Line + 1;
             this.FilePath = symbol.SyntaxTree.FilePath;
+            this.Symbol = symbol;
 
             if (symbol is VariableDeclaratorSyntax)
             {
@@ -110,8 +121,6 @@ namespace Opperis.SAST.Engine.Findings
 
         public SourceLocation(ISymbol symbol)
         {
-            throw new NotImplementedException();
-
             if (symbol.Locations.Count() > 1)
                 throw new NotImplementedException("Not sure what to do: symbol has more than one location");
 
@@ -125,7 +134,7 @@ namespace Opperis.SAST.Engine.Findings
 
                 var lineSpan = syntaxTree.GetLineSpan(syntaxNode.Span);
 
-                //this.Text = syntaxNode.GetDisplayText();
+                this.Text = syntaxNode.GetDisplayText();
                 this.LineNumber = lineSpan.StartLinePosition.Line + 1;
                 this.FilePath = syntaxTree.FilePath;
             }
@@ -135,6 +144,29 @@ namespace Opperis.SAST.Engine.Findings
                 this.FilePath = "(External)";
             }
 
+            if (symbol is IMethodSymbol)
+            {
+                this.LocationType = SyntaxType.MethodDeclaration;
+            }
+            else if (symbol is INamedTypeSymbol)
+            {
+                this.LocationType = SyntaxType.NamedItem;
+            }
+            else if (symbol is ILocalSymbol)
+            {
+                //TODO: Verify
+                this.LocationType = SyntaxType.VariableCreation;
+            }
+            else if (symbol is IPropertySymbol)
+            {
+                this.LocationType = SyntaxType.Property;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+
+            this.Symbol = symbol;
             //this.LocationType = symbol.GetType().Name;
         }
 

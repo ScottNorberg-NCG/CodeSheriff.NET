@@ -19,6 +19,7 @@ namespace Opperis.SAST.IntegrationTests
             {
                 Globals.Solution = workspace.OpenSolutionAsync(solutionFilePath).Result;
 
+                TestSqlInjections();
                 TestValueShadowingIssues();
                 TestCsrfIssues();
                 TestDanglingConnectionOpens();
@@ -28,6 +29,16 @@ namespace Opperis.SAST.IntegrationTests
                 TestUnprotectedRedirects();
                 TestSymmetricAlgorithms();
             }
+        }
+
+        private static void TestSqlInjections()
+        {
+            var sqlInjections = SqlInjectionProcessor.GetSqlInjections();
+            Assert.AreEqual(8, sqlInjections.Count, "Expected number of SQL Injection Issues");
+            Assert.AreEqual(2, sqlInjections.Select(c => c.GetType().ToString()).Distinct().Count(), "Number of distinct types of SQL Injection issues");
+            Assert.AreEqual(49, sqlInjections.Max(s => s.CallStacks.Count), "ExecSql has many different callstacks");
+            Assert.AreEqual(7, sqlInjections.SelectMany(s => s.CallStacks).Max(cs => cs.Locations.Count), "SQL injection - number of locations in the largest callstack");
+            Assert.AllRootLocationsSet(sqlInjections, "TestSqlInjections");
         }
 
         private static void TestValueShadowingIssues()
