@@ -25,11 +25,7 @@ namespace Opperis.SAST.IntegrationTests.Processors
                     var root = syntaxTree.GetRoot();
 
                     var walker = new SymmetricCryptographyPropertySyntaxWalker();
-
-                    foreach (var finding in SymmetricAlgorithmPropertyAnalyzer.FindHardCodedKeys(walker, root))
-                    { 
-                        retVal.Add(finding);
-                    }
+                    retVal.AddRange(SymmetricAlgorithmPropertyAnalyzer.FindHardCodedKeys(walker, root));
                 }
             }
 

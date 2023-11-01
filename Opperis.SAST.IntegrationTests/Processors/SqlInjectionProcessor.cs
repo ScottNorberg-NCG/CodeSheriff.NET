@@ -25,11 +25,7 @@ namespace Opperis.SAST.IntegrationTests.Processors
                     var root = syntaxTree.GetRoot();
 
                     var walker = new DatabaseCommandTextSyntaxWalker();
-
-                    foreach (var finding in SQLInjectionAnalyzer.GetSQLInjections(walker, root))
-                    {
-                        retVal.Add(finding);
-                    }
+                    retVal.AddRange(SQLInjectionAnalyzer.GetSQLInjections(walker, root));
                 }
             }
 

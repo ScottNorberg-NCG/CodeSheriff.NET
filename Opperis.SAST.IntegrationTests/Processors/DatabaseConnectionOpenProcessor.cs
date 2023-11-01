@@ -25,11 +25,7 @@ namespace Opperis.SAST.IntegrationTests.Processors
                     var root = syntaxTree.GetRoot();
 
                     var walker = new DatabaseConnectionOpenSyntaxWalker();
-
-                    foreach (var finding in DatabaseConnectionOpenAnalyzer.FindUnsafeDatabaseConnectionOpens(walker, root))
-                    {
-                        retVal.Add(finding);
-                    }
+                    retVal.AddRange(DatabaseConnectionOpenAnalyzer.FindUnsafeDatabaseConnectionOpens(walker, root));
                 }
             }
 

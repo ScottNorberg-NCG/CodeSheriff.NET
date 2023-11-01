@@ -25,11 +25,7 @@ namespace Opperis.SAST.IntegrationTests.Processors
                     var root = syntaxTree.GetRoot();
 
                     var walker = new SymmetricAlgorithmSyntaxWalker();
-
-                    foreach (var finding in SymmetricAlgorithmAnalyzer.FindDeprecatedAlgorithms(walker, root))
-                    { 
-                        retVal.Add(finding);
-                    }
+                    retVal.AddRange(SymmetricAlgorithmAnalyzer.FindDeprecatedAlgorithms(walker, root));
                 }
             }
 

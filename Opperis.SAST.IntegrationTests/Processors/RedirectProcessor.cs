@@ -25,11 +25,7 @@ namespace Opperis.SAST.IntegrationTests.Processors
                     var root = syntaxTree.GetRoot();
 
                     var walker = new ExternalRedirectSyntaxWalker();
-
-                    foreach (var finding in ExternalRedirectAnalyzer.FindProblematicExternalRedirects(walker, root))
-                    { 
-                        retVal.Add(finding);
-                    }
+                    retVal.AddRange(ExternalRedirectAnalyzer.FindProblematicExternalRedirects(walker, root));
                 }
             }
 

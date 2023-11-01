@@ -25,11 +25,7 @@ namespace Opperis.SAST.IntegrationTests.Processors
                     var root = syntaxTree.GetRoot();
 
                     var walker = new ControllerMethodSyntaxWalker();
-
-                    foreach (var finding in CsrfAnalyzer.FindCsrfIssues(walker, root))
-                    {
-                        retVal.Add(finding);
-                    }
+                    retVal.AddRange(CsrfAnalyzer.FindCsrfIssues(walker, root));
                 }
             }
 
