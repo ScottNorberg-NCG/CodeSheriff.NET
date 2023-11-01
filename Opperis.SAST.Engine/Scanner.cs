@@ -65,6 +65,9 @@ namespace Opperis.SAST.Engine
 
                         var externalRedirects = new ExternalRedirectSyntaxWalker();
                         findings.AddRange(ExternalRedirectAnalyzer.FindProblematicExternalRedirects(externalRedirects, root));
+
+                        var hardCodedConnectionStrings = new DatabaseConnectionStringSyntaxWalker();
+                        findings.AddRange(HardCodedConnectionStringAnalyzer.FindHardCodedConnectionStrings(hardCodedConnectionStrings, root));
                     }
                 }
             }

@@ -19,6 +19,7 @@ namespace Opperis.SAST.IntegrationTests
             {
                 Globals.Solution = workspace.OpenSolutionAsync(solutionFilePath).Result;
 
+                TestHardCodedConnectionStrings();
                 TestSqlInjections();
                 TestValueShadowingIssues();
                 TestCsrfIssues();
@@ -29,6 +30,13 @@ namespace Opperis.SAST.IntegrationTests
                 TestUnprotectedRedirects();
                 TestSymmetricAlgorithms();
             }
+        }
+
+        private static void TestHardCodedConnectionStrings()
+        {
+            var connectionStrings = HardCodedConnectionStringProcessor.GetConnectionStrings();
+            Assert.AreEqual(2, connectionStrings.Count, "Number of hard-coded connection strings");
+            Assert.AllRootLocationsSet(connectionStrings, "TestHardCodedConnectionStrings");
         }
 
         private static void TestSqlInjections()

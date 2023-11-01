@@ -23,7 +23,8 @@ namespace Opperis.SAST.Engine.Findings
             ClassDeclaration,
             MethodParameter,
             Property,
-            CshtmlFile
+            CshtmlFile,
+            ClassConstructor
         }
 
         public string Text { get; set; }
@@ -50,7 +51,7 @@ namespace Opperis.SAST.Engine.Findings
                 this.LocationType = SyntaxType.MethodCall; //Is this always true?
             }
             else if (symbol is IdentifierNameSyntax id)
-            { 
+            {
                 this.Text = id.Identifier.Text;
                 this.LocationType = SyntaxType.NamedItem;
             }
@@ -78,6 +79,11 @@ namespace Opperis.SAST.Engine.Findings
             {
                 this.Text = binary.ToString();
                 this.LocationType = SyntaxType.InterpolatedString; //TODO: Is this always true?
+            }
+            else if (symbol is ObjectCreationExpressionSyntax constructor)
+            { 
+                this.Text = constructor.ToString();
+                this.LocationType = SyntaxType.ClassConstructor;
             }
             else
                 throw new NotImplementedException();

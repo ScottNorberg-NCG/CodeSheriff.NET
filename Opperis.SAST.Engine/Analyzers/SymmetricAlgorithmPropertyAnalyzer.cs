@@ -18,7 +18,7 @@ namespace Opperis.SAST.Engine.Analyzers
     {
         internal static List<BaseFinding> FindHardCodedKeys(SymmetricCryptographyPropertySyntaxWalker walker, SyntaxNode root)
         {
-            if (walker.CryptoKeySets.Count == 0)
+            if (walker.CryptoKeySets.Count == 0 && walker.CryptoIVSets.Count == 0 && walker.CryptoModeSets.Count == 0)
                 walker.Visit(root);
 
             var findings = new List<BaseFinding>();
