@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewData["Title"] = "AngularJS";
+}
+
+<partial name="_Menu" />
+<div class="attack-page-content">
+    <h1>AngularJS</h1>
+    <p>This page is vulnerable to AngularJS attacks. Try submitting <span class="code">{{4*4}}</span> as your search text.</p>
+    <div class="results-container" ng-controller="searchController" ng-app="searchApp">
+        <h2>You searched for: @ViewBag.SearchText</h2>
+        <table width="100%">
+            <tr><th>ID</th><th>Food Name</th><th>Food Group</th><th>Calories</th><th>Protein</th><th>Fat</th><th>Carbohydrates</th></tr>
+            <tr ng-repeat="food in items">
+                <td>{{food.foodID}}</td>
+                <td>{{food.foodName}}</td>
+                <td>{{food.foodGroup}}</td>
+                <td>{{food.calories}}</td>
+                <td>{{food.protein}}</td>
+                <td>{{food.fat}}</td>
+                <td>{{food.carbohydrates}}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+@section Scripts
+{
+    <script src="~/js/angular.min.js"></script>
+    <script nonce="011121314151">
+    var app = angular.module('searchApp', []);
+    app.controller('searchController', function ($scope, $http) {
+        $scope.items = [];
+
+        $http({
+            method: "POST",
+            url: "/api/SearchFoods/@ViewBag.SearchText"
+        }).then(
+            function onSuccess(response) {
+                $scope.items = response.data;
+            },
+            function onError(response) {
+                alert("An error occurred: " + response.statusText);
+            }
+        );
+    });
+    </script>
+}

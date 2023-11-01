@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Blog";
+}
+@model BlogListModel
+
+<div class="blog-list-container wide-with-margin">
+    <div class="blog-content">
+        <h1>Blogs and Whitepapers</h1>
+        @foreach (var blog in Model.Blogs)
+        {
+            /* blog-summary added in GetClasses() */
+            <div class="@blog.GetClasses()">
+                <a href="/blog/@blog.BlogURL">
+                    <img src="https://opperis.b-cdn.net/blogimages/@blog.ImageName" />
+                    <div class="blog-summary-text">
+                        <h2>@blog.DisplayTitle</h2>
+                        <p>@blog.BlogSummary</p>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+    <div class="blog-tags">
+        <h1>Filter By Tag</h1>
+        @foreach (var tag in Model.BlogTags)
+        {
+            <div class="blog-tag" for="@tag.TagClass">@tag.TagText (@tag.Count)</div>
+        }
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/js/blog.js"></script>
+}

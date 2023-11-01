@@ -9,6 +9,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="HtmlTestFiles\InternalExternal.txt" />
+    <None Remove="HtmlTestFiles\Layout.txt" />
+    <None Remove="HtmlTestFiles\OpperisBlog.txt" />
+    <None Remove="HtmlTestFiles\ValidationPartial.txt" />
+    <None Remove="Other\SyntaxTree.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="HtmlTestFiles\InternalExternal.txt" />
+    <EmbeddedResource Include="HtmlTestFiles\Layout.txt" />
+    <EmbeddedResource Include="HtmlTestFiles\OpperisBlog.txt" />
+    <EmbeddedResource Include="HtmlTestFiles\ValidationPartial.txt" />
+    <EmbeddedResource Include="Other\SyntaxTree.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.8" />
     <PackageReference Include="MSTest.TestFramework" Version="2.2.8" />

@@ -22,14 +22,15 @@ namespace Opperis.SAST.Engine.Findings
             VariableAssignment,
             ClassDeclaration,
             MethodParameter,
-            Property
+            Property,
+            CshtmlFile
         }
 
         public string Text { get; set; }
-        public int LineNumber { get; private set; }
-        public string FilePath { get; private set; }
-        public SyntaxType LocationType { get; private set; }
-        public object Symbol { get; private set; }
+        public int LineNumber { get; set; }
+        public string FilePath { get; set; }
+        public SyntaxType? LocationType { get; set; }
+        public object? Symbol { get; set; }
 
         public SourceLocation() { }
 

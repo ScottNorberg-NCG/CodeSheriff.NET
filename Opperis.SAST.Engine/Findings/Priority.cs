@@ -36,9 +36,14 @@ namespace Opperis.SAST.Engine.Findings
             get { return new Priority() { Sort = 5, Text = "Low" }; }
         }
 
+        internal static Priority VeryLow
+        {
+            get { return new Priority() { Sort = 6, Text = "Very Low" }; }
+        }
+
         internal static Priority Info
         {
-            get { return new Priority() { Sort = 6, Text = "Information" }; }
+            get { return new Priority() { Sort = 7, Text = "Information" }; }
         }
     }
 }
