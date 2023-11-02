@@ -13,18 +13,24 @@ namespace Opperis.SAST.Engine.Findings
     internal class SourceLocation
     {
         public enum SyntaxType
-        { 
+        {
+            ClassConstructor,
+            ClassDeclaration,
+            ClassProperty,
+
+            CshtmlFile,
+
+            InterpolatedString,
+
+            MethodArgument,
             MethodCall,
             MethodDeclaration,
-            NamedItem,
-            InterpolatedString,
-            VariableCreation,
-            VariableAssignment,
-            ClassDeclaration,
             MethodParameter,
-            Property,
-            CshtmlFile,
-            ClassConstructor
+
+            NamedItem,
+
+            VariableAssignment,
+            VariableCreation,
         }
 
         public string Text { get; set; }
@@ -122,6 +128,11 @@ namespace Opperis.SAST.Engine.Findings
                 this.Text = symbol.ToString();
                 this.LocationType = SyntaxType.MethodParameter;
             }
+            else if (symbol is ArgumentSyntax)
+            {
+                this.Text = symbol.ToString();
+                this.LocationType = SyntaxType.MethodArgument;
+            }
             else
                 throw new NotImplementedException();
         }
@@ -166,7 +177,7 @@ namespace Opperis.SAST.Engine.Findings
             }
             else if (symbol is IPropertySymbol)
             {
-                this.LocationType = SyntaxType.Property;
+                this.LocationType = SyntaxType.ClassProperty;
             }
             else
             {

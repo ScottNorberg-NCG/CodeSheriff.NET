@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.MSBuild;
 using Opperis.SAST.Engine;
 using Opperis.SAST.Engine.Analyzers;
+using Opperis.SAST.Engine.Findings;
 using Opperis.SAST.IntegrationTests.Processors;
 
 namespace Opperis.SAST.IntegrationTests
@@ -18,6 +19,10 @@ namespace Opperis.SAST.IntegrationTests
             using (var workspace = MSBuildWorkspace.Create())
             {
                 Globals.Solution = workspace.OpenSolutionAsync(solutionFilePath).Result;
+
+                var xssIssues = HtmlRawProcessor.GetXssIssues();
+                WriteFindingsToConsole(xssIssues);
+                int i = 1;
 
                 TestHardCodedConnectionStrings();
                 TestSqlInjections();
@@ -126,6 +131,29 @@ namespace Opperis.SAST.IntegrationTests
             foreach (var finding in deprecatedAlgorithms)
             {
                 Assert.AreEqual(0, finding.CallStacks.Count, "Confirm CallStack count for SymmetricAlgorithm");
+            }
+        }
+
+        private static void WriteFindingsToConsole(List<BaseFinding> findings)
+        {
+            foreach (var finding in findings)
+            {
+                Console.WriteLine($"New Finding: {finding.FindingText}");
+                Console.WriteLine($"Root Location: {finding.RootLocation}");
+                
+                foreach (var cs in finding.CallStacks)
+                { 
+                    Console.WriteLine("Call Stack: ");
+
+                    foreach (var location in cs.Locations)
+                    {
+                        Console.WriteLine(location.ToString());
+                    }
+
+                    Console.WriteLine("-----");
+                }
+
+                Console.WriteLine("*********************************");
             }
         }
     }

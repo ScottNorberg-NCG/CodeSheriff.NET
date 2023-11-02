@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Opperis.SAST.Engine.SyntaxWalkers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -82,6 +83,51 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
             return false;
         }
 
+        internal static bool HasName(this MethodDeclarationSyntax syntax, string className, string methodName)
+        {
+            if (syntax.Identifier.Text != methodName)
+                return false;
+
+            if (syntax.Parent is ClassDeclarationSyntax classSyntax)
+            {
+                if (classSyntax.Identifier.Text == className || classSyntax.Identifier.Text == className + "Controller")
+                    return true;
+            }
+
+            return false;
+        }
+
+        internal static IEnumerable<ReturnTypeInfo> ReturnsModelType(this MethodDeclarationSyntax syntax, ITypeSymbol typeSymbol)
+        {
+            //var returnStatements = syntax.Body?.Statements.Where(s => s is ReturnStatementSyntax).Select(s => s as ReturnStatementSyntax).ToList();
+            var returnStatements = syntax.GetReturnStatements();
+
+            foreach (var stmt in returnStatements)
+            {
+                if (stmt.Expression is InvocationExpressionSyntax invocation)
+                {
+                    if (invocation.Expression is IdentifierNameSyntax id)
+                    {
+                        if (id.Identifier.Text == "View" && invocation.ArgumentList.Arguments.Count == 1)
+                        {
+                            var model = Globals.Compilation.GetSemanticModel(syntax.SyntaxTree);
+                            var argumentType = model.GetTypeInfo(invocation.ArgumentList.Arguments[0].Expression).Type;
+
+                            if (SymbolEqualityComparer.Default.Equals(argumentType, typeSymbol))
+                                yield return new ReturnTypeInfo() { ContainingMethod = syntax, ReturnObject = invocation.ArgumentList.Arguments[0].Expression };
+                        }
+                    }
+                }
+            }
+        }
+
+        internal static List<ReturnStatementSyntax> GetReturnStatements(this MethodDeclarationSyntax syntax)
+        {
+            var finder = new ReturnStatementSyntaxWalker();
+            finder.Visit(syntax);
+            return finder.ReturnStatements;
+        }
+
         internal class HttpMethodInfo
         {
             public enum HttpMethod
@@ -111,6 +157,12 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
             {
                 this.Method = method;
             }
+        }
+
+        internal struct ReturnTypeInfo
+        {
+            internal MethodDeclarationSyntax ContainingMethod { get; set; }
+            internal ExpressionSyntax ReturnObject { get; set; }
         }
     }
 }

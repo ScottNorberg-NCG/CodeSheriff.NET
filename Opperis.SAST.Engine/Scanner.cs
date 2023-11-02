@@ -68,6 +68,9 @@ namespace Opperis.SAST.Engine
 
                         var hardCodedConnectionStrings = new DatabaseConnectionStringSyntaxWalker();
                         findings.AddRange(HardCodedConnectionStringAnalyzer.FindHardCodedConnectionStrings(hardCodedConnectionStrings, root));
+
+                        var problematicHtmlRaws = new HtmlRawSyntaxWalker();
+                        findings.AddRange(HtmlRawAnalyzer.FindXssIssues(problematicHtmlRaws, root));
                     }
                 }
             }

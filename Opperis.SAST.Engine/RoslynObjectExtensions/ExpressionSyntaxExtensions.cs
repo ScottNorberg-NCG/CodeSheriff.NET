@@ -46,6 +46,10 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
             {
                 return propertySymbol.Type;
             }
+            else if (asSymbol is ITypeSymbol typeSymbol)
+            {
+                return typeSymbol;
+            }
             else
             {
                 //It would be better to throw an exception here, but this can be triggered for one-off methods

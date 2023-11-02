@@ -1,9 +1,11 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Opperis.SAST.Engine.Findings.SourceLocation;
 
 namespace Opperis.SAST.Engine.Findings
 {
@@ -26,6 +28,24 @@ namespace Opperis.SAST.Engine.Findings
         public void AddLocation(ExpressionSyntax syntax)
         { 
             var newLocation = new SourceLocation(syntax);
+            this.Locations.Add(newLocation);
+        }
+
+        public void AddLocation(MethodDeclarationSyntax symbol)
+        {
+            var newLocation = new SourceLocation(symbol);
+            this.Locations.Add(newLocation);
+        }
+
+        public void AddLocation(SyntaxNode symbol)
+        {
+            var newLocation = new SourceLocation(symbol);
+            this.Locations.Add(newLocation);
+        }
+
+        public void AddLocation(ISymbol symbol)
+        {
+            var newLocation = new SourceLocation(symbol);
             this.Locations.Add(newLocation);
         }
     }
