@@ -18,15 +18,25 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
             return model.GetSymbolInfo(expression).Symbol;
         }
 
-        internal static SyntaxNode GetDefinitionNode(this ExpressionSyntax expression, SyntaxNode root)
+        internal static SyntaxNode? GetDefinitionNode(this ExpressionSyntax expression, SyntaxNode root)
         {
             var asSymbol = expression.ToSymbol();
             var definition = SymbolFinder.FindSourceDefinitionAsync(asSymbol, Globals.Solution).Result;
 
-            return root.FindNode(definition.Locations.First().SourceSpan);
+            if (definition == null)
+                return null;
+
+            try
+            {
+                return root.FindNode(definition.Locations.First().SourceSpan);
+            }
+            catch (System.ArgumentOutOfRangeException)
+            {
+                return null;
+            }
         }
 
-        internal static ITypeSymbol GetUnderlyingType(this ExpressionSyntax expression)
+        internal static ITypeSymbol? GetUnderlyingType(this ExpressionSyntax expression)
         {
             var asSymbol = expression.ToSymbol();
 
@@ -49,6 +59,14 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
             else if (asSymbol is ITypeSymbol typeSymbol)
             {
                 return typeSymbol;
+            }
+            else if (asSymbol is IMethodSymbol methodSymbol)
+            {
+                return null;
+            }
+            else if (asSymbol is INamespaceSymbol namespaceSymbol)
+            {
+                return null;
             }
             else
             {

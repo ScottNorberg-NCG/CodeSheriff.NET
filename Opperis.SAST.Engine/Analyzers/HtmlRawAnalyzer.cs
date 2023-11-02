@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.FindSymbols;
 using Opperis.SAST.Engine.CompiledCSHtmlParsing;
 using Opperis.SAST.Engine.Findings;
 using Opperis.SAST.Engine.Findings.CSRF;
@@ -43,6 +44,9 @@ namespace Opperis.SAST.Engine.Analyzers
 
                         foreach (var suspect in controllerMethodSuspects)
                         {
+                            if (suspect.ContainingMethod.ParameterList.Parameters.Count == 0)
+                                continue;
+
                             if (suspect.ContainingMethod.ParameterList.Parameters.Any(p => p.Type.GetUnderlyingType() == htmlRawArgType))
                             {
                                 var allowedMethods = suspect.ContainingMethod.GetMethodVerbs();
@@ -52,7 +56,7 @@ namespace Opperis.SAST.Engine.Analyzers
                                 if (allowedMethods.Count == 0 || allowedMethods.Any(a => a.Method == MethodDeclarationSyntaxExtensions.HttpMethodInfo.HttpMethod.Get))
                                     finding = new BindObjectForGetUsedInHtmlRaw();
                                 else
-                                    finding = new BindObjectForPostUsedInHtmlRaw();
+                                    finding = new BindObjectForOtherMethodUsedInHtmlRaw();
 
                                 finding.RootLocation = new SourceLocation(argToHtmlRaw);
 
@@ -66,22 +70,52 @@ namespace Opperis.SAST.Engine.Analyzers
                                 findings.Add(finding);
                             }
 
-                            int i = 1;
-                            //var definition = suspect.ReturnObject.GetDefinitionExpression(suspect.ContainingMethod.SyntaxTree);
+                            var htmlRawProperty = htmlRawArgAsMemberAccess.Name as IdentifierNameSyntax;
 
-                            //int g = 1;
+                            if (htmlRawProperty != null)
+                            { 
+                                foreach (var node in suspect.ContainingMethod.DescendantNodes().Where(e => e is MemberAccessExpressionSyntax))
+                                { 
+                                    var member = node as MemberAccessExpressionSyntax;
 
-                            //var references = suspect.ReturnObject.GetReferenceExpressions(suspect.ContainingMethod.SyntaxTree);
+                                    var nodeType = member.Expression.GetUnderlyingType();
 
-                            //foreach (var reference in references)
-                            //{
-                            //    if (reference is ParameterSyntax)
-                            //    {
-                            //        int q = 1;
-                            //    }
-                            //}
+                                    if (nodeType != null)
+                                    {
+                                        if (nodeType.Equals(htmlRawArgType) && member.Name.Identifier.Text == htmlRawProperty.ToString())
+                                        {
+                                            if (member.Parent is AssignmentExpressionSyntax assignment)
+                                            {
+                                                var source = assignment.Right.GetDefinitionNode(suspect.ContainingMethod);
 
-                            //int i = 1;
+                                                if (source is ParameterSyntax parameter)
+                                                {
+                                                    var allowedMethods = suspect.ContainingMethod.GetMethodVerbs();
+
+                                                    BaseFinding finding;
+
+                                                    if (allowedMethods.Count == 0 || allowedMethods.Any(a => a.Method == MethodDeclarationSyntaxExtensions.HttpMethodInfo.HttpMethod.Get))
+                                                        finding = new BindObjectForGetUsedInHtmlRaw();
+                                                    else
+                                                        finding = new BindObjectForOtherMethodUsedInHtmlRaw();
+
+                                                    finding.RootLocation = new SourceLocation(argToHtmlRaw);
+
+                                                    var callStack = new CallStack();
+                                                    callStack.AddLocation(call);
+                                                    callStack.AddLocation(suspect.ReturnObject);
+                                                    callStack.AddLocation(assignment);
+                                                    callStack.AddLocation(source);
+                                                    callStack.AddLocation(suspect.ContainingMethod);
+                                                    finding.CallStacks.Add(callStack);
+
+                                                    findings.Add(finding);
+                                                }
+                                            }
+                                        }                                        
+                                    }
+                                }                            
+                            }
                         }
                     }
                 }

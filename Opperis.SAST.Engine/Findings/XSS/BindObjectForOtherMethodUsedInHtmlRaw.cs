@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Opperis.SAST.Engine.Findings.XSS
 {
-    internal class BindObjectForPostUsedInHtmlRaw : BaseFinding
+    internal class BindObjectForOtherMethodUsedInHtmlRaw : BaseFinding
     {
         internal override Priority Priority
         {

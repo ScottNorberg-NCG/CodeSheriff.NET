@@ -20,10 +20,7 @@ namespace Opperis.SAST.IntegrationTests
             {
                 Globals.Solution = workspace.OpenSolutionAsync(solutionFilePath).Result;
 
-                var xssIssues = HtmlRawProcessor.GetXssIssues();
-                WriteFindingsToConsole(xssIssues);
-                int i = 1;
-
+                TestHtmlRawXssIssues();
                 TestHardCodedConnectionStrings();
                 TestSqlInjections();
                 TestValueShadowingIssues();
@@ -35,6 +32,15 @@ namespace Opperis.SAST.IntegrationTests
                 TestUnprotectedRedirects();
                 TestSymmetricAlgorithms();
             }
+        }
+
+        private static void TestHtmlRawXssIssues()
+        {
+            var xssIssues = HtmlRawProcessor.GetXssIssues();
+            //WriteFindingsToConsole(xssIssues);
+            Assert.AreEqual(3, xssIssues.Count, "Expected number of XSS Issues from Html.Raw calls");
+            Assert.AreEqual(1, xssIssues.Select(c => c.GetType().ToString()).Distinct().Count(), "Number of distinct types of XSS issues from Html.Raw calls");
+            Assert.AllRootLocationsSet(xssIssues, "TestHtmlRawXssIssues");
         }
 
         private static void TestHardCodedConnectionStrings()
