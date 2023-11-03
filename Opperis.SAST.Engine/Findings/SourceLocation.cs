@@ -118,9 +118,9 @@ namespace Opperis.SAST.Engine.Findings
                 this.Text = symbol.ToString();
                 this.LocationType = SyntaxType.VariableCreation;
             }
-            else if (symbol is ClassDeclarationSyntax)
+            else if (symbol is ClassDeclarationSyntax classDeclaration)
             {
-                this.Text = symbol.ToString();
+                this.Text = classDeclaration.Identifier.Text;
                 this.LocationType = SyntaxType.ClassDeclaration;
             }
             else if (symbol is ParameterSyntax)

@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis.MSBuild;
 using Opperis.SAST.Engine;
 using Opperis.SAST.Engine.Analyzers;
 using Opperis.SAST.Engine.Findings;
+using Opperis.SAST.Engine.SyntaxWalkers;
 using Opperis.SAST.IntegrationTests.Processors;
 
 namespace Opperis.SAST.IntegrationTests
@@ -20,6 +21,7 @@ namespace Opperis.SAST.IntegrationTests
             {
                 Globals.Solution = workspace.OpenSolutionAsync(solutionFilePath).Result;
 
+                TestOverpostingInControllers();
                 TestHtmlRawXssIssues();
                 TestHardCodedConnectionStrings();
                 TestSqlInjections();
@@ -32,6 +34,13 @@ namespace Opperis.SAST.IntegrationTests
                 TestUnprotectedRedirects();
                 TestSymmetricAlgorithms();
             }
+        }
+
+        private static void TestOverpostingInControllers()
+        {
+            var efObjectsAsParameters = OverpostingAnalyzer.FindEFObjectsAsParameters();
+            Assert.AreEqual(1, efObjectsAsParameters.Count, "Expected number of Overposting in controllers");
+            Assert.AllRootLocationsSet(efObjectsAsParameters, "TestOverpostingInControllers");
         }
 
         private static void TestHtmlRawXssIssues()

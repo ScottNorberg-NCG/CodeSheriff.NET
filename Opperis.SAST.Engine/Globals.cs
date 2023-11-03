@@ -24,21 +24,59 @@ namespace Opperis.SAST.Engine
                 { 
                     _solutionControllerMethods = new List<MethodDeclarationSyntax>();
 
-                    foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
+                    foreach (var project in Globals.Solution.Projects)
                     {
-                        var root = syntaxTree.GetRoot();
+                        Globals.Compilation = project.GetCompilationAsync().Result;
 
-                        var methodFinder = new ControllerMethodSyntaxWalker();
-                        methodFinder.Visit(root);
-
-                        foreach (var method in methodFinder.Methods)
+                        foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
                         {
-                            _solutionControllerMethods.Add(method);
+                            var root = syntaxTree.GetRoot();
+
+                            var methodFinder = new ControllerMethodSyntaxWalker();
+                            methodFinder.Visit(root);
+
+                            foreach (var method in methodFinder.Methods)
+                            {
+                                _solutionControllerMethods.Add(method);
+                            }
                         }
                     }
                 }
 
                 return _solutionControllerMethods;
+            }
+        }
+
+        private static List<ITypeSymbol>? _entityFrameworkObjects;
+
+        internal static List<ITypeSymbol> EntityFrameworkObjects
+        {
+            get
+            {
+                if (_entityFrameworkObjects == null)
+                {
+                    _entityFrameworkObjects = new List<ITypeSymbol>();
+
+                    foreach (var project in Globals.Solution.Projects)
+                    {
+                        Globals.Compilation = project.GetCompilationAsync().Result;
+
+                        foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
+                        {
+                            var root = syntaxTree.GetRoot();
+
+                            var dbTypes = new EntityFrameworkDbSetSyntaxWalker();
+                            dbTypes.Visit(root);
+
+                            foreach (var dbType in dbTypes.EntityFrameworkObjects)
+                            {
+                                _entityFrameworkObjects.Add(dbType);
+                            }
+                        }
+                    }
+                }
+
+                return _entityFrameworkObjects;
             }
         }
     }

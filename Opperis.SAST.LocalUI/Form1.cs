@@ -53,8 +53,8 @@ namespace Opperis.SAST.LocalUI
                 GetPRow(content, "Priority", finding.Priority.Text);
                 GetPRow(content, "Finding", finding.FindingText);
                 GetPRow(content, "Description", finding.Description);
-                GetPRow(content, "File", finding.CallStacks.First().Locations.First().FilePath);
-                GetPRow(content, "Text", finding.CallStacks.First().Locations.First().Text);
+                GetPRow(content, "File", finding.RootLocation.FilePath);
+                GetPRow(content, "Text", finding.RootLocation.Text);
 
                 content.AppendLine("<p>");
                 content.AppendLine("<div style='font-weight: bold;'>Call Stacks</div><div>");
