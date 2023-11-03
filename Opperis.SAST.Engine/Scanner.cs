@@ -71,6 +71,11 @@ namespace Opperis.SAST.Engine
 
                         var problematicHtmlRaws = new HtmlRawSyntaxWalker();
                         findings.AddRange(HtmlRawAnalyzer.FindXssIssues(problematicHtmlRaws, root));
+
+                        findings.AddRange(OverpostingAnalyzer.FindEFObjectsAsParameters());
+
+                        var overpostingsAsBindObjects = new RazorPageBindObjectSyntaxWalker();
+                        findings.AddRange(OverpostingAnalyzer.FindEFObjectsAsBindObjects(overpostingsAsBindObjects, root));
                     }
                 }
             }
