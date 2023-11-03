@@ -21,6 +21,21 @@ namespace Opperis.SAST.IntegrationTests
             {
                 Globals.Solution = workspace.OpenSolutionAsync(solutionFilePath).Result;
 
+                //foreach (var project in Globals.Solution.Projects)
+                //{
+                //    Globals.Compilation = project.GetCompilationAsync().Result;
+
+                //    foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
+                //    {
+                //        var root = syntaxTree.GetRoot();
+
+                //        var walker = new RazorPageBindObjectSyntaxWalker();
+                //        walker.Visit(root);
+                //    }
+                //}
+
+
+                TestOverpostingInRazorPages();
                 TestOverpostingInControllers();
                 TestHtmlRawXssIssues();
                 TestHardCodedConnectionStrings();
@@ -34,6 +49,13 @@ namespace Opperis.SAST.IntegrationTests
                 TestUnprotectedRedirects();
                 TestSymmetricAlgorithms();
             }
+        }
+
+        private static void TestOverpostingInRazorPages()
+        {
+            var efObjectsAsBindObjects = OverpostingProcessor.GetOverpostingIssues();
+            Assert.AreEqual(1, efObjectsAsBindObjects.Count, "Expected number of Overposting in razor pages");
+            Assert.AllRootLocationsSet(efObjectsAsBindObjects, "TestOverpostingInRazorPages");
         }
 
         private static void TestOverpostingInControllers()
@@ -74,7 +96,7 @@ namespace Opperis.SAST.IntegrationTests
             //Number of Value Shadowing issues will change frequently
             //If an issue is found here, check to see whether the project changed first before debugging tests
             var valueShadowing = ValueShadowingProcessor.GetValueShadowingIssues();
-            Assert.AreEqual(63, valueShadowing.Count, "Expected number of Value Shadowing Issues");
+            Assert.AreEqual(64, valueShadowing.Count, "Expected number of Value Shadowing Issues");
             Assert.AllRootLocationsSet(valueShadowing, "TestValueShadowingIssues");
         }
 

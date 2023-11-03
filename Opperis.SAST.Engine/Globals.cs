@@ -21,26 +21,8 @@ namespace Opperis.SAST.Engine
             get
             {
                 if (_solutionControllerMethods == null)
-                { 
-                    _solutionControllerMethods = new List<MethodDeclarationSyntax>();
-
-                    foreach (var project in Globals.Solution.Projects)
-                    {
-                        Globals.Compilation = project.GetCompilationAsync().Result;
-
-                        foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
-                        {
-                            var root = syntaxTree.GetRoot();
-
-                            var methodFinder = new ControllerMethodSyntaxWalker();
-                            methodFinder.Visit(root);
-
-                            foreach (var method in methodFinder.Methods)
-                            {
-                                _solutionControllerMethods.Add(method);
-                            }
-                        }
-                    }
+                {
+                    LoadGlobalLists();
                 }
 
                 return _solutionControllerMethods;
@@ -55,28 +37,69 @@ namespace Opperis.SAST.Engine
             {
                 if (_entityFrameworkObjects == null)
                 {
-                    _entityFrameworkObjects = new List<ITypeSymbol>();
-
-                    foreach (var project in Globals.Solution.Projects)
-                    {
-                        Globals.Compilation = project.GetCompilationAsync().Result;
-
-                        foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
-                        {
-                            var root = syntaxTree.GetRoot();
-
-                            var dbTypes = new EntityFrameworkDbSetSyntaxWalker();
-                            dbTypes.Visit(root);
-
-                            foreach (var dbType in dbTypes.EntityFrameworkObjects)
-                            {
-                                _entityFrameworkObjects.Add(dbType);
-                            }
-                        }
-                    }
+                    LoadGlobalLists();
                 }
 
                 return _entityFrameworkObjects;
+            }
+        }
+
+        private static List<RazorPageBindObjectSyntaxWalker.RazorPageBindObject>? _razorPageBindObjects;
+
+        internal static List<RazorPageBindObjectSyntaxWalker.RazorPageBindObject> RazorPageBindObjects
+        {
+            get
+            {
+                if (_razorPageBindObjects == null)
+                {
+                    LoadGlobalLists();
+                }
+
+                return _razorPageBindObjects;
+            }
+        }
+
+        private static void LoadGlobalLists()
+        {
+            _solutionControllerMethods = new List<MethodDeclarationSyntax>();
+            _entityFrameworkObjects = new List<ITypeSymbol>();
+            _razorPageBindObjects = new List<RazorPageBindObjectSyntaxWalker.RazorPageBindObject>();
+
+            foreach (var project in Globals.Solution.Projects)
+            {
+                Globals.Compilation = project.GetCompilationAsync().Result;
+
+                foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
+                {
+                    var root = syntaxTree.GetRoot();
+
+                    //Get Controller Methods
+                    var methodFinder = new ControllerMethodSyntaxWalker();
+                    methodFinder.Visit(root);
+
+                    foreach (var method in methodFinder.Methods)
+                    {
+                        _solutionControllerMethods.Add(method);
+                    }
+
+                    //Get Entity Framework Objects
+                    var dbTypes = new EntityFrameworkDbSetSyntaxWalker();
+                    dbTypes.Visit(root);
+
+                    foreach (var dbType in dbTypes.EntityFrameworkObjects)
+                    {
+                        _entityFrameworkObjects.Add(dbType);
+                    }
+
+                    //Get RazorPageBindObjects
+                    var bindObjects = new RazorPageBindObjectSyntaxWalker();
+                    bindObjects.Visit(root);
+
+                    foreach (var bindObject in bindObjects.RazorPageBindObjects)
+                    {
+                        _razorPageBindObjects.Add(bindObject);
+                    }
+                }
             }
         }
     }

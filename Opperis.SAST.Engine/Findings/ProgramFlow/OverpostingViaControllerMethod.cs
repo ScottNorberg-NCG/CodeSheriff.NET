@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Opperis.SAST.Engine.Findings.ProgramFlow
 {
-    internal class UnprotectedExternalRedirect : BaseFinding
+    internal class OverpostingViaControllerMethod : BaseFinding
     {
         internal override Priority Priority
         {
@@ -19,8 +19,8 @@ namespace Opperis.SAST.Engine.Findings.ProgramFlow
             }
         }
 
-        internal override string FindingText { get { return "External redirect used"; } }
+        internal override string FindingText { get { return "Entity Framework Object Used as Controller Parameter"; } }
 
-        internal override string Description { get { return "We found a variable that may have been sent by an untrusted source (like the user) sent to a call to Redirect(). Since Redirect() may redirect users to external sites, this may be abused in phishing attacks."; } }
+        internal override string Description { get { return "We found an Entity Framework object that was used as a binding object via controller parameter. This can lead to Overposting (or Mass Assignment) attacks where an attacker sends more data than the developer intends but the data is processed due to automatic data binding."; } }
     }
 }

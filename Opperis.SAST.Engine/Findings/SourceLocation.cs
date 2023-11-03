@@ -139,9 +139,6 @@ namespace Opperis.SAST.Engine.Findings
 
         public SourceLocation(ISymbol symbol)
         {
-            if (symbol.Locations.Count() > 1)
-                throw new NotImplementedException("Not sure what to do: symbol has more than one location");
-
             var location = symbol.Locations.First();
 
             if (location.SourceTree != null)

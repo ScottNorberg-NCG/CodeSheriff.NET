@@ -6,6 +6,7 @@ using Opperis.SAST.Engine.SyntaxWalkers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,6 +37,36 @@ namespace Opperis.SAST.Engine.Analyzers
 
                             findings.Add(finding);
                         }
+                    }
+                }
+            }
+
+            return findings;
+        }
+
+        internal static List<BaseFinding> FindEFObjectsAsBindObjects(RazorPageBindObjectSyntaxWalker walker, SyntaxNode root)
+        {
+            if (walker.RazorPageBindObjects.Count == 0)
+                walker.Visit(root);
+
+            var findings = new List<BaseFinding>();
+
+            foreach (var bindObject in walker.RazorPageBindObjects)
+            {
+                foreach (var type in Globals.EntityFrameworkObjects)
+                {
+                    if (bindObject.ObjectType.Equals(type))
+                    {
+                        var finding = new OverpostingViaBindObject();
+
+                        finding.RootLocation = new SourceLocation(bindObject.ObjectType);
+
+                        var callStack = new CallStack();
+                        callStack.AddLocation(bindObject.ObjectType);
+                        callStack.AddLocation(bindObject.ClassDeclaration);
+                        finding.CallStacks.Add(callStack);
+
+                        findings.Add(finding);
                     }
                 }
             }
