@@ -70,12 +70,17 @@ namespace Opperis.SAST.Engine
                         findings.AddRange(HardCodedConnectionStringAnalyzer.FindHardCodedConnectionStrings(hardCodedConnectionStrings, root));
 
                         var problematicHtmlRaws = new HtmlRawSyntaxWalker();
-                        findings.AddRange(HtmlRawAnalyzer.FindXssIssues(problematicHtmlRaws, root));
+                        var rawAnalyzer = new HtmlRawAnalyzer();
+                        findings.AddRange(rawAnalyzer.FindXssIssues(problematicHtmlRaws, root));
 
                         findings.AddRange(OverpostingAnalyzer.FindEFObjectsAsParameters());
 
                         var overpostingsAsBindObjects = new RazorPageBindObjectSyntaxWalker();
                         findings.AddRange(OverpostingAnalyzer.FindEFObjectsAsBindObjects(overpostingsAsBindObjects, root));
+
+                        var problematicHtmlHelpers = new HtmlHelperSyntaxWalker();
+                        var helperAnalyzer = new HtmlHelperAnalyzer();
+                        findings.AddRange(helperAnalyzer.FindXssIssues(problematicHtmlHelpers, root));
                     }
                 }
             }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.FindSymbols;
 using Opperis.SAST.Engine.SyntaxWalkers;
 using System;
 using System.Collections.Generic;
@@ -126,6 +127,37 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
             var finder = new ReturnStatementSyntaxWalker();
             finder.Visit(syntax);
             return finder.ReturnStatements;
+        }
+
+        internal static bool IsStatic(this MethodDeclarationSyntax syntax)
+        {
+            return syntax.Modifiers.Any(m => m.ValueText == "static");
+        }
+
+        internal static bool IsExtensionMethod(this MethodDeclarationSyntax syntax)
+        {
+            if (!syntax.Modifiers.Any(m => m.ValueText == "static"))
+                return false;
+            else if (syntax.ParameterList.Parameters.Count == 0)
+                return false;
+            else if (!syntax.ParameterList.Parameters.First().Modifiers.Any(m => m.ValueText == "this"))
+                return false;
+
+            return true;
+        }
+
+        internal static ISymbol ToSymbol(this MethodDeclarationSyntax syntax)
+        {
+            var model = Globals.Compilation.GetSemanticModel(syntax.SyntaxTree);
+
+            var symbolInfo = model.GetSymbolInfo(syntax);
+
+            //TODO: Can we just call GetDeclaredSymbol and be done with it?
+
+            if (symbolInfo.Symbol != null)
+                return symbolInfo.Symbol;
+            else
+                return model.GetDeclaredSymbol(syntax);
         }
 
         internal class HttpMethodInfo

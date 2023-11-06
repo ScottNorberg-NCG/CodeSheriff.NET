@@ -57,7 +57,7 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
             return callStacks;
         }
 
-        private static List<IMethodSymbol> GetReferences(this IMethodSymbol methodSymbol)
+        internal static List<IMethodSymbol> GetReferences(this IMethodSymbol methodSymbol)
         {
             var toReturn = new List<IMethodSymbol>();
 
@@ -67,8 +67,10 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
             {
                 foreach (var referenceLocation in reference.Locations)
                 {
-                    var referenceDocument = Globals.Solution.GetDocument(referenceLocation.Document.Id);
-                    var referenceRoot = referenceDocument.GetSyntaxRootAsync().Result;
+                    //var referenceDocument = Globals.Solution.GetDocument(referenceLocation.Document.Id);
+                    //var referenceRoot = referenceDocument.GetSyntaxRootAsync().Result;
+
+                    var referenceRoot = referenceLocation.Document.GetSyntaxRootAsync().Result;
 
                     // Find the syntax node where the method is called
                     var referenceNode = referenceRoot.FindNode(referenceLocation.Location.SourceSpan);

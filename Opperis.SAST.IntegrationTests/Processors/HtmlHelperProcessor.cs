@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Opperis.SAST.IntegrationTests.Processors
 {
-    internal static class HtmlRawProcessor
+    internal static class HtmlHelperProcessor
     {
         internal static List<BaseFinding> GetXssIssues()
         {
@@ -24,8 +24,8 @@ namespace Opperis.SAST.IntegrationTests.Processors
                 {
                     var root = syntaxTree.GetRoot();
 
-                    var walker = new HtmlRawSyntaxWalker();
-                    var analyzer = new HtmlRawAnalyzer();
+                    var walker = new HtmlHelperSyntaxWalker();
+                    var analyzer = new HtmlHelperAnalyzer();
                     retVal.AddRange(analyzer.FindXssIssues(walker, root));
                 }
             }

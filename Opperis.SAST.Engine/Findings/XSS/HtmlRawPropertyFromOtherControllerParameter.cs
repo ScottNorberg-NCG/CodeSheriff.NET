@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Opperis.SAST.Engine.Findings.XSS
 {
-    internal class BindObjectForOtherUsedInHtmlRaw : BaseFinding
+    internal class HtmlRawPropertyFromOtherControllerParameter : BaseFinding
     {
         internal override Priority Priority
         {
@@ -19,7 +19,7 @@ namespace Opperis.SAST.Engine.Findings.XSS
             }
         }
 
-        internal override string FindingText { get { return "Possible Cross-Site Scripting - Controller method used in Html.Raw()"; } }
+        internal override string FindingText { get { return "Possible Cross-Site Scripting - Controller method parameter used in Html.Raw()"; } }
 
         internal override string Description { get { return "The scanner found an object that was used as an input object used in a call to Html.Raw(). If an attacker sends a script in the parameter used in Html.Raw(), this will result in a Reflected Cross-Site Scripting vulnerability."; } }
     }

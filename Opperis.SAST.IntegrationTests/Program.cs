@@ -29,12 +29,12 @@ namespace Opperis.SAST.IntegrationTests
                 //    {
                 //        var root = syntaxTree.GetRoot();
 
-                //        var walker = new RazorPageBindObjectSyntaxWalker();
-                //        walker.Visit(root);
+                //        var walker = new HtmlHelperSyntaxWalker();
+                //        walker.Visit(root);   
                 //    }
                 //}
 
-
+                TestHtmlHelperXssIssues();
                 TestOverpostingInRazorPages();
                 TestOverpostingInControllers();
                 TestHtmlRawXssIssues();
@@ -49,6 +49,14 @@ namespace Opperis.SAST.IntegrationTests
                 TestUnprotectedRedirects();
                 TestSymmetricAlgorithms();
             }
+        }
+
+        private static void TestHtmlHelperXssIssues()
+        {
+            var xssIssues = HtmlHelperProcessor.GetXssIssues();
+            //WriteFindingsToConsole(xssIssues);
+            Assert.AreEqual(1, xssIssues.Count, "Expected number of XSS Issues from HtmlHelper calls");
+            Assert.AllRootLocationsSet(xssIssues, "TestHtmlHelperXssIssues");
         }
 
         private static void TestOverpostingInRazorPages()
@@ -69,7 +77,7 @@ namespace Opperis.SAST.IntegrationTests
         {
             var xssIssues = HtmlRawProcessor.GetXssIssues();
             //WriteFindingsToConsole(xssIssues);
-            Assert.AreEqual(3, xssIssues.Count, "Expected number of XSS Issues from Html.Raw calls");
+            Assert.AreEqual(2, xssIssues.Count, "Expected number of XSS Issues from Html.Raw calls");
             Assert.AreEqual(1, xssIssues.Select(c => c.GetType().ToString()).Distinct().Count(), "Number of distinct types of XSS issues from Html.Raw calls");
             Assert.AllRootLocationsSet(xssIssues, "TestHtmlRawXssIssues");
         }
