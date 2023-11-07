@@ -81,6 +81,9 @@ namespace Opperis.SAST.Engine
                         var problematicHtmlHelpers = new HtmlHelperSyntaxWalker();
                         var helperAnalyzer = new HtmlHelperAnalyzer();
                         findings.AddRange(helperAnalyzer.FindXssIssues(problematicHtmlHelpers, root));
+
+                        var cookieConfigurationWalker = new CookieAppendSyntaxWalker();
+                        findings.AddRange(CookieConfigurationAnalyzer.FindMisconfiguredCookies(cookieConfigurationWalker, root));
                     }
                 }
             }

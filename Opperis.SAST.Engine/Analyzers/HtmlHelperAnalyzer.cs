@@ -28,7 +28,7 @@ namespace Opperis.SAST.Engine.Analyzers
             {
                 var asSymbol = method.ToSymbol() as IMethodSymbol;
 
-                var references = asSymbol.GetReferences();
+                var references = asSymbol.GetMethodsReferencedIn();
 
                 foreach (var reference in references)
                 {

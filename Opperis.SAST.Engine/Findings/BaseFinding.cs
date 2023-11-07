@@ -1,4 +1,5 @@
-﻿using Opperis.SAST.Engine.DataCleaning;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Opperis.SAST.Engine.DataCleaning;
 using System;
 using System.Collections.Generic;
 using System.Linq;

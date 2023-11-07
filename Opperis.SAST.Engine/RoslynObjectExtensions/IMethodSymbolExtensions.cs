@@ -26,7 +26,7 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
         {
             var callStacks = new List<CallStack>();
 
-            var references = method.GetReferences();
+            var references = method.GetMethodsReferencedIn();
 
             if (!stack.Locations.Last().Equals(new SourceLocation(method)))
                 stack.Locations.Add(new SourceLocation(method));
@@ -57,7 +57,7 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
             return callStacks;
         }
 
-        internal static List<IMethodSymbol> GetReferences(this IMethodSymbol methodSymbol)
+        internal static List<IMethodSymbol> GetMethodsReferencedIn(this IMethodSymbol methodSymbol)
         {
             var toReturn = new List<IMethodSymbol>();
 
@@ -76,7 +76,7 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
                     var referenceNode = referenceRoot.FindNode(referenceLocation.Location.SourceSpan);
 
                     SyntaxNode? parent = referenceNode.Parent;
-
+                    
                     while (parent != null && !(parent is MethodDeclarationSyntax))
                     {
                         parent = parent.Parent;

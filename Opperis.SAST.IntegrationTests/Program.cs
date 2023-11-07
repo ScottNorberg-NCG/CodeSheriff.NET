@@ -29,11 +29,12 @@ namespace Opperis.SAST.IntegrationTests
                 //    {
                 //        var root = syntaxTree.GetRoot();
 
-                //        var walker = new HtmlHelperSyntaxWalker();
-                //        walker.Visit(root);   
+                //        var walker = new CookieAppendSyntaxWalker();
+                //        walker.Visit(root);
                 //    }
                 //}
 
+                TestCookieConfigurationIssues();
                 TestHtmlHelperXssIssues();
                 TestOverpostingInRazorPages();
                 TestOverpostingInControllers();
@@ -49,6 +50,15 @@ namespace Opperis.SAST.IntegrationTests
                 TestUnprotectedRedirects();
                 TestSymmetricAlgorithms();
             }
+        }
+
+        private static void TestCookieConfigurationIssues()
+        {
+            var cookieIssues = CookieConfigurationProcessor.GetCookieConfigurationIssues();
+            //WriteFindingsToConsole(cookieIssues);
+            Assert.AreEqual(11, cookieIssues.Count, "Expected number of cookie configuration issues");
+            Assert.AreEqual(5, cookieIssues.Select(c => c.GetType().ToString()).Distinct().Count(), "Number of distinct types of cookie configuration issues");
+            Assert.AllRootLocationsSet(cookieIssues, "TestCookieConfigurationIssues");
         }
 
         private static void TestHtmlHelperXssIssues()

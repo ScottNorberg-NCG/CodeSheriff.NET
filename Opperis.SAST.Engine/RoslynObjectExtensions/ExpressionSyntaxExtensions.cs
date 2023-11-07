@@ -62,7 +62,10 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
             }
             else if (asSymbol is IMethodSymbol methodSymbol)
             {
-                return null;
+                if (methodSymbol.MethodKind.ToString() == "Constructor")
+                    return methodSymbol.ReceiverType;
+                else
+                    return null;
             }
             else if (asSymbol is INamespaceSymbol namespaceSymbol)
             {
