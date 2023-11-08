@@ -12,7 +12,8 @@ namespace Opperis.SAST.IntegrationTests
     {
         static void Main(string[] args)
         {
-            var solutionFilePath = "C:\\Users\\scott\\Source\\repos\\VulnerabilityBuffet2\\AspNetCore\\NCG.SecurityDetection.VulnerabilityBuffet.sln";
+            //var solutionFilePath = "C:\\Users\\scott\\Source\\repos\\VulnerabilityBuffet2\\AspNetCore\\NCG.SecurityDetection.VulnerabilityBuffet.sln";
+            var solutionFilePath = "C:\\Users\\scott\\Downloads\\WebGoat.NETCore-master\\WebGoat.NET-master\\WebGoat.NET.sln";
 
             if (!MSBuildLocator.IsRegistered)
                 MSBuildLocator.RegisterDefaults();
@@ -33,6 +34,9 @@ namespace Opperis.SAST.IntegrationTests
                 //        walker.Visit(root);
                 //    }
                 //}
+
+                var sqlInjections = SqlInjectionProcessor.GetSqlInjections();
+                int i = 1;
 
                 TestCookieConfigurationIssues();
                 TestHtmlHelperXssIssues();

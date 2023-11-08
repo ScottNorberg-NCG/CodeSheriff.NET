@@ -8,6 +8,7 @@ using Opperis.SAST.Engine.SyntaxWalkers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,7 +30,7 @@ namespace Opperis.SAST.Engine.Analyzers
                 {
                     if (arg is IdentifierNameSyntax)
                     {
-                        AddIfStringParameter(root, findings, arg);
+                        AddIfStringParameter(root, findings, arg, arg);
                     }
                     else if (arg is BinaryExpressionSyntax binary)
                     {
@@ -39,7 +40,7 @@ namespace Opperis.SAST.Engine.Analyzers
                             if (expression is InvocationExpressionSyntax)
                                 continue;
 
-                            AddIfStringParameter(root, findings, expression);
+                            AddIfStringParameter(root, findings, expression, expression);
                         }
                     }
                     else if (arg is InterpolatedStringExpressionSyntax interpolated)
@@ -50,8 +51,12 @@ namespace Opperis.SAST.Engine.Analyzers
                             if (expression is InvocationExpressionSyntax)
                                 continue;
 
-                            AddIfStringParameter(root, findings, expression);
+                            AddIfStringParameter(root, findings, expression, expression);
                         }
+                    }
+                    else if (arg is MemberAccessExpressionSyntax member)
+                    {
+                        AddIfStringParameter(root, findings, member, member.Expression);
                     }
                     else if (arg is LiteralExpressionSyntax)
                     {
@@ -59,7 +64,8 @@ namespace Opperis.SAST.Engine.Analyzers
                     }
                     else
                     {
-                        throw new NotSupportedException();
+                        //Do nothing for now
+                        //throw new NotSupportedException();
                     }
                 }
             }
@@ -67,14 +73,15 @@ namespace Opperis.SAST.Engine.Analyzers
             return findings;
         }
 
-        private static void AddIfStringParameter(SyntaxNode root, List<BaseFinding> findings, ExpressionSyntax? arg)
+        private static void AddIfStringParameter(SyntaxNode root, List<BaseFinding> findings, ExpressionSyntax? redirectArgument, ExpressionSyntax? redirectContainer)
         {
-            var underlyingType = arg.GetUnderlyingType();
+            var underlyingType = redirectArgument.GetUnderlyingType();
 
-            if (underlyingType != null && underlyingType.ToDisplayString() == "string" && ValueCameFromExternallyFacingMethodParam(arg, root))
+            if (underlyingType != null && underlyingType.ToDisplayString().In("string", "string?") && 
+                ValueCameFromExternallyFacingMethodParam(redirectArgument, root) || ValueCameFromExternallyFacingMethodParam(redirectContainer, root))
             {
                 var finding = new UnprotectedExternalRedirect();
-                finding.RootLocation = new SourceLocation(arg);
+                finding.RootLocation = new SourceLocation(redirectArgument);
 
                 findings.Add(finding);
             }

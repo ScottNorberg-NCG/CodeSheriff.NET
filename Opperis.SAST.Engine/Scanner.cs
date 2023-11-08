@@ -25,6 +25,8 @@ namespace Opperis.SAST.Engine
             {
                 Globals.Solution = workspace.OpenSolutionAsync(solutionFilePath).Result;
 
+                findings.AddRange(OverpostingAnalyzer.FindEFObjectsAsParameters());
+
                 foreach (var project in Globals.Solution.Projects)
                 {
                     Globals.Compilation = project.GetCompilationAsync().Result;
@@ -72,8 +74,6 @@ namespace Opperis.SAST.Engine
                         var problematicHtmlRaws = new HtmlRawSyntaxWalker();
                         var rawAnalyzer = new HtmlRawAnalyzer();
                         findings.AddRange(rawAnalyzer.FindXssIssues(problematicHtmlRaws, root));
-
-                        findings.AddRange(OverpostingAnalyzer.FindEFObjectsAsParameters());
 
                         var overpostingsAsBindObjects = new RazorPageBindObjectSyntaxWalker();
                         findings.AddRange(OverpostingAnalyzer.FindEFObjectsAsBindObjects(overpostingsAsBindObjects, root));

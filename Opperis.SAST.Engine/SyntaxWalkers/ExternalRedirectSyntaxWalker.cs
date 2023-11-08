@@ -1,5 +1,8 @@
-﻿using Microsoft.CodeAnalysis.CSharp;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.FindSymbols;
+using Opperis.SAST.Engine.RoslynObjectExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,9 +22,12 @@ namespace Opperis.SAST.Engine.SyntaxWalkers
                 var model = Globals.Compilation.GetSemanticModel(node.SyntaxTree);
                 var symbol = model.GetSymbolInfo(id).Symbol;
 
-                if (symbol.ContainingType.Name == "PageModel" || symbol.ContainingType.Name == "ControllerBase")
-                {
-                    UnvalidatedRedirects.Add(node);
+                if (symbol != null) 
+                { 
+                    if (symbol.ContainingType.Name == "PageModel" || symbol.ContainingType.Name == "ControllerBase")
+                    {
+                        UnvalidatedRedirects.Add(node);
+                    }                
                 }
             }
 

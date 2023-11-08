@@ -16,7 +16,7 @@ namespace Opperis.SAST.Engine.SyntaxWalkers
 
         public override void VisitAttribute(AttributeSyntax node)
         {
-            if (node.Name != null)
+            if (node.Name != null && node.Name.ToSymbol() != null)
             {
                 var type = node.Name.ToSymbol().ContainingType;
 
