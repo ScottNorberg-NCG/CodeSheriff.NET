@@ -108,9 +108,25 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
 
                 foreach (var variable in binary.GetNonLiteralPortions())
                 {
-                    foreach (var callStack in GetDefinitionExpression(variable, baseCallStack))
+                    //TODO: It's probably correct to change this so if it's processable by GetCallStacksRecursive then do it there
+                    if (variable is InterpolatedStringExpressionSyntax interpolated)
                     {
-                        result.Add(callStack);
+                        baseCallStack.AddLocation(variable);
+
+                        foreach (var interpVariable in interpolated.GetNonLiteralPortions())
+                        {
+                            foreach (var callStack in GetDefinitionExpression(interpVariable, baseCallStack))
+                            {
+                                result.Add(callStack);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var callStack in GetDefinitionExpression(variable, baseCallStack))
+                        {
+                            result.Add(callStack);
+                        }
                     }
                 }
             }

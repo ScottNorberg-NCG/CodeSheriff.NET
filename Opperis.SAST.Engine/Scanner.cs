@@ -1,6 +1,7 @@
 ﻿using Microsoft.Build.Locator;
 using Microsoft.CodeAnalysis.MSBuild;
 using Opperis.SAST.Engine.Analyzers;
+using Opperis.SAST.Engine.ErrorHandling;
 using Opperis.SAST.Engine.Findings;
 using Opperis.SAST.Engine.HtmlTagParsing;
 using Opperis.SAST.Engine.SyntaxWalkers;

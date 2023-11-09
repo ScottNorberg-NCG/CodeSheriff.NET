@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Opperis.SAST.Engine.ErrorHandling;
 using Opperis.SAST.Engine.Findings;
 using Opperis.SAST.Engine.Findings.Database;
 using Opperis.SAST.Engine.RoslynObjectExtensions;
@@ -24,38 +25,45 @@ namespace Opperis.SAST.Engine.Analyzers
 
             foreach (var access in walker.CommandTextSets)
             {
-                var parent = access.Parent as AssignmentExpressionSyntax;
-
-                if (parent.Right is LiteralExpressionSyntax)
-                    continue;
-                else
+                try
                 {
-                    var callStacks = parent.Right.GetCallStacks();
+                    var parent = access.Parent as AssignmentExpressionSyntax;
 
-                    if (callStacks.Count > 0)
+                    if (parent.Right is LiteralExpressionSyntax)
+                        continue;
+                    else
                     {
-                        var countExternal = callStacks.SelectMany(cs => cs.Locations).Where(l => l.Symbol is IMethodSymbol).Select(m => m.Symbol as IMethodSymbol).Count(m => m.IsUIProcessor());
+                        var callStacks = parent.Right.GetCallStacks();
 
-                        BaseFinding finding;
-
-                        //This is a bit simplified - it only looks to see if the call stack ends in a publicly-accessible method
-                        //(like a controller class)
-                        //It does not look at individual properties
-                        //TODO: look at individual properties
-                        if (countExternal > 0)
-                            finding = new SqlInjection_DataFromView();
-                        else
-                            finding = new SqlInjection_DataFromOther();
-
-                        finding.RootLocation = new SourceLocation(parent.Right);
-
-                        foreach (var cs in callStacks)
+                        if (callStacks.Count > 0)
                         {
-                            finding.CallStacks.Add(cs);
-                        }
+                            var countExternal = callStacks.SelectMany(cs => cs.Locations).Where(l => l.Symbol is IMethodSymbol).Select(m => m.Symbol as IMethodSymbol).Count(m => m.IsUIProcessor());
 
-                        findings.Add(finding);
+                            BaseFinding finding;
+
+                            //This is a bit simplified - it only looks to see if the call stack ends in a publicly-accessible method
+                            //(like a controller class)
+                            //It does not look at individual properties
+                            //TODO: look at individual properties
+                            if (countExternal > 0)
+                                finding = new SqlInjection_DataFromView();
+                            else
+                                finding = new SqlInjection_DataFromOther();
+
+                            finding.RootLocation = new SourceLocation(parent.Right);
+
+                            foreach (var cs in callStacks)
+                            {
+                                finding.CallStacks.Add(cs);
+                            }
+
+                            findings.Add(finding);
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Globals.RuntimeErrors.Add(new UnknownSingleFindingError(access, ex));
                 }
             }
 

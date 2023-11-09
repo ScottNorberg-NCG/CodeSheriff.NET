@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.FindSymbols;
 using Opperis.SAST.Engine.CompiledCSHtmlParsing;
+using Opperis.SAST.Engine.ErrorHandling;
 using Opperis.SAST.Engine.Findings;
 using Opperis.SAST.Engine.Findings.CSRF;
 using Opperis.SAST.Engine.Findings.XSS;
@@ -26,7 +27,14 @@ namespace Opperis.SAST.Engine.Analyzers
 
             foreach (var call in walker.HtmlRawCalls)
             {
-                GetFindingsForCshtmlInvocation(findings, call);
+                try
+                { 
+                    GetFindingsForCshtmlInvocation(findings, call);
+                }
+                catch (Exception ex) 
+                {
+                    Globals.RuntimeErrors.Add(new UnknownSingleFindingError(call, ex));
+                }
             }
 
             return findings;

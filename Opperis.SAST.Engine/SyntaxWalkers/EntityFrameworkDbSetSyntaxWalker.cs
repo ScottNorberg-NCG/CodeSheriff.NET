@@ -26,10 +26,13 @@ namespace Opperis.SAST.Engine.SyntaxWalkers
         {
             var asGenericType = node.Type as GenericNameSyntax;
 
-            if (node.Type.GetUnderlyingType().ToString().StartsWith("Microsoft.EntityFrameworkCore.DbSet<"))
+            if (node.Type.GetUnderlyingType() != null)
             {
-                var objectType = asGenericType.TypeArgumentList.Arguments.First().GetUnderlyingType();
-                EntityFrameworkObjects.Add(objectType);
+                if (node.Type.GetUnderlyingType().ToString().StartsWith("Microsoft.EntityFrameworkCore.DbSet<"))
+                {
+                    var objectType = asGenericType.TypeArgumentList.Arguments.First().GetUnderlyingType();
+                    EntityFrameworkObjects.Add(objectType);
+                }
             }
 
             base.VisitPropertyDeclaration(node);

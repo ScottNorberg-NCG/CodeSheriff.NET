@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using Opperis.SAST.Engine.ErrorHandling;
 using Opperis.SAST.Engine.Findings;
 using Opperis.SAST.Engine.Findings.CSRF;
 using Opperis.SAST.Engine.RoslynObjectExtensions;
@@ -22,23 +23,30 @@ namespace Opperis.SAST.Engine.Analyzers
 
             foreach (var method in walker.Methods)
             {
-                foreach (var parameter in method.ParameterList.Parameters)
+                try
                 {
-                    if (!parameter.HasBindingSourceInfo())
+                    foreach (var parameter in method.ParameterList.Parameters)
                     {
-                        var finding = new ControllerParameterMissingBindingInfo();
+                        if (!parameter.HasBindingSourceInfo())
+                        {
+                            var finding = new ControllerParameterMissingBindingInfo();
 
-                        finding.RootLocation = new SourceLocation(parameter);
+                            finding.RootLocation = new SourceLocation(parameter);
 
-                        var callStack = new CallStack();
-                        callStack.Locations.Add(new SourceLocation(parameter));
-                        callStack.Locations.Add(new SourceLocation(method));
-                        callStack.Locations.Add(new SourceLocation(method.Parent));
+                            var callStack = new CallStack();
+                            callStack.Locations.Add(new SourceLocation(parameter));
+                            callStack.Locations.Add(new SourceLocation(method));
+                            callStack.Locations.Add(new SourceLocation(method.Parent));
 
-                        finding.CallStacks.Add(callStack);
+                            finding.CallStacks.Add(callStack);
 
-                        findings.Add(finding);
+                            findings.Add(finding);
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Globals.RuntimeErrors.Add(new UnknownSingleFindingError(method, ex));
                 }
             }
 

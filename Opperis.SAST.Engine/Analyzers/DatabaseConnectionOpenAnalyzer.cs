@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Opperis.SAST.Engine.ErrorHandling;
 using Opperis.SAST.Engine.Findings;
 using Opperis.SAST.Engine.Findings.Database;
 using Opperis.SAST.Engine.SyntaxWalkers;
@@ -22,29 +23,36 @@ namespace Opperis.SAST.Engine.Analyzers
 
             foreach (var open in walker.ConnectionOpens)
             {
-                var parentMethod = open.Ancestors().OfType<MethodDeclarationSyntax>().First();
-                var dbCloseSyntaxWalker = new DatabaseConnectionCloseSyntaxWalker();
-                dbCloseSyntaxWalker.Visit(parentMethod);
+                try
+                {
+                    var parentMethod = open.Ancestors().OfType<MethodDeclarationSyntax>().First();
+                    var dbCloseSyntaxWalker = new DatabaseConnectionCloseSyntaxWalker();
+                    dbCloseSyntaxWalker.Visit(parentMethod);
 
-                //Not *really* safe, since we might have multiple connection objects that are opened but only one closed
-                //This should be good enough for now until a better solution is found
-                if (!dbCloseSyntaxWalker.ConnectionCloses.Any())
-                {
-                    var finding = new SqlConnectionNotClosed();
-                    finding.RootLocation = new SourceLocation(open);
-                    findings.Add(finding);
-                }
-                else
-                {
-                    foreach (var close in dbCloseSyntaxWalker.ConnectionCloses)
+                    //Not *really* safe, since we might have multiple connection objects that are opened but only one closed
+                    //This should be good enough for now until a better solution is found
+                    if (!dbCloseSyntaxWalker.ConnectionCloses.Any())
                     {
-                        if (!close.Ancestors().OfType<FinallyClauseSyntax>().Any())
+                        var finding = new SqlConnectionNotClosed();
+                        finding.RootLocation = new SourceLocation(open);
+                        findings.Add(finding);
+                    }
+                    else
+                    {
+                        foreach (var close in dbCloseSyntaxWalker.ConnectionCloses)
                         {
-                            var finding = new SqlConnectionNotClosedInTryFinally();
-                            finding.RootLocation = new SourceLocation(open);
-                            findings.Add(finding);
+                            if (!close.Ancestors().OfType<FinallyClauseSyntax>().Any())
+                            {
+                                var finding = new SqlConnectionNotClosedInTryFinally();
+                                finding.RootLocation = new SourceLocation(open);
+                                findings.Add(finding);
+                            }
                         }
                     }
+                }
+                catch (Exception ex)
+                { 
+                    Globals.RuntimeErrors.Add(new UnknownSingleFindingError(open, ex));
                 }
             }
 

@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.FindSymbols;
 using Opperis.SAST.Engine.CompiledCSHtmlParsing;
+using Opperis.SAST.Engine.ErrorHandling;
 using Opperis.SAST.Engine.Findings;
 using Opperis.SAST.Engine.Findings.CSRF;
 using Opperis.SAST.Engine.Findings.XSS;
@@ -26,35 +27,42 @@ namespace Opperis.SAST.Engine.Analyzers
 
             foreach (var method in walker.UnsafeHtmlHelpers)
             {
-                var asSymbol = method.ToSymbol() as IMethodSymbol;
-
-                var references = asSymbol.GetMethodsReferencedIn();
-
-                foreach (var reference in references)
+                try
                 {
-                    var cshtmlRoot = reference.Locations.First().SourceTree.GetRoot();
-                    var referenceAsNode = cshtmlRoot.FindNode(reference.Locations.First().SourceSpan);
+                    var asSymbol = method.ToSymbol() as IMethodSymbol;
 
-                    foreach (var invocationAsMethod in referenceAsNode.DescendantNodes().Where(r => r is InvocationExpressionSyntax))
+                    var references = asSymbol.GetMethodsReferencedIn();
+
+                    foreach (var reference in references)
                     {
-                        var invocation = invocationAsMethod as InvocationExpressionSyntax;
+                        var cshtmlRoot = reference.Locations.First().SourceTree.GetRoot();
+                        var referenceAsNode = cshtmlRoot.FindNode(reference.Locations.First().SourceSpan);
 
-                        if (invocation.ArgumentList.Arguments.Count == 1 && invocation.Expression is IdentifierNameSyntax id)
-                        { 
-                            //The compiler calls Write() to write the method rather than calling our HtmlHelper method directly
-                            if (id.Identifier.Text == "Write")
+                        foreach (var invocationAsMethod in referenceAsNode.DescendantNodes().Where(r => r is InvocationExpressionSyntax))
+                        {
+                            var invocation = invocationAsMethod as InvocationExpressionSyntax;
+
+                            if (invocation.ArgumentList.Arguments.Count == 1 && invocation.Expression is IdentifierNameSyntax id)
                             {
-                                if (invocation.ArgumentList.Arguments.First().Expression is InvocationExpressionSyntax targetInvocation)
+                                //The compiler calls Write() to write the method rather than calling our HtmlHelper method directly
+                                if (id.Identifier.Text == "Write")
                                 {
-                                    if (targetInvocation.IsInvocationOfMethod(method))
+                                    if (invocation.ArgumentList.Arguments.First().Expression is InvocationExpressionSyntax targetInvocation)
                                     {
-                                        GetFindingsForCshtmlInvocation(findings, targetInvocation);
+                                        if (targetInvocation.IsInvocationOfMethod(method))
+                                        {
+                                            GetFindingsForCshtmlInvocation(findings, targetInvocation);
+                                        }
                                     }
                                 }
                             }
-                        }
 
+                        }
                     }
+                }
+                catch (Exception ex) 
+                {
+                    Globals.RuntimeErrors.Add(new UnknownSingleFindingError(method, ex));
                 }
             }
 

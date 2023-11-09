@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Opperis.SAST.Engine.ErrorHandling;
 using Opperis.SAST.Engine.Findings;
 using Opperis.SAST.Engine.Findings.Cryptography;
 using Opperis.SAST.Engine.SyntaxWalkers;
@@ -23,22 +24,29 @@ namespace Opperis.SAST.Engine.Analyzers
 
             foreach (var algorithm in walker.SymmetricAlgorithms)
             {
-                var identifierName = algorithm.Expression as IdentifierNameSyntax;
-
-                var semanticModel = Globals.Compilation.GetSemanticModel(identifierName.SyntaxTree);
-
-                var symbol = semanticModel.GetSymbolInfo(identifierName).Symbol as ILocalSymbol;
-
-                var type = symbol.Type;
-
-                if (!type.Name.StartsWith("Aes") && !type.Name.StartsWith("Rijndael"))
+                try
                 {
-                    var finding = new UseOfDeprecatedAlgorithm();
-                    finding.RootLocation = new SourceLocation(algorithm);
+                    var identifierName = algorithm.Expression as IdentifierNameSyntax;
 
-                    finding.AdditionalInformation = $"Algorithm found: {type.Name}";
+                    var semanticModel = Globals.Compilation.GetSemanticModel(identifierName.SyntaxTree);
 
-                    findings.Add(finding);
+                    var symbol = semanticModel.GetSymbolInfo(identifierName).Symbol as ILocalSymbol;
+
+                    var type = symbol.Type;
+
+                    if (!type.Name.StartsWith("Aes") && !type.Name.StartsWith("Rijndael"))
+                    {
+                        var finding = new UseOfDeprecatedAlgorithm();
+                        finding.RootLocation = new SourceLocation(algorithm);
+
+                        finding.AdditionalInformation = $"Algorithm found: {type.Name}";
+
+                        findings.Add(finding);
+                    }
+                }
+                catch (Exception ex) 
+                {
+                    Globals.RuntimeErrors.Add(new UnknownSingleFindingError(algorithm, ex));
                 }
             }
 

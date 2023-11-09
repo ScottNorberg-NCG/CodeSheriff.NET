@@ -29,12 +29,26 @@ namespace Opperis.SAST.Engine.SyntaxWalkers
 
                 if (member != null && IsDangerousCryptoProperty(member))
                 {
-                    if (member.Name.Identifier.Text == "Key")
-                        CryptoKeySets.Add(member);
-                    else if (member.Name.Identifier.Text == "IV")
-                        CryptoIVSets.Add(member);
-                    else if (member.Name.Identifier.Text == "Mode")
-                        CryptoModeSets.Add(member);
+                    var parent = member.Parent;
+
+                    while (parent != null)
+                    {
+                        if (parent is AssignmentExpressionSyntax assignment)
+                        {
+                            if (member.Name.Identifier.Text == "Key")
+                                CryptoKeySets.Add(member);
+                            else if (member.Name.Identifier.Text == "IV")
+                                CryptoIVSets.Add(member);
+                            else if (member.Name.Identifier.Text == "Mode")
+                                CryptoModeSets.Add(member);
+
+                            break;
+                        }
+                        else
+                        {
+                            parent = parent.Parent;
+                        }
+                    }
                 }
             }
         }

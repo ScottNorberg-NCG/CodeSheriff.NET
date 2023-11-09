@@ -20,6 +20,8 @@ namespace Opperis.SAST.Engine.Findings
 
             CshtmlFile,
 
+            InterfaceDeclaration,
+
             InterpolatedString,
 
             MethodArgument,
@@ -28,6 +30,8 @@ namespace Opperis.SAST.Engine.Findings
             MethodParameter,
 
             NamedItem,
+
+            StructDeclaration,
 
             VariableAssignment,
             VariableCreation,
@@ -132,6 +136,16 @@ namespace Opperis.SAST.Engine.Findings
             {
                 this.Text = symbol.ToString();
                 this.LocationType = SyntaxType.MethodArgument;
+            }
+            else if (symbol is InterfaceDeclarationSyntax interfaceSyntax)
+            {
+                this.Text = interfaceSyntax.Identifier.Text;
+                this.LocationType = SyntaxType.InterfaceDeclaration;
+            }
+            else if (symbol is StructDeclarationSyntax structSyntax)
+            {
+                this.Text = structSyntax.Identifier.Text;
+                this.LocationType = SyntaxType.StructDeclaration;
             }
             else
                 throw new NotImplementedException();

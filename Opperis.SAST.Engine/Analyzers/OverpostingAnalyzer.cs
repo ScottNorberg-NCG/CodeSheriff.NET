@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using Opperis.SAST.Engine.ErrorHandling;
 using Opperis.SAST.Engine.Findings;
 using Opperis.SAST.Engine.Findings.ProgramFlow;
 using Opperis.SAST.Engine.RoslynObjectExtensions;
@@ -20,24 +21,31 @@ namespace Opperis.SAST.Engine.Analyzers
 
             foreach (var method in Globals.SolutionControllerMethods)
             {
-                foreach (var parameter in method.ParameterList.Parameters)
+                try
                 {
-                    foreach (var type in Globals.EntityFrameworkObjects)
+                    foreach (var parameter in method.ParameterList.Parameters)
                     {
-                        if (parameter.Type.GetUnderlyingType().Equals(type))
+                        foreach (var type in Globals.EntityFrameworkObjects)
                         {
-                            var finding = new OverpostingViaControllerMethod();
+                            if (parameter.Type.GetUnderlyingType().Equals(type))
+                            {
+                                var finding = new OverpostingViaControllerMethod();
 
-                            finding.RootLocation = new SourceLocation(parameter);
+                                finding.RootLocation = new SourceLocation(parameter);
 
-                            var callStack = new CallStack();
-                            callStack.AddLocation(parameter);
-                            callStack.AddLocation(method);
-                            finding.CallStacks.Add(callStack);
+                                var callStack = new CallStack();
+                                callStack.AddLocation(parameter);
+                                callStack.AddLocation(method);
+                                finding.CallStacks.Add(callStack);
 
-                            findings.Add(finding);
+                                findings.Add(finding);
+                            }
                         }
                     }
+                }
+                catch (Exception ex) 
+                { 
+                    Globals.RuntimeErrors.Add(new UnknownSingleFindingError(method, ex));
                 }
             }
 
@@ -53,21 +61,28 @@ namespace Opperis.SAST.Engine.Analyzers
 
             foreach (var bindObject in walker.RazorPageBindObjects)
             {
-                foreach (var type in Globals.EntityFrameworkObjects)
+                try
                 {
-                    if (bindObject.ObjectType.Equals(type))
+                    foreach (var type in Globals.EntityFrameworkObjects)
                     {
-                        var finding = new OverpostingViaBindObject();
+                        if (bindObject.ObjectType.Equals(type))
+                        {
+                            var finding = new OverpostingViaBindObject();
 
-                        finding.RootLocation = new SourceLocation(bindObject.ObjectType);
+                            finding.RootLocation = new SourceLocation(bindObject.ObjectType);
 
-                        var callStack = new CallStack();
-                        callStack.AddLocation(bindObject.ObjectType);
-                        callStack.AddLocation(bindObject.ClassDeclaration);
-                        finding.CallStacks.Add(callStack);
+                            var callStack = new CallStack();
+                            callStack.AddLocation(bindObject.ObjectType);
+                            callStack.AddLocation(bindObject.ClassDeclaration);
+                            finding.CallStacks.Add(callStack);
 
-                        findings.Add(finding);
+                            findings.Add(finding);
+                        }
                     }
+                }
+                catch (Exception ex) 
+                {
+                    Globals.RuntimeErrors.Add(new UnknownSingleFindingError(bindObject.ClassDeclaration, ex));
                 }
             }
 

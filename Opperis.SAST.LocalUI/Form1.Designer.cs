@@ -37,6 +37,7 @@
             txtResultsFolder = new TextBox();
             btnChooseFolder = new Button();
             btnScan = new Button();
+            chkIncludeBindings = new CheckBox();
             SuspendLayout();
             // 
             // label1
@@ -98,7 +99,7 @@
             // 
             // btnScan
             // 
-            btnScan.Location = new Point(186, 132);
+            btnScan.Location = new Point(186, 166);
             btnScan.Name = "btnScan";
             btnScan.Size = new Size(118, 30);
             btnScan.TabIndex = 6;
@@ -106,11 +107,23 @@
             btnScan.UseVisualStyleBackColor = true;
             btnScan.Click += btnScan_Click;
             // 
+            // chkIncludeBindings
+            // 
+            chkIncludeBindings.AutoSize = true;
+            chkIncludeBindings.Location = new Point(12, 127);
+            chkIncludeBindings.Name = "chkIncludeBindings";
+            chkIncludeBindings.Size = new Size(185, 19);
+            chkIncludeBindings.TabIndex = 7;
+            chkIncludeBindings.Text = "Include diagnostics in output?";
+            chkIncludeBindings.TextAlign = ContentAlignment.MiddleRight;
+            chkIncludeBindings.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(465, 190);
+            ClientSize = new Size(465, 212);
+            Controls.Add(chkIncludeBindings);
             Controls.Add(btnScan);
             Controls.Add(btnChooseFolder);
             Controls.Add(txtResultsFolder);
@@ -135,5 +148,6 @@
         private TextBox txtResultsFolder;
         private Button btnChooseFolder;
         private Button btnScan;
+        private CheckBox chkIncludeBindings;
     }
 }

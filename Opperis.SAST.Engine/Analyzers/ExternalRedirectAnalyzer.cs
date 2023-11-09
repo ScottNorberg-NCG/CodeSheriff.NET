@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Opperis.SAST.Engine.ErrorHandling;
 using Opperis.SAST.Engine.Findings;
 using Opperis.SAST.Engine.Findings.Cryptography;
 using Opperis.SAST.Engine.Findings.ProgramFlow;
@@ -26,47 +27,54 @@ namespace Opperis.SAST.Engine.Analyzers
 
             foreach (var redirect in walker.UnvalidatedRedirects)
             {
-                foreach (var arg in redirect.ArgumentList.Arguments.Select(a => a.Expression))
+                try
                 {
-                    if (arg is IdentifierNameSyntax)
+                    foreach (var arg in redirect.ArgumentList.Arguments.Select(a => a.Expression))
                     {
-                        AddIfStringParameter(root, findings, arg, arg);
-                    }
-                    else if (arg is BinaryExpressionSyntax binary)
-                    {
-                        foreach (var expression in binary.GetNonLiteralPortions())
+                        if (arg is IdentifierNameSyntax)
                         {
-                            //TODO: Handle this
-                            if (expression is InvocationExpressionSyntax)
-                                continue;
+                            AddIfStringParameter(root, findings, arg, arg);
+                        }
+                        else if (arg is BinaryExpressionSyntax binary)
+                        {
+                            foreach (var expression in binary.GetNonLiteralPortions())
+                            {
+                                //TODO: Handle this
+                                if (expression is InvocationExpressionSyntax)
+                                    continue;
 
-                            AddIfStringParameter(root, findings, expression, expression);
+                                AddIfStringParameter(root, findings, expression, expression);
+                            }
+                        }
+                        else if (arg is InterpolatedStringExpressionSyntax interpolated)
+                        {
+                            foreach (var expression in interpolated.GetNonLiteralPortions())
+                            {
+                                //TODO: Handle this
+                                if (expression is InvocationExpressionSyntax)
+                                    continue;
+
+                                AddIfStringParameter(root, findings, expression, expression);
+                            }
+                        }
+                        else if (arg is MemberAccessExpressionSyntax member)
+                        {
+                            AddIfStringParameter(root, findings, member, member.Expression);
+                        }
+                        else if (arg is LiteralExpressionSyntax)
+                        {
+                            //Do nothing, not a finding
+                        }
+                        else
+                        {
+                            //Do nothing for now
+                            //throw new NotSupportedException();
                         }
                     }
-                    else if (arg is InterpolatedStringExpressionSyntax interpolated)
-                    {
-                        foreach (var expression in interpolated.GetNonLiteralPortions())
-                        {
-                            //TODO: Handle this
-                            if (expression is InvocationExpressionSyntax)
-                                continue;
-
-                            AddIfStringParameter(root, findings, expression, expression);
-                        }
-                    }
-                    else if (arg is MemberAccessExpressionSyntax member)
-                    {
-                        AddIfStringParameter(root, findings, member, member.Expression);
-                    }
-                    else if (arg is LiteralExpressionSyntax)
-                    {
-                        //Do nothing, not a finding
-                    }
-                    else
-                    {
-                        //Do nothing for now
-                        //throw new NotSupportedException();
-                    }
+                }
+                catch (Exception ex) 
+                {
+                    Globals.RuntimeErrors.Add(new UnknownSingleFindingError(redirect, ex));
                 }
             }
 

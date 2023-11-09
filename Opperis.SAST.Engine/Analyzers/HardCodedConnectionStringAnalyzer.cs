@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Opperis.SAST.Engine.ErrorHandling;
 using Opperis.SAST.Engine.Findings;
 using Opperis.SAST.Engine.Findings.Database;
 using Opperis.SAST.Engine.SyntaxWalkers;
@@ -23,20 +24,27 @@ namespace Opperis.SAST.Engine.Analyzers
 
             foreach (var connectionString in walker.ConnectionStringSets)
             {
-                if (connectionString.Parent is AssignmentExpressionSyntax assignment)
+                try
                 {
-                    if (assignment.Right is LiteralExpressionSyntax literal)
+                    if (connectionString.Parent is AssignmentExpressionSyntax assignment)
                     {
-                        BaseFinding finding;
+                        if (assignment.Right is LiteralExpressionSyntax literal)
+                        {
+                            BaseFinding finding;
 
-                        if (literal.ToString().Contains("Password"))
-                            finding = new HardCodedConnectionStringWithPassword();
-                        else
-                            finding = new HardCodedConnectionStringWithoutPassword();
+                            if (literal.ToString().Contains("Password"))
+                                finding = new HardCodedConnectionStringWithPassword();
+                            else
+                                finding = new HardCodedConnectionStringWithoutPassword();
 
-                        finding.RootLocation = new SourceLocation(assignment);
-                        findings.Add(finding);
+                            finding.RootLocation = new SourceLocation(assignment);
+                            findings.Add(finding);
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Globals.RuntimeErrors.Add(new UnknownSingleFindingError(connectionString, ex));
                 }
             }
 

@@ -44,7 +44,7 @@ namespace Opperis.SAST.Engine.SyntaxWalkers
 
             if (objectType != null)
             { 
-                var typeString = objectType.ToString();
+                var typeString = objectType.ToString().Replace("?", "");
 
                 if (typeString == "Microsoft.Data.SqlClient.SqlCommand" || typeString == "System.Data.SqlClient.SqlCommand" || typeString == "System.Data.Common.DbCommand")
                 {

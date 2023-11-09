@@ -12,8 +12,8 @@ namespace Opperis.SAST.IntegrationTests
     {
         static void Main(string[] args)
         {
-            //var solutionFilePath = "C:\\Users\\scott\\Source\\repos\\VulnerabilityBuffet2\\AspNetCore\\NCG.SecurityDetection.VulnerabilityBuffet.sln";
-            var solutionFilePath = "C:\\Users\\scott\\Downloads\\WebGoat.NETCore-master\\WebGoat.NET-master\\WebGoat.NET.sln";
+            var solutionFilePath = "C:\\Users\\scott\\Source\\repos\\VulnerabilityBuffet2\\AspNetCore\\NCG.SecurityDetection.VulnerabilityBuffet.sln";
+            //var solutionFilePath = "C:\\Users\\scott\\Downloads\\WebGoat.NETCore-master\\WebGoat.NET-master\\WebGoat.NET.sln";
 
             if (!MSBuildLocator.IsRegistered)
                 MSBuildLocator.RegisterDefaults();
@@ -35,7 +35,7 @@ namespace Opperis.SAST.IntegrationTests
                 //    }
                 //}
 
-                var sqlInjections = SqlInjectionProcessor.GetSqlInjections();
+                var hardCodedIVs = SymmetricAlgorithmPropertyProcessor.GetAllHardCodedIVs();
                 int i = 1;
 
                 TestCookieConfigurationIssues();
@@ -172,8 +172,8 @@ namespace Opperis.SAST.IntegrationTests
         private static void TestUnprotectedRedirects()
         {
             var redirects = RedirectProcessor.GetAllExternalRedirects();
-            Assert.AreEqual(2, redirects.Count, "Expected number of unprotected redirects");
-            Assert.AreEqual(2, redirects.Count(r => r.GetType().ToString() == "Opperis.SAST.Engine.Findings.ProgramFlow.UnprotectedExternalRedirect"), "All external redirects are the correct type");
+            Assert.AreEqual(5, redirects.Count, "Expected number of unprotected redirects");
+            Assert.AreEqual(5, redirects.Count(r => r.GetType().ToString() == "Opperis.SAST.Engine.Findings.ProgramFlow.UnprotectedExternalRedirect"), "All external redirects are the correct type");
             Assert.AllRootLocationsSet(redirects, "TestUnprotectedRedirects");
         }
 

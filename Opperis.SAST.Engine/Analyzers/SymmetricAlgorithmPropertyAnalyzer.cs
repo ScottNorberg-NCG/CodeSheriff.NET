@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.FindSymbols;
+using Opperis.SAST.Engine.ErrorHandling;
 using Opperis.SAST.Engine.Findings;
 using Opperis.SAST.Engine.Findings.Cryptography;
 using Opperis.SAST.Engine.RoslynObjectExtensions;
@@ -29,47 +30,54 @@ namespace Opperis.SAST.Engine.Analyzers
             //  depending on where the finding was located
             foreach (var access in walker.CryptoKeySets)
             {
-                var parent = access.Parent as AssignmentExpressionSyntax;
-
-                if (parent.Right is IdentifierNameSyntax name)
+                try
                 {
-                    var asSymbol = name.ToSymbol();
-                    var definition = SymbolFinder.FindSourceDefinitionAsync(asSymbol, Globals.Solution).Result;
+                    var parent = access.Parent as AssignmentExpressionSyntax;
 
-                    var node = root.FindNode(definition.Locations.First().SourceSpan);
-
-                    if (node is VariableDeclaratorSyntax variable)
+                    if (parent.Right is IdentifierNameSyntax name)
                     {
-                        if (variable.Initializer != null && variable.Initializer.Value is ArrayCreationExpressionSyntax array)
+                        var asSymbol = name.ToSymbol();
+                        var definition = SymbolFinder.FindSourceDefinitionAsync(asSymbol, Globals.Solution).Result;
+
+                        var node = root.FindNode(definition.Locations.First().SourceSpan);
+
+                        if (node is VariableDeclaratorSyntax variable)
                         {
-                            var finding = new HardCodedCryptographyKey();
-                            finding.RootLocation = new SourceLocation(parent.Right);
+                            if (variable.Initializer != null && variable.Initializer.Value is ArrayCreationExpressionSyntax array)
+                            {
+                                var finding = new HardCodedCryptographyKey();
+                                finding.RootLocation = new SourceLocation(parent.Right);
 
-                            var callStack = new CallStack();
-                            callStack.Locations.Add(new SourceLocation(parent.Right));
-                            callStack.Locations.Add(new SourceLocation(array));
-                            finding.CallStacks.Add(callStack);
+                                var callStack = new CallStack();
+                                callStack.Locations.Add(new SourceLocation(parent.Right));
+                                callStack.Locations.Add(new SourceLocation(array));
+                                finding.CallStacks.Add(callStack);
 
-                            finding.RedactAllByteArrays();
+                                finding.RedactAllByteArrays();
 
-                            findings.Add(finding);
-                        }
-                        else
-                        {
-                            //TBD
+                                findings.Add(finding);
+                            }
+                            else
+                            {
+                                //TBD
+                            }
                         }
                     }
+                    else if (parent.Right is ArrayCreationExpressionSyntax array)
+                    {
+                        var finding = new HardCodedCryptographyKey();
+                        finding.RootLocation = new SourceLocation(parent);
+                        finding.RedactAllByteArrays();
+                        findings.Add(finding);
+                    }
+                    else
+                    {
+                        //Do nothing, may still be hard-coded via a method, but we'll handle that possibility later
+                    }
                 }
-                else if (parent.Right is ArrayCreationExpressionSyntax array)
+                catch (Exception ex) 
                 {
-                    var finding = new HardCodedCryptographyKey();
-                    finding.RootLocation = new SourceLocation(parent);
-                    finding.RedactAllByteArrays();
-                    findings.Add(finding);
-                }
-                else
-                {
-                    //Do nothing, may still be hard-coded via a method, but we'll handle that possibility later
+                    Globals.RuntimeErrors.Add(new UnknownSingleFindingError(access, ex));
                 }
             }
 
@@ -85,47 +93,54 @@ namespace Opperis.SAST.Engine.Analyzers
 
             foreach (var access in walker.CryptoIVSets)
             {
-                var parent = access.Parent as AssignmentExpressionSyntax;
-
-                if (parent.Right is IdentifierNameSyntax name)
+                try
                 {
-                    var asSymbol = name.ToSymbol();
-                    var definition = SymbolFinder.FindSourceDefinitionAsync(asSymbol, Globals.Solution).Result;
+                    var parent = access.Parent as AssignmentExpressionSyntax;
 
-                    var node = root.FindNode(definition.Locations.First().SourceSpan);
-
-                    if (node is VariableDeclaratorSyntax variable)
+                    if (parent.Right != null && parent.Right is IdentifierNameSyntax name)
                     {
-                        if (variable.Initializer != null && variable.Initializer.Value is ArrayCreationExpressionSyntax array)
+                        var asSymbol = name.ToSymbol();
+                        var definition = SymbolFinder.FindSourceDefinitionAsync(asSymbol, Globals.Solution).Result;
+
+                        var node = root.FindNode(definition.Locations.First().SourceSpan);
+
+                        if (node is VariableDeclaratorSyntax variable)
                         {
-                            var finding = new HardCodedCryptographyIV();
-                            finding.RootLocation = new SourceLocation(parent.Right);
+                            if (variable.Initializer != null && variable.Initializer.Value is ArrayCreationExpressionSyntax array)
+                            {
+                                var finding = new HardCodedCryptographyIV();
+                                finding.RootLocation = new SourceLocation(parent.Right);
 
-                            var callStack = new CallStack();
-                            callStack.Locations.Add(new SourceLocation(parent.Right));
-                            callStack.Locations.Add(new SourceLocation(array));
-                            finding.CallStacks.Add(callStack);
+                                var callStack = new CallStack();
+                                callStack.Locations.Add(new SourceLocation(parent.Right));
+                                callStack.Locations.Add(new SourceLocation(array));
+                                finding.CallStacks.Add(callStack);
 
-                            finding.RedactAllByteArrays();
+                                finding.RedactAllByteArrays();
 
-                            findings.Add(finding);
-                        }
-                        else
-                        {
-                            //TBD
+                                findings.Add(finding);
+                            }
+                            else
+                            {
+                                //TBD
+                            }
                         }
                     }
+                    else if (parent.Right is ArrayCreationExpressionSyntax array)
+                    {
+                        var finding = new HardCodedCryptographyIV();
+                        finding.RootLocation = new SourceLocation(parent);
+                        finding.RedactAllByteArrays();
+                        findings.Add(finding);
+                    }
+                    else
+                    {
+                        //Do nothing, may still be hard-coded via a method, but we'll handle that possibility later
+                    }
                 }
-                else if (parent.Right is ArrayCreationExpressionSyntax array)
+                catch (Exception ex)
                 {
-                    var finding = new HardCodedCryptographyIV();
-                    finding.RootLocation = new SourceLocation(parent);
-                    finding.RedactAllByteArrays();
-                    findings.Add(finding);
-                }
-                else
-                {
-                    //Do nothing, may still be hard-coded via a method, but we'll handle that possibility later
+                    Globals.RuntimeErrors.Add(new UnknownSingleFindingError(access, ex));
                 }
             }
 
@@ -141,20 +156,27 @@ namespace Opperis.SAST.Engine.Analyzers
 
             foreach (var access in walker.CryptoModeSets)
             {
-                var parent = access.Parent as AssignmentExpressionSyntax;
-
-                if (parent.Right is MemberAccessExpressionSyntax member)
+                try
                 {
-                    if (member.GetText().ToString() == "CipherMode.ECB")
+                    var parent = access.Parent as AssignmentExpressionSyntax;
+
+                    if (parent.Right is MemberAccessExpressionSyntax member)
                     {
-                        var finding = new UseOfECBMode();
-                        finding.RootLocation = new SourceLocation(member);
-                        findings.Add(finding);
+                        if (member.GetText().ToString() == "CipherMode.ECB")
+                        {
+                            var finding = new UseOfECBMode();
+                            finding.RootLocation = new SourceLocation(member);
+                            findings.Add(finding);
+                        }
+                    }
+                    else
+                    {
+                        //Probably nothing to do
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    //Probably nothing to do
+                    Globals.RuntimeErrors.Add(new UnknownSingleFindingError(access, ex));
                 }
             }
 

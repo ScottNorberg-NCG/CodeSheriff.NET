@@ -19,12 +19,12 @@ namespace Opperis.SAST.IntegrationTests
                 }
                 else
                 {
-                    Console.WriteLine($"FAILED: Expected {expected}, Actual {actual}, {message}");
+                    WriteError($"FAILED: Expected {expected}, Actual {actual}, {message}");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"FAILED: AreEqual for test {message} threw exception {ex.Message}");
+                WriteError($"FAILED: AreEqual for test {message} threw exception {ex.Message}");
             }
         }
 
@@ -38,12 +38,12 @@ namespace Opperis.SAST.IntegrationTests
                 }
                 else
                 {
-                    Console.WriteLine($"FAILED: IsTrue Failed, {message}");
+                    WriteError($"FAILED: IsTrue Failed, {message}");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"FAILED: IsTrue for test {message} threw exception {ex.Message}");
+                WriteError($"FAILED: IsTrue for test {message} threw exception {ex.Message}");
             }
         }
 
@@ -57,13 +57,20 @@ namespace Opperis.SAST.IntegrationTests
                 }
                 else
                 {
-                    Console.WriteLine($"FAILED: Null RootLocation values for {message}");
+                    WriteError($"FAILED: Null RootLocation values for {message}");
                 } 
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"FAILED: IsTrue for test {message} threw exception {ex.Message}");
+                WriteError($"FAILED: IsTrue for test {message} threw exception {ex.Message}");
             }
+        }
+
+        private static void WriteError(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(message);
+            Console.ForegroundColor = ConsoleColor.White;
         }
     }
 }

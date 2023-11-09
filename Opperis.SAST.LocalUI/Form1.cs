@@ -32,6 +32,8 @@ namespace Opperis.SAST.LocalUI
 
         private void btnScan_Click(object sender, EventArgs e)
         {
+            Globals.ClearErrors();
+
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             var findings = Scanner.Scan(txtSolutionFile.Text);
@@ -74,7 +76,21 @@ namespace Opperis.SAST.LocalUI
                 content.AppendLine("</div>");
             }
 
-            content.AppendLine("</table>");
+            if (chkIncludeBindings.Checked)
+            {
+                content.AppendLine("<h2>Diagnostic info</h2>");
+                foreach (var error in Globals.RuntimeErrors)
+                {
+                    var stackTrace = error.BaseException != null ? error.BaseException.ToString() : "N/A";
+
+                    content.AppendLine("<div>");
+                    content.AppendLine($"<div>Error cause: {error.CodeLocation.ToString()}</div>");
+                    content.AppendLine($"<div><pre>Stack trace: {stackTrace}</pre></div>");
+                    content.AppendLine("<hr />");
+                    content.AppendLine("</div>");
+                }
+            }
+
             content.AppendLine($"<p>Scan completed in {stopwatch.Elapsed.Minutes} minutes and {stopwatch.Elapsed.Seconds} seconds</p>");
             content.AppendLine("</body>");
             content.AppendLine("</html>");

@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Opperis.SAST.Engine.ErrorHandling;
 using Opperis.SAST.Engine.SyntaxWalkers;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,8 @@ namespace Opperis.SAST.Engine
     {
         public static Solution Solution { get; set; }
         public static Compilation Compilation { get; set; }
+
+        public static List<BaseError> RuntimeErrors { get; private set; } = new List<BaseError>();
 
         private static List<MethodDeclarationSyntax>? _solutionControllerMethods;
 
@@ -57,6 +60,11 @@ namespace Opperis.SAST.Engine
 
                 return _razorPageBindObjects;
             }
+        }
+
+        internal static void ClearErrors()
+        {
+            RuntimeErrors = new List<BaseError>();
         }
 
         private static void LoadGlobalLists()
