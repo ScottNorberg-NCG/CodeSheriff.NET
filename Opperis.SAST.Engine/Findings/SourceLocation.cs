@@ -16,6 +16,7 @@ namespace Opperis.SAST.Engine.Findings
         {
             ClassConstructor,
             ClassDeclaration,
+            ClassField,
             ClassProperty,
 
             CshtmlFile,
@@ -189,6 +190,10 @@ namespace Opperis.SAST.Engine.Findings
             else if (symbol is IPropertySymbol)
             {
                 this.LocationType = SyntaxType.ClassProperty;
+            }
+            else if (symbol is IFieldSymbol)
+            {
+                this.LocationType = SyntaxType.ClassField;
             }
             else
             {

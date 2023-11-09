@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Opperis.SAST.Engine.RoslynObjectExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,8 +18,7 @@ namespace Opperis.SAST.Engine.SyntaxWalkers
             if (node.Expression is MemberAccessExpressionSyntax memberAccess &&
                 memberAccess.Name.Identifier.Text == "Raw")
             {
-                var model = Globals.Compilation.GetSemanticModel(node.SyntaxTree);
-                var symbol = model.GetSymbolInfo(memberAccess).Symbol;
+                var symbol = memberAccess.ToSymbol();
 
                 if (symbol != null && symbol.ContainingType.Name == "IHtmlHelper")
                 {

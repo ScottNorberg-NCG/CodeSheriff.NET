@@ -35,9 +35,7 @@ namespace Opperis.SAST.IntegrationTests
                 //    }
                 //}
 
-                var hardCodedIVs = SymmetricAlgorithmPropertyProcessor.GetAllHardCodedIVs();
-                int i = 1;
-
+                TestFileManipulationIssues();
                 TestCookieConfigurationIssues();
                 TestHtmlHelperXssIssues();
                 TestOverpostingInRazorPages();
@@ -54,6 +52,15 @@ namespace Opperis.SAST.IntegrationTests
                 TestUnprotectedRedirects();
                 TestSymmetricAlgorithms();
             }
+        }
+
+        private static void TestFileManipulationIssues()
+        {
+            var fileManipulations = FileManipulationProcessor.GetFileManipulations();
+            //WriteFindingsToConsole(fileManipulations);
+            Assert.AreEqual(2, fileManipulations.Count, "Expected number of file manipulation issues");
+            Assert.AreEqual(2, fileManipulations.Select(c => c.GetType().ToString()).Distinct().Count(), "Number of distinct types of file manipulation issues");
+            Assert.AllRootLocationsSet(fileManipulations, "TestFileManipulationIssues");
         }
 
         private static void TestCookieConfigurationIssues()

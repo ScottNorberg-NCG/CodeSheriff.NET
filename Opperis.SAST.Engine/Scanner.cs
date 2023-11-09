@@ -85,6 +85,9 @@ namespace Opperis.SAST.Engine
 
                         var cookieConfigurationWalker = new CookieAppendSyntaxWalker();
                         findings.AddRange(CookieConfigurationAnalyzer.FindMisconfiguredCookies(cookieConfigurationWalker, root));
+
+                        var fileManipulationWalker = new FileManipulationSyntaxWalker();
+                        findings.AddRange(FileManipulationAnalyzer.FindFileManipulations(fileManipulationWalker, root));
                     }
                 }
             }

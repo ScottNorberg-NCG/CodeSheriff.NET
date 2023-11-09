@@ -97,10 +97,7 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
             {
                 baseCallStack.AddLocation(id);
 
-                foreach (var callStack in GetDefinitionExpression(id, baseCallStack))
-                {
-                    result.Add(callStack);
-                }
+                result.AddRange(GetDefinitionExpression(id, baseCallStack));
             }
             else if (expression is BinaryExpressionSyntax binary)
             {
@@ -108,26 +105,8 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
 
                 foreach (var variable in binary.GetNonLiteralPortions())
                 {
-                    //TODO: It's probably correct to change this so if it's processable by GetCallStacksRecursive then do it there
-                    if (variable is InterpolatedStringExpressionSyntax interpolated)
-                    {
-                        baseCallStack.AddLocation(variable);
-
-                        foreach (var interpVariable in interpolated.GetNonLiteralPortions())
-                        {
-                            foreach (var callStack in GetDefinitionExpression(interpVariable, baseCallStack))
-                            {
-                                result.Add(callStack);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        foreach (var callStack in GetDefinitionExpression(variable, baseCallStack))
-                        {
-                            result.Add(callStack);
-                        }
-                    }
+                    var localCallStack = baseCallStack.Clone();
+                    result.AddRange(GetCallStacksRecursive(variable, localCallStack));
                 }
             }
             else if (expression is InterpolatedStringExpressionSyntax interpolated)
@@ -136,10 +115,7 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
 
                 foreach (var variable in interpolated.GetNonLiteralPortions())
                 {
-                    foreach (var callStack in GetDefinitionExpression(variable, baseCallStack))
-                    {
-                        result.Add(callStack);
-                    }
+                    result.AddRange(GetDefinitionExpression(variable, baseCallStack));
                 }
             }
             else if (expression is InvocationExpressionSyntax invocation)
@@ -156,10 +132,7 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
 
                         if (!(arg is LiteralExpressionSyntax))
                         {
-                            foreach (var cs in arg.GetCallStacksRecursive(baseCallStack))
-                            {
-                                result.Add(cs);
-                            }
+                            result.AddRange(arg.GetCallStacksRecursive(baseCallStack));
                         }
                     }
                 }
@@ -172,10 +145,7 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
             {
                 baseCallStack.AddLocation(member);
 
-                foreach (var callStack in GetDefinitionExpression(member, baseCallStack))
-                {
-                    result.Add(callStack);
-                }
+                result.AddRange(GetDefinitionExpression(member, baseCallStack));
             }
             else
             {
@@ -193,7 +163,9 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
 
             var asSymbol = expression.ToSymbol();
 
-            if (asSymbol != null)
+            var localCallStack = baseCallStack.Clone();
+
+            if (asSymbol != null && asSymbol.Locations.Any())
             {
                 if (asSymbol is IParameterSymbol parameterSymbol)
                 {
@@ -201,42 +173,41 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
 
                     if (containingMethod != null)
                     {
-                        baseCallStack.Locations.Add(new SourceLocation(containingMethod));
+                        localCallStack.Locations.Add(new SourceLocation(containingMethod));
 
-                        foreach (var reference in containingMethod.CrawlTrees(baseCallStack))
-                        {
-                            result.Add(reference);
-                        }
+                        result.AddRange(containingMethod.CrawlTrees(localCallStack));
                     }
                 }
                 else if (asSymbol is ILocalSymbol localSymbol)
                 {
-                    baseCallStack.Locations.Add(new SourceLocation(localSymbol));
+                    localCallStack.Locations.Add(new SourceLocation(localSymbol));
 
                     var syntax = localSymbol.DeclaringSyntaxReferences.Single().GetSyntax();
                     var parent = syntax.Parent as VariableDeclarationSyntax;
 
-                    var callStacks = GetCallStacksRecursive(parent.Variables.First().Initializer.Value, baseCallStack);
-
-                    foreach (var cs in callStacks)
-                        result.Add(cs);
+                    result.AddRange(GetCallStacksRecursive(parent.Variables.First().Initializer.Value, localCallStack));
                 }
                 else if (asSymbol is IFieldSymbol fieldSymbol)
                 {
-                    baseCallStack.Locations.Add(new SourceLocation(fieldSymbol));
-                    result.Add(baseCallStack);
+                    localCallStack.Locations.Add(new SourceLocation(fieldSymbol));
+                    result.Add(localCallStack);
                 }
                 else if (asSymbol is IPropertySymbol propertySymbol)
                 {
-                    baseCallStack.Locations.Add(new SourceLocation(propertySymbol));
-                    result.Add(baseCallStack);
+                    //Calling method should have added this already
+                    //localCallStack.Locations.Add(new SourceLocation(propertySymbol));
+                    if (expression is MemberAccessExpressionSyntax member)
+                    {
+                        result.AddRange(GetCallStacksRecursive(member.Expression, localCallStack));
+                    }
+                    else
+                    {
+                        result.Add(localCallStack);
+                    }
                 }
                 else if (asSymbol is IMethodSymbol methodSymbol)
                 {
-                    foreach (var reference in methodSymbol.CrawlTrees(baseCallStack))
-                    {
-                        result.Add(reference);
-                    }
+                    result.AddRange(methodSymbol.CrawlTrees(localCallStack));
                 }
             }
 
