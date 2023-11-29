@@ -14,17 +14,23 @@ namespace Opperis.SAST.Engine.SyntaxWalkers
     {
         public List<MethodDeclarationSyntax> Methods { get; private set; } = new List<MethodDeclarationSyntax>();
 
-        public override void VisitClassDeclaration(ClassDeclarationSyntax node)
-        {
-            if (node.InheritsFrom("Microsoft.AspNetCore.Mvc.Controller") || node.InheritsFrom("System.Web.Mvc.Controller"))
-                base.VisitClassDeclaration(node);
-        }
+        //public override void VisitClassDeclaration(ClassDeclarationSyntax node)
+        //{
+        //    if (node.InheritsFrom("Microsoft.AspNetCore.Mvc.Controller") || node.InheritsFrom("System.Web.Mvc.Controller"))
+        //        base.VisitClassDeclaration(node);
+        //}
 
         public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
         {
-            if (node.Modifiers.Any(modifier => modifier.IsKind(SyntaxKind.PublicKeyword)))
+            if (node.Parent is ClassDeclarationSyntax classDeclaration)
             {
-                Methods.Add(node);
+                if (classDeclaration.InheritsFrom("Microsoft.AspNetCore.Mvc.Controller") || classDeclaration.InheritsFrom("System.Web.Mvc.Controller"))
+                {
+                    if (node.Modifiers.Any(modifier => modifier.IsKind(SyntaxKind.PublicKeyword)))
+                    {
+                        Methods.Add(node);
+                    }
+                }
             }
         }
     }

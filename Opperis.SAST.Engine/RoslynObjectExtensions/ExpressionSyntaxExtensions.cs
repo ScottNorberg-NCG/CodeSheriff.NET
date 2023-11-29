@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.FindSymbols;
+using Opperis.SAST.Engine.ErrorHandling;
 using Opperis.SAST.Engine.Findings;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,13 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
     {
         internal static ISymbol ToSymbol(this ExpressionSyntax expression)
         {
-            var model = Globals.Compilation.GetSemanticModel(expression.SyntaxTree);
+            SemanticModel model;
+            
+            if (Globals.Compilation.ContainsSyntaxTree(expression.SyntaxTree))
+                model = Globals.Compilation.GetSemanticModel(expression.SyntaxTree);
+            else
+                model = Globals.SearchForSemanticModel(expression.SyntaxTree);
+
             return model.GetSymbolInfo(expression).Symbol;
         }
 
@@ -73,7 +80,8 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
             }
             else
             {
-                //It would be better to throw an exception here, but this can be triggered for one-off methods
+                Globals.RuntimeErrors.Add(new CannotFindUnderlyingType(expression));
+                
                 return null;
             }
         }
@@ -173,7 +181,8 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
 
                     if (containingMethod != null)
                     {
-                        localCallStack.Locations.Add(new SourceLocation(containingMethod));
+                        //Skip this - CrawlTrees adds the location (might not be intuitive - refactor?)
+                        //localCallStack.Locations.Add(new SourceLocation(containingMethod));
 
                         result.AddRange(containingMethod.CrawlTrees(localCallStack));
                     }

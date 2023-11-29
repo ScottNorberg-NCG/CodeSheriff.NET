@@ -35,6 +35,9 @@ namespace Opperis.SAST.Engine.SyntaxWalkers
 
         private bool IsDatabaseConnectionMethod(MemberAccessExpressionSyntax memberAccess)
         {
+            if (memberAccess.Name.Identifier.Text != "CommandText")
+                return false;
+
             var identifierName = memberAccess.Expression as IdentifierNameSyntax;
 
             if (identifierName == null)
@@ -48,7 +51,7 @@ namespace Opperis.SAST.Engine.SyntaxWalkers
 
                 if (typeString == "Microsoft.Data.SqlClient.SqlCommand" || typeString == "System.Data.SqlClient.SqlCommand" || typeString == "System.Data.Common.DbCommand")
                 {
-                    return memberAccess.Name.Identifier.Text == "CommandText";
+                    return true;
                 }            
             }
 

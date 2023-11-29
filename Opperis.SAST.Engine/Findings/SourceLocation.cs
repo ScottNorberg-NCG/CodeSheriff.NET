@@ -25,6 +25,8 @@ namespace Opperis.SAST.Engine.Findings
 
             InterpolatedString,
 
+            Literal,
+
             MethodArgument,
             MethodCall,
             MethodDeclaration,
@@ -36,6 +38,8 @@ namespace Opperis.SAST.Engine.Findings
 
             VariableAssignment,
             VariableCreation,
+
+            Unknown
         }
 
         public string Text { get; set; }
@@ -96,8 +100,33 @@ namespace Opperis.SAST.Engine.Findings
                 this.Text = constructor.ToString();
                 this.LocationType = SyntaxType.ClassConstructor;
             }
+            else if (symbol is QualifiedNameSyntax name)
+            {
+                this.Text = name.ToString();
+                this.LocationType = SyntaxType.Unknown;
+            }
+            else if (symbol is GenericNameSyntax genericName)
+            {
+                this.Text = genericName.ToString();
+                this.LocationType = SyntaxType.Unknown;
+            }
+            else if (symbol is LiteralExpressionSyntax literal)
+            {
+                this.Text = literal.ToString();
+                this.LocationType = SyntaxType.Literal;
+            }
+            else if (symbol is PredefinedTypeSyntax predefinedType)
+            {
+                this.Text = predefinedType.ToString();
+                this.LocationType = SyntaxType.Literal;
+            }
+            else if (symbol is NullableTypeSyntax nullableType)
+            {
+                this.Text = nullableType.ToString();
+                this.LocationType = SyntaxType.Literal;
+            }
             else
-                throw new NotImplementedException();
+                throw new NotImplementedException($"Cannot find text and location type for an object of type {symbol.GetType()}");
         }
 
         public SourceLocation(MethodDeclarationSyntax symbol)
@@ -148,8 +177,19 @@ namespace Opperis.SAST.Engine.Findings
                 this.Text = structSyntax.Identifier.Text;
                 this.LocationType = SyntaxType.StructDeclaration;
             }
+            else if (symbol is RecordDeclarationSyntax record)
+            { 
+                this.Text = record.Identifier.Text;
+
+                if (record.ClassOrStructKeyword.Text == "struct")
+                    this.LocationType = SyntaxType.StructDeclaration;
+                else if (record.ClassOrStructKeyword.Text == "class")
+                    this.LocationType = SyntaxType.ClassDeclaration;
+                else
+                    this.LocationType = SyntaxType.Unknown; //Probably should throw some sort of exception here instead
+            }
             else
-                throw new NotImplementedException();
+                throw new NotImplementedException($"Could not find text and location type for symbol type {symbol.GetType().Name}");
         }
 
         public SourceLocation(ISymbol symbol)
@@ -218,7 +258,7 @@ namespace Opperis.SAST.Engine.Findings
 
             var other = obj as SourceLocation;
 
-            return other.LineNumber == this.LineNumber && other.FilePath == this.FilePath && other.Text == this.Text;
+            return other.LineNumber == this.LineNumber && other.FilePath == this.FilePath && other.Text == this.Text && this.GetType() == obj.GetType();
         }
     }
 }

@@ -148,7 +148,7 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
 
         internal static ISymbol ToSymbol(this MethodDeclarationSyntax syntax)
         {
-            var model = Globals.Compilation.GetSemanticModel(syntax.SyntaxTree);
+            var model = Globals.SearchForSemanticModel(syntax.SyntaxTree);
 
             var symbolInfo = model.GetSymbolInfo(syntax);
 
@@ -158,6 +158,19 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
                 return symbolInfo.Symbol;
             else
                 return model.GetDeclaredSymbol(syntax);
+        }
+
+        internal static bool IsTestMethod(this MethodDeclarationSyntax syntax)
+        {
+            var model = Globals.SearchForSemanticModel(syntax.SyntaxTree);
+
+            foreach (var list in syntax.AttributeLists)
+            {
+                if (list.Attributes.Any(a => a.IsTestAttribute(model)))
+                    return true;
+            }
+
+            return false;
         }
 
         internal class HttpMethodInfo

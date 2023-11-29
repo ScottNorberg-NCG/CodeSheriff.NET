@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 
 namespace Opperis.SAST.Engine.ErrorHandling
 {
-    internal abstract class BaseError
+    internal abstract class BaseError : ApplicationException
     {
         internal enum ErrorCategory
         { 
+            CannotFindUnderlyingType,
+            NoSymbolForExpression,
             UnknownForSingleFinding
         }
 

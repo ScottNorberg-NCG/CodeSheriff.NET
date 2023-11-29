@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Host;
 using Opperis.SAST.Engine.ErrorHandling;
 using Opperis.SAST.Engine.SyntaxWalkers;
 using System;
@@ -66,6 +67,21 @@ namespace Opperis.SAST.Engine
         {
             RuntimeErrors = new List<BaseError>();
         }
+
+        internal static SemanticModel? SearchForSemanticModel(SyntaxTree tree)
+        {
+            foreach (var project in Solution.Projects)
+            {
+                var compilation = project.GetCompilationAsync().Result;
+
+                if (compilation.ContainsSyntaxTree(tree))
+                    return compilation.GetSemanticModel(tree);
+            }
+
+            return null;
+        }
+
+        internal static int MaxCallStackCount => 50;
 
         private static void LoadGlobalLists()
         {

@@ -34,7 +34,7 @@ namespace Opperis.SAST.Engine.SyntaxWalkers
                 }
             }
 
-            base.VisitInvocationExpression(node);
+            //base.VisitInvocationExpression(node);
         }
     }
 }

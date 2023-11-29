@@ -27,7 +27,7 @@ namespace Opperis.SAST.Engine.Analyzers
                     {
                         foreach (var type in Globals.EntityFrameworkObjects)
                         {
-                            if (parameter.Type.GetUnderlyingType().Equals(type))
+                            if (type.Equals(parameter.Type.GetUnderlyingType()))
                             {
                                 var finding = new OverpostingViaControllerMethod();
 

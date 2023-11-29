@@ -9,6 +9,12 @@ namespace Opperis.SAST.LocalUI
         public Form1()
         {
             InitializeComponent();
+
+#if DEBUG
+            txtResultsFolder.Text = "C:\\temp\\ScanResults";
+            txtSolutionFile.Text = "C:\\Users\\scott\\Downloads\\sentry-dotnet-main\\sentry-dotnet-main\\Sentry.NoMobile.sln";
+            chkIncludeBindings.Checked = true;
+#endif
         }
 
         private void btnChooseSolution_Click(object sender, EventArgs e)
@@ -84,7 +90,8 @@ namespace Opperis.SAST.LocalUI
                     var stackTrace = error.BaseException != null ? error.BaseException.ToString() : "N/A";
 
                     content.AppendLine("<div>");
-                    content.AppendLine($"<div>Error cause: {error.CodeLocation.ToString()}</div>");
+                    content.AppendLine($"<div>Type: {error.Category.ToString()}</div>");
+                    content.AppendLine($"<div>Source Code Location: {error.CodeLocation.ToString()}</div>");
                     content.AppendLine($"<div><pre>Stack trace: {stackTrace}</pre></div>");
                     content.AppendLine("<hr />");
                     content.AppendLine("</div>");

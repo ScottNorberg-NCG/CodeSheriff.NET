@@ -17,7 +17,8 @@ namespace Opperis.SAST.Engine.SyntaxWalkers
         {
             if (node.IsExtensionMethod())
             {
-                if (node.ReturnType.GetUnderlyingType().ToDisplayString() == "Microsoft.AspNetCore.Html.IHtmlContent" && 
+                if (node.ReturnType.GetUnderlyingType() != null && //Likely due to return type of "void"
+                    node.ReturnType.GetUnderlyingType().ToDisplayString() == "Microsoft.AspNetCore.Html.IHtmlContent" && 
                     node.ParameterList.Parameters.First().Type.GetUnderlyingType().ToDisplayString() == "Microsoft.AspNetCore.Mvc.Rendering.IHtmlHelper")
                 {
                     bool hasEncoder = false;

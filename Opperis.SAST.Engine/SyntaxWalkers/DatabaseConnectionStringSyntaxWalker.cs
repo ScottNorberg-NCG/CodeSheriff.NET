@@ -17,6 +17,13 @@ namespace Opperis.SAST.Engine.SyntaxWalkers
 
         public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
         {
+            if (node.Parent is ClassDeclarationSyntax classDeclaration &&
+                classDeclaration.IsTestClass())
+            {
+                base.VisitMethodDeclaration(node);
+                return;
+            }
+            
             foreach (var child in node.DescendantNodes())
             {
                 var member = child as MemberAccessExpressionSyntax;
@@ -45,6 +52,9 @@ namespace Opperis.SAST.Engine.SyntaxWalkers
 
         private bool IsDatabaseConnectionSet(MemberAccessExpressionSyntax memberAccess)
         {
+            if (memberAccess.Name.Identifier.Text != "ConnectionString")
+                return false;
+
             if (memberAccess.Expression is IdentifierNameSyntax identifierName)
             {
                 var objectType = identifierName.GetUnderlyingType();
@@ -55,7 +65,7 @@ namespace Opperis.SAST.Engine.SyntaxWalkers
 
                     if (typeString == "Microsoft.Data.SqlClient.SqlConnection" || typeString == "System.Data.SqlClient.SqlConnection")
                     {
-                        return memberAccess.Name.Identifier.Text == "ConnectionString";
+                        return true;
                     }
                 }
             }

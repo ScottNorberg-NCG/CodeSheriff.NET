@@ -29,7 +29,7 @@ namespace Opperis.SAST.Engine.Analyzers
                 {
                     var parent = access.Parent as AssignmentExpressionSyntax;
 
-                    if (parent.Right is LiteralExpressionSyntax)
+                    if (parent == null || parent.Right is LiteralExpressionSyntax)
                         continue;
                     else
                     {

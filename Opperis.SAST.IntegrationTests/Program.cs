@@ -12,8 +12,9 @@ namespace Opperis.SAST.IntegrationTests
     {
         static void Main(string[] args)
         {
-            var solutionFilePath = "C:\\Users\\scott\\Source\\repos\\VulnerabilityBuffet2\\AspNetCore\\NCG.SecurityDetection.VulnerabilityBuffet.sln";
+            //var solutionFilePath = "C:\\Users\\scott\\Source\\repos\\VulnerabilityBuffet2\\AspNetCore\\NCG.SecurityDetection.VulnerabilityBuffet.sln";
             //var solutionFilePath = "C:\\Users\\scott\\Downloads\\WebGoat.NETCore-master\\WebGoat.NET-master\\WebGoat.NET.sln";
+            var solutionFilePath = "C:\\Users\\scott\\Downloads\\sentry-dotnet-main\\sentry-dotnet-main\\Sentry.NoMobile.sln";
 
             if (!MSBuildLocator.IsRegistered)
                 MSBuildLocator.RegisterDefaults();

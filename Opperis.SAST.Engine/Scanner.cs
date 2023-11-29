@@ -1,4 +1,5 @@
 ﻿using Microsoft.Build.Locator;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
 using Opperis.SAST.Engine.Analyzers;
 using Opperis.SAST.Engine.ErrorHandling;
@@ -34,14 +35,9 @@ namespace Opperis.SAST.Engine
 
                     foreach (var cshtmlFile in project.AdditionalDocuments.Where(d => d.FilePath.EndsWith(".cshtml")))
                     {
-                        var scripts = CSHtmlScriptTagParser.GetScriptTags(cshtmlFile.GetTextAsync().Result.ToString());
-                        findings.AddRange(CSHtmlScriptTagParser.ParseJavaScriptFindings(scripts, cshtmlFile));
-
-                        var links = CSHtmlLinkTagParser.GetLinkTags(cshtmlFile.GetTextAsync().Result.ToString());
-                        findings.AddRange(CSHtmlLinkTagParser.ParseLinkTagFindings(links, cshtmlFile));
-
-                        var styleTags = CSHtmlStyleTagParser.GetStyleTags(cshtmlFile.GetTextAsync().Result.ToString());
-                        findings.AddRange(CSHtmlStyleTagParser.ParseStyleTagFindings(styleTags, cshtmlFile));
+                        ParseJavaScriptTags(findings, cshtmlFile);
+                        ParseLinkTags(findings, cshtmlFile);
+                        ParseStyleTags(findings, cshtmlFile);
                     }
 
                     foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
@@ -79,20 +75,53 @@ namespace Opperis.SAST.Engine
                         var overpostingsAsBindObjects = new RazorPageBindObjectSyntaxWalker();
                         findings.AddRange(OverpostingAnalyzer.FindEFObjectsAsBindObjects(overpostingsAsBindObjects, root));
 
-                        var problematicHtmlHelpers = new HtmlHelperSyntaxWalker();
-                        var helperAnalyzer = new HtmlHelperAnalyzer();
-                        findings.AddRange(helperAnalyzer.FindXssIssues(problematicHtmlHelpers, root));
-
-                        var cookieConfigurationWalker = new CookieAppendSyntaxWalker();
-                        findings.AddRange(CookieConfigurationAnalyzer.FindMisconfiguredCookies(cookieConfigurationWalker, root));
-
-                        var fileManipulationWalker = new FileManipulationSyntaxWalker();
-                        findings.AddRange(FileManipulationAnalyzer.FindFileManipulations(fileManipulationWalker, root));
+                        SearchForXssIssues(findings, root);
+                        SearchForCookieManipulations(findings, root);
+                        SearchForFileManipulations(findings, root);
                     }
                 }
             }
 
             return findings;
+        }
+
+        private static void ParseJavaScriptTags(List<BaseFinding> findings, TextDocument? cshtmlFile)
+        {
+            var scripts = CSHtmlScriptTagParser.GetScriptTags(cshtmlFile.GetTextAsync().Result.ToString());
+            findings.AddRange(CSHtmlScriptTagParser.ParseJavaScriptFindings(scripts, cshtmlFile));
+        }
+
+        private static void ParseLinkTags(List<BaseFinding> findings, TextDocument? cshtmlFile)
+        {
+            var links = CSHtmlLinkTagParser.GetLinkTags(cshtmlFile.GetTextAsync().Result.ToString());
+            findings.AddRange(CSHtmlLinkTagParser.ParseLinkTagFindings(links, cshtmlFile));
+        }
+
+        private static void ParseStyleTags(List<BaseFinding> findings, TextDocument? cshtmlFile)
+        {
+            var styleTags = CSHtmlStyleTagParser.GetStyleTags(cshtmlFile.GetTextAsync().Result.ToString());
+            findings.AddRange(CSHtmlStyleTagParser.ParseStyleTagFindings(styleTags, cshtmlFile));
+        }
+
+
+
+        private static void SearchForXssIssues(List<BaseFinding> findings, SyntaxNode root)
+        {
+            var problematicHtmlHelpers = new HtmlHelperSyntaxWalker();
+            var helperAnalyzer = new HtmlHelperAnalyzer();
+            findings.AddRange(helperAnalyzer.FindXssIssues(problematicHtmlHelpers, root));
+        }
+
+        private static void SearchForCookieManipulations(List<BaseFinding> findings, SyntaxNode root)
+        {
+            var cookieConfigurationWalker = new CookieAppendSyntaxWalker();
+            findings.AddRange(CookieConfigurationAnalyzer.FindMisconfiguredCookies(cookieConfigurationWalker, root));
+        }
+
+        private static void SearchForFileManipulations(List<BaseFinding> findings, SyntaxNode root)
+        {
+            var fileManipulationWalker = new FileManipulationSyntaxWalker();
+            findings.AddRange(FileManipulationAnalyzer.FindFileManipulations(fileManipulationWalker, root));
         }
     }
 }

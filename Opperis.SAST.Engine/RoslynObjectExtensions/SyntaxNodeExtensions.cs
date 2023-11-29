@@ -26,6 +26,8 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
                 return structSyntax.Identifier.Text;
             else if (node is PropertyDeclarationSyntax prop)
                 return prop.Identifier.Text;
+            else if (node is ConstructorDeclarationSyntax constructor)
+                return constructor.Identifier.Text;
             else
                 throw new NotImplementedException($"Cannot find display text for type: {node.GetType()}");
         }

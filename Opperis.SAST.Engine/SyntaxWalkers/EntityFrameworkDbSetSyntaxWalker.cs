@@ -18,7 +18,8 @@ namespace Opperis.SAST.Engine.SyntaxWalkers
         {
             if (node.InheritsFrom("Microsoft.EntityFrameworkCore.DbContext"))
             {
-                base.VisitClassDeclaration(node);
+                if (!node.IsTestClass())
+                    base.VisitClassDeclaration(node);
             }
         }
 

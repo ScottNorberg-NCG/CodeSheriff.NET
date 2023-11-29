@@ -27,5 +27,21 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
 
             return false;
         }
+
+        internal static bool IsTestAttribute(this AttributeSyntax attributeSyntax, SemanticModel model)
+        {
+            var typeName = model.GetTypeInfo(attributeSyntax).Type.ToString();
+
+            if (typeName == "SkippableTheory") //TODO: Is there a way we can get the fact that this is actually an Xunit attribute?
+                return true;
+            else if (typeName == "Fact")
+                return true;
+            else if (typeName.StartsWith("Xunit."))
+                return true;
+            else if (typeName.StartsWith("Microsoft.VisualStudio.TestTools.UnitTesting."))
+                return true;
+
+            return false;
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Opperis.SAST.Engine.ErrorHandling;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,11 @@ namespace Opperis.SAST.Engine.SyntaxWalkers
                 var model = Globals.Compilation.GetSemanticModel(node.SyntaxTree);
                 var symbol = model.GetSymbolInfo(memberAccess).Symbol;
 
-                if (symbol.ContainingType.Name == "SqlConnection")
+                if (symbol == null)
+                {
+                    Globals.RuntimeErrors.Add(new NoSymbolForExpression(memberAccess));
+                }
+                else if (symbol.ContainingType.Name == "SqlConnection")
                 {
                     if (!node.Ancestors().OfType<UsingStatementSyntax>().Any())
                         ConnectionOpens.Add(node);
