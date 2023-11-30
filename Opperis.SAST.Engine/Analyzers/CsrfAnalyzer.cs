@@ -68,8 +68,8 @@ namespace Opperis.SAST.Engine.Analyzers
         private static void SetFinding(BaseFinding finding, MethodDeclarationSyntax method)
         {
             var callStack = new CallStack();
-            callStack.Locations.Add(new SourceLocation(method));
-            callStack.Locations.Add(new SourceLocation(method.Parent));
+            callStack.AddLocation(method);
+            callStack.AddLocation(method.Parent);
             finding.CallStacks.Add(callStack);
 
             finding.RootLocation = new SourceLocation(method);

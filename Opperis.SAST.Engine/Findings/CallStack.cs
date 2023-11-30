@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,14 @@ namespace Opperis.SAST.Engine.Findings
 {
     internal class CallStack
     {
-        public List<SourceLocation> Locations { get; set; } = new List<SourceLocation>();
+        private List<SourceLocation> _locations = new List<SourceLocation>();
+        public ReadOnlyCollection<SourceLocation> Locations
+        {
+            get 
+            {
+                return _locations.AsReadOnly();
+            }
+        }
 
         public CallStack Clone()
         {
@@ -19,34 +27,54 @@ namespace Opperis.SAST.Engine.Findings
 
             foreach (var location in this.Locations)
             {
-                newCallStack.Locations.Add(location);
+                newCallStack._locations.Add(location);
             }
 
             return newCallStack;
         }
 
-        public void AddLocation(ExpressionSyntax syntax)
-        { 
+        public bool AddLocation(ExpressionSyntax syntax)
+        {
+            if (_locations.Count >= Globals.MaxCallStackDepth)
+                return false;
+
             var newLocation = new SourceLocation(syntax);
-            this.Locations.Add(newLocation);
+            _locations.Add(newLocation);
+
+            return true;
         }
 
-        public void AddLocation(MethodDeclarationSyntax symbol)
+        public bool AddLocation(MethodDeclarationSyntax symbol)
         {
+            if (_locations.Count >= Globals.MaxCallStackDepth)
+                return false;
+
             var newLocation = new SourceLocation(symbol);
-            this.Locations.Add(newLocation);
+            _locations.Add(newLocation);
+
+            return true;
         }
 
-        public void AddLocation(SyntaxNode symbol)
+        public bool AddLocation(SyntaxNode symbol)
         {
+            if (_locations.Count >= Globals.MaxCallStackDepth)
+                return false;
+
             var newLocation = new SourceLocation(symbol);
-            this.Locations.Add(newLocation);
+            _locations.Add(newLocation);
+
+            return true;
         }
 
-        public void AddLocation(ISymbol symbol)
+        public bool AddLocation(ISymbol symbol)
         {
+            if (_locations.Count >= Globals.MaxCallStackDepth)
+                return false;
+
             var newLocation = new SourceLocation(symbol);
-            this.Locations.Add(newLocation);
+            _locations.Add(newLocation);
+
+            return true;
         }
     }
 }

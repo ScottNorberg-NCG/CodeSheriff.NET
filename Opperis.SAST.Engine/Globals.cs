@@ -81,7 +81,9 @@ namespace Opperis.SAST.Engine
             return null;
         }
 
-        internal static int MaxCallStackCount => 50;
+        internal static int MaxCallStackCount { get; set; } = 50;
+
+        internal static int MaxCallStackDepth { get; set; } = 10;
 
         private static void LoadGlobalLists()
         {

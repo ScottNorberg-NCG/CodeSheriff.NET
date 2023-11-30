@@ -35,7 +35,13 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
             var references = method.GetMethodsReferencedIn();
 
             if (!stack.Locations.Any(l => l.Equals(new SourceLocation(method))))
-                stack.Locations.Add(new SourceLocation(method));
+            {
+                if (!stack.AddLocation(method))
+                {
+                    callStacks.Add(stack);
+                    return callStacks;
+                }
+            } 
             else
             {
                 callStacks.Add(stack);
@@ -48,7 +54,7 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
 
             if (references.Count == 0)
             {
-                stack.Locations.Add(new SourceLocation(method.ContainingSymbol));
+                stack.AddLocation(method.ContainingSymbol);
                 callStacks.Add(stack);
             }
             else if (references.Count == 1)

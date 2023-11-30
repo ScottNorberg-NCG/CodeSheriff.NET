@@ -45,6 +45,9 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
 
         internal static ITypeSymbol? GetUnderlyingType(this ExpressionSyntax expression)
         {
+            if (expression is LiteralExpressionSyntax)
+                return null; //It would be better if we could return an ITypeSymbol of string here, but return null for now
+
             var asSymbol = expression.ToSymbol();
 
             if (asSymbol is ILocalSymbol localSymbol)
@@ -103,46 +106,66 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
             }
             else if (expression is IdentifierNameSyntax id)
             {
-                baseCallStack.AddLocation(id);
-
-                result.AddRange(GetDefinitionExpression(id, baseCallStack));
+                if (baseCallStack.AddLocation(id))
+                {
+                    result.AddRange(GetDefinitionExpression(id, baseCallStack));
+                }
+                else
+                {
+                    result.Add(baseCallStack);
+                }
             }
             else if (expression is BinaryExpressionSyntax binary)
             {
-                baseCallStack.AddLocation(binary);
-
-                foreach (var variable in binary.GetNonLiteralPortions())
+                if (baseCallStack.AddLocation(binary))
                 {
-                    var localCallStack = baseCallStack.Clone();
-                    result.AddRange(GetCallStacksRecursive(variable, localCallStack));
+                    foreach (var variable in binary.GetNonLiteralPortions())
+                    {
+                        var localCallStack = baseCallStack.Clone();
+                        result.AddRange(GetCallStacksRecursive(variable, localCallStack));
+                    }
+                }
+                else
+                {
+                    result.Add(baseCallStack);
                 }
             }
             else if (expression is InterpolatedStringExpressionSyntax interpolated)
             {
-                baseCallStack.AddLocation(interpolated);
-
-                foreach (var variable in interpolated.GetNonLiteralPortions())
+                if (baseCallStack.AddLocation(interpolated))
                 {
-                    result.AddRange(GetDefinitionExpression(variable, baseCallStack));
+                    foreach (var variable in interpolated.GetNonLiteralPortions())
+                    {
+                        result.AddRange(GetDefinitionExpression(variable, baseCallStack));
+                    }
+                }
+                else
+                {
+                    result.Add(baseCallStack);
                 }
             }
             else if (expression is InvocationExpressionSyntax invocation)
             {
-                baseCallStack.AddLocation(invocation);
-
-                var text = invocation.ToString();
-
-                if (text.StartsWith("string.Format") || text.StartsWith("String.Format"))
+                if (baseCallStack.AddLocation(invocation))
                 {
-                    for (int i = 1; i < invocation.ArgumentList.Arguments.Count; i++)
-                    {
-                        var arg = invocation.ArgumentList.Arguments[i].Expression;
+                    var text = invocation.ToString();
 
-                        if (!(arg is LiteralExpressionSyntax))
+                    if (text.StartsWith("string.Format") || text.StartsWith("String.Format"))
+                    {
+                        for (int i = 1; i < invocation.ArgumentList.Arguments.Count; i++)
                         {
-                            result.AddRange(arg.GetCallStacksRecursive(baseCallStack));
+                            var arg = invocation.ArgumentList.Arguments[i].Expression;
+
+                            if (!(arg is LiteralExpressionSyntax))
+                            {
+                                result.AddRange(arg.GetCallStacksRecursive(baseCallStack));
+                            }
                         }
                     }
+                }
+                else
+                {
+                    result.Add(baseCallStack);
                 }
             }
             else if (expression is ConditionalExpressionSyntax)
@@ -151,9 +174,14 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
             }
             else if (expression is MemberAccessExpressionSyntax member)
             {
-                baseCallStack.AddLocation(member);
-
-                result.AddRange(GetDefinitionExpression(member, baseCallStack));
+                if (baseCallStack.AddLocation(member))
+                {
+                    result.AddRange(GetDefinitionExpression(member, baseCallStack));
+                }
+                else
+                { 
+                    result.Add(baseCallStack); 
+                }
             }
             else
             {
@@ -189,16 +217,21 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
                 }
                 else if (asSymbol is ILocalSymbol localSymbol)
                 {
-                    localCallStack.Locations.Add(new SourceLocation(localSymbol));
+                    if (localCallStack.AddLocation(localSymbol))
+                    {
+                        var syntax = localSymbol.DeclaringSyntaxReferences.Single().GetSyntax();
+                        var parent = syntax.Parent as VariableDeclarationSyntax;
 
-                    var syntax = localSymbol.DeclaringSyntaxReferences.Single().GetSyntax();
-                    var parent = syntax.Parent as VariableDeclarationSyntax;
-
-                    result.AddRange(GetCallStacksRecursive(parent.Variables.First().Initializer.Value, localCallStack));
+                        result.AddRange(GetCallStacksRecursive(parent.Variables.First().Initializer.Value, localCallStack));
+                    }
+                    else
+                    {
+                        result.Add(localCallStack);
+                    }
                 }
                 else if (asSymbol is IFieldSymbol fieldSymbol)
                 {
-                    localCallStack.Locations.Add(new SourceLocation(fieldSymbol));
+                    localCallStack.AddLocation(fieldSymbol);
                     result.Add(localCallStack);
                 }
                 else if (asSymbol is IPropertySymbol propertySymbol)

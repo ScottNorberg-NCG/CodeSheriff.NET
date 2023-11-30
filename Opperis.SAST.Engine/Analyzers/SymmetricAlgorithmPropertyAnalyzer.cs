@@ -49,8 +49,8 @@ namespace Opperis.SAST.Engine.Analyzers
                                 finding.RootLocation = new SourceLocation(parent.Right);
 
                                 var callStack = new CallStack();
-                                callStack.Locations.Add(new SourceLocation(parent.Right));
-                                callStack.Locations.Add(new SourceLocation(array));
+                                callStack.AddLocation(parent.Right);
+                                callStack.AddLocation(array);
                                 finding.CallStacks.Add(callStack);
 
                                 finding.RedactAllByteArrays();
@@ -112,8 +112,8 @@ namespace Opperis.SAST.Engine.Analyzers
                                 finding.RootLocation = new SourceLocation(parent.Right);
 
                                 var callStack = new CallStack();
-                                callStack.Locations.Add(new SourceLocation(parent.Right));
-                                callStack.Locations.Add(new SourceLocation(array));
+                                callStack.AddLocation(parent.Right);
+                                callStack.AddLocation(array);
                                 finding.CallStacks.Add(callStack);
 
                                 finding.RedactAllByteArrays();

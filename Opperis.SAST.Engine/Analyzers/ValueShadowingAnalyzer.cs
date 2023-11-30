@@ -34,9 +34,9 @@ namespace Opperis.SAST.Engine.Analyzers
                             finding.RootLocation = new SourceLocation(parameter);
 
                             var callStack = new CallStack();
-                            callStack.Locations.Add(new SourceLocation(parameter));
-                            callStack.Locations.Add(new SourceLocation(method));
-                            callStack.Locations.Add(new SourceLocation(method.Parent));
+                            callStack.AddLocation(parameter);
+                            callStack.AddLocation(method);
+                            callStack.AddLocation(method.Parent);
 
                             finding.CallStacks.Add(callStack);
 
