@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Opperis.SAST.Engine\Opperis.SAST.Engine.csproj" />
+    <ProjectReference Include="..\Opperis.SAST.Secrets\Opperis.SAST.Secrets.csproj" />
   </ItemGroup>
 
 </Project>

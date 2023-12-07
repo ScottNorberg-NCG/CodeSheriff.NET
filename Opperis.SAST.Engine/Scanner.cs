@@ -6,6 +6,7 @@ using Opperis.SAST.Engine.ErrorHandling;
 using Opperis.SAST.Engine.Findings;
 using Opperis.SAST.Engine.HtmlTagParsing;
 using Opperis.SAST.Engine.SyntaxWalkers;
+using Opperis.SAST.Secrets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,8 @@ namespace Opperis.SAST.Engine
                 Globals.Solution = workspace.OpenSolutionAsync(solutionFilePath).Result;
 
                 findings.AddRange(OverpostingAnalyzer.FindEFObjectsAsParameters());
+
+                var rules = Opperis.SAST.Secrets.RulesEngine.GetGitLeaksRules();
 
                 foreach (var project in Globals.Solution.Projects)
                 {
@@ -78,6 +81,7 @@ namespace Opperis.SAST.Engine
                         SearchForXssIssues(findings, root);
                         SearchForCookieManipulations(findings, root);
                         SearchForFileManipulations(findings, root);
+                        SearchForSecrets(findings, root, rules);
                     }
                 }
             }
@@ -122,6 +126,12 @@ namespace Opperis.SAST.Engine
         {
             var fileManipulationWalker = new FileManipulationSyntaxWalker();
             findings.AddRange(FileManipulationAnalyzer.FindFileManipulations(fileManipulationWalker, root));
+        }
+
+        private static void SearchForSecrets(List<BaseFinding> findings, SyntaxNode root, List<GitLeaksRule> rules)
+        {
+            var stringLiteralWalker = new StringLiteralSyntaxWalker();
+            findings.AddRange(SecretStorageAnalyzer.GetStoredSecrets(stringLiteralWalker, root, rules));
         }
     }
 }

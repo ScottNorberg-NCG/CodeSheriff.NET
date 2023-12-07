@@ -1,0 +1,2 @@
+﻿Sonatype download: https://www.sonatype.com/products/vulnerability-scanner
+Trufflehog repo: https://github.com/trufflesecurity/trufflehog

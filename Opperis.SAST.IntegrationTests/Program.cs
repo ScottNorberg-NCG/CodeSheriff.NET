@@ -35,10 +35,7 @@ namespace Opperis.SAST.IntegrationTests
                 //        walker.Visit(root);
                 //    }
                 //}
-                var rules = Opperis.SAST.Secrets.RulesEngine.GetGitLeaksRules();
-                var storedSecrets = SecretStorageProcessor.GetStoredSecrets();
-                int i = 1;
-
+                TestGetStoredSecrets();
                 TestFileManipulationIssues();
                 TestCookieConfigurationIssues();
                 TestHtmlHelperXssIssues();
@@ -56,6 +53,14 @@ namespace Opperis.SAST.IntegrationTests
                 TestUnprotectedRedirects();
                 TestSymmetricAlgorithms();
             }
+        }
+
+        private static void TestGetStoredSecrets()
+        {
+            var storedSecrets = SecretStorageProcessor.GetStoredSecrets();
+            Assert.AreEqual(4, storedSecrets.Count, "Expected number of stored secrets");
+            Assert.AreEqual(4, storedSecrets.Select(c => c.Description).Distinct().Count(), "Number of distinct types of stored secrets");
+            Assert.AllRootLocationsSet(storedSecrets, "TestGetStoredSecrets");
         }
 
         private static void TestFileManipulationIssues()
