@@ -1,2 +1,4 @@
-﻿Sonatype download: https://www.sonatype.com/products/vulnerability-scanner
+﻿GitLeaks: https://github.com/gitleaks/gitleaks
+Sonatype download: https://www.sonatype.com/products/vulnerability-scanner
 Trufflehog repo: https://github.com/trufflesecurity/trufflehog
+NVD Parsing original source: https://github.com/digitalcoyote/NuGetDefense.NVD/tree/master

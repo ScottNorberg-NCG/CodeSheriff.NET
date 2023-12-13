@@ -11,68 +11,67 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.Analyzers
+namespace Opperis.SAST.Engine.Analyzers;
+
+internal static class CsrfAnalyzer
 {
-    internal static class CsrfAnalyzer
+    internal static List<BaseFinding> FindCsrfIssues(ControllerMethodSyntaxWalker walker, SyntaxNode root)
     {
-        internal static List<BaseFinding> FindCsrfIssues(ControllerMethodSyntaxWalker walker, SyntaxNode root)
+        if (!walker.Methods.Any())
+            walker.Visit(root);
+
+        var findings = new List<BaseFinding>();
+
+        foreach (var method in walker.Methods)
         {
-            if (!walker.Methods.Any())
-                walker.Visit(root);
-
-            var findings = new List<BaseFinding>();
-
-            foreach (var method in walker.Methods)
+            try
             {
-                try
+                var methodAttributes = method.GetMethodVerbs();
+
+                if (methodAttributes.Count() == 0)
                 {
-                    var methodAttributes = method.GetMethodVerbs();
+                    var finding = new ControllerActionMissingVerbAttribute();
+                    SetFinding(finding, method);
 
-                    if (methodAttributes.Count() == 0)
-                    {
-                        var finding = new ControllerActionMissingVerbAttribute();
-                        SetFinding(finding, method);
-
-                        findings.Add(finding);
-                    }
-
-                    //Probably a rare situation, but check if they have both a Get and a Post
-                    if (methodAttributes.Any(ma => ma.SkipsCsrfChecks) && methodAttributes.Any(ma => !ma.SkipsCsrfChecks))
-                    {
-                        var finding = new ControllerActionMixingBodyAndNonBodyMethods();
-                        SetFinding(finding, method);
-
-                        findings.Add(finding);
-                    }
-
-                    if (methodAttributes.Any(ma => !ma.SkipsCsrfChecks))
-                    {
-                        if (!method.HasCsrfProtection())
-                        {
-                            var finding = new RequestWithBodyMissingCsrfProtection();
-                            SetFinding(finding, method);
-
-                            findings.Add(finding);
-                        }
-                    }
+                    findings.Add(finding);
                 }
-                catch (Exception ex) 
+
+                //Probably a rare situation, but check if they have both a Get and a Post
+                if (methodAttributes.Any(ma => ma.SkipsCsrfChecks) && methodAttributes.Any(ma => !ma.SkipsCsrfChecks))
                 {
-                    Globals.RuntimeErrors.Add(new UnknownSingleFindingError(method, ex));
+                    var finding = new ControllerActionMixingBodyAndNonBodyMethods();
+                    SetFinding(finding, method);
+
+                    findings.Add(finding);
+                }
+
+                if (methodAttributes.Any(ma => !ma.SkipsCsrfChecks))
+                {
+                    if (!method.HasCsrfProtection())
+                    {
+                        var finding = new RequestWithBodyMissingCsrfProtection();
+                        SetFinding(finding, method);
+
+                        findings.Add(finding);
+                    }
                 }
             }
-
-            return findings;
+            catch (Exception ex) 
+            {
+                Globals.RuntimeErrors.Add(new UnknownSingleFindingError(method, ex));
+            }
         }
 
-        private static void SetFinding(BaseFinding finding, MethodDeclarationSyntax method)
-        {
-            var callStack = new CallStack();
-            callStack.AddLocation(method);
-            callStack.AddLocation(method.Parent);
-            finding.CallStacks.Add(callStack);
+        return findings;
+    }
 
-            finding.RootLocation = new SourceLocation(method);
-        }
+    private static void SetFinding(BaseFinding finding, MethodDeclarationSyntax method)
+    {
+        var callStack = new CallStack();
+        callStack.AddLocation(method);
+        callStack.AddLocation(method.Parent);
+        finding.CallStacks.Add(callStack);
+
+        finding.RootLocation = new SourceLocation(method);
     }
 }

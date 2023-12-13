@@ -25,5 +25,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Opperis.SAST.Secrets\Opperis.SAST.Secrets.csproj" />
+    <ProjectReference Include="..\Opperis.SCA.Engine\Opperis.SCA.Engine.csproj" />
   </ItemGroup>
 </Project>

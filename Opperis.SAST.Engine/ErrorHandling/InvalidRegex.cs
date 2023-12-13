@@ -4,16 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.ErrorHandling
-{
-    internal class InvalidRegex : BaseError
-    {
-        internal override ErrorCategory Category => ErrorCategory.InvalidRegex;
+namespace Opperis.SAST.Engine.ErrorHandling;
 
-        public InvalidRegex(string regex, Exception ex)
-        {
-            var wrapper = new ApplicationException($"Regex {regex} could not be processed", ex);
-            base.BaseException = wrapper;
-        }
+internal class InvalidRegex : BaseError
+{
+    internal override ErrorCategory Category => ErrorCategory.InvalidRegex;
+
+    public InvalidRegex(string regex, Exception ex)
+    {
+        var wrapper = new ApplicationException($"Regex {regex} could not be processed", ex);
+        base.BaseException = wrapper;
     }
 }

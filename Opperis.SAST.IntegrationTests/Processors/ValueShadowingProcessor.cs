@@ -8,28 +8,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.IntegrationTests.Processors
+namespace Opperis.SAST.IntegrationTests.Processors;
+
+internal static class ValueShadowingProcessor
 {
-    internal static class ValueShadowingProcessor
+    internal static List<BaseFinding> GetValueShadowingIssues()
     {
-        internal static List<BaseFinding> GetValueShadowingIssues()
+        var retVal = new List<BaseFinding>();
+
+        foreach (var project in Globals.Solution.Projects)
         {
-            var retVal = new List<BaseFinding>();
+            Globals.Compilation = project.GetCompilationAsync().Result;
 
-            foreach (var project in Globals.Solution.Projects)
+            foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
             {
-                Globals.Compilation = project.GetCompilationAsync().Result;
+                var root = syntaxTree.GetRoot();
 
-                foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
-                {
-                    var root = syntaxTree.GetRoot();
-
-                    var walker = new ControllerMethodSyntaxWalker();
-                    retVal.AddRange(ValueShadowingAnalyzer.FindValueShadowingPossibilities(walker, root));
-                }
+                var walker = new ControllerMethodSyntaxWalker();
+                retVal.AddRange(ValueShadowingAnalyzer.FindValueShadowingPossibilities(walker, root));
             }
-
-            return retVal;
         }
+
+        return retVal;
     }
 }

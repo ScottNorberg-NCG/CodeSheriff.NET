@@ -5,30 +5,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.ErrorHandling
+namespace Opperis.SAST.Engine.ErrorHandling;
+
+internal class UnknownSingleFindingError : BaseError
 {
-    internal class UnknownSingleFindingError : BaseError
+    private Exception ex;
+
+    internal override ErrorCategory Category => ErrorCategory.UnknownForSingleFinding;
+
+    internal UnknownSingleFindingError(ExpressionSyntax syntax, Exception exception)
     {
-        private Exception ex;
+        base.CodeLocation = new Findings.SourceLocation(syntax);
+        base.BaseException = exception;
+    }
 
-        internal override ErrorCategory Category => ErrorCategory.UnknownForSingleFinding;
+    internal UnknownSingleFindingError(MethodDeclarationSyntax syntax, Exception exception)
+    {
+        base.CodeLocation = new Findings.SourceLocation(syntax);
+        base.BaseException = exception;
+    }
 
-        internal UnknownSingleFindingError(ExpressionSyntax syntax, Exception exception)
-        {
-            base.CodeLocation = new Findings.SourceLocation(syntax);
-            base.BaseException = exception;
-        }
-
-        internal UnknownSingleFindingError(MethodDeclarationSyntax syntax, Exception exception)
-        {
-            base.CodeLocation = new Findings.SourceLocation(syntax);
-            base.BaseException = exception;
-        }
-
-        public UnknownSingleFindingError(ClassDeclarationSyntax classDeclaration, Exception exception)
-        {
-            base.CodeLocation= new Findings.SourceLocation(classDeclaration);
-            base.BaseException = exception;
-        }
+    public UnknownSingleFindingError(ClassDeclarationSyntax classDeclaration, Exception exception)
+    {
+        base.CodeLocation= new Findings.SourceLocation(classDeclaration);
+        base.BaseException = exception;
     }
 }

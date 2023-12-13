@@ -26,45 +26,50 @@ namespace Opperis.SAST.Engine.Analyzers
 
             var findings = new List<BaseFinding>();
 
-            foreach (var literal in walker.StringLiterals)
+            Parallel.ForEach(walker.StringLiterals, literal =>
+            //foreach (var literal in walker.StringLiterals)
             {
                 try
                 {
                     var value = literal.ToString().Trim('"');
 
-                    foreach (var rule in rules)
+                    if (value.Length >= Globals.MinStringLengthForSecretMatching)
                     {
-                        //We get too many false positives with this one, so skip it
-                        //TODO: make skipping this configurable
-                        if (rule.id == "generic-api-key")
-                            continue;
-
-                        try
+                        //Parallel.ForEach(rules, rule =>
+                        foreach (var rule in rules)
                         {
-                            if (Regex.Match(value, rule.regex).Success)
+                            //We get too many false positives with this one, so skip it
+                            //TODO: make skipping this configurable
+                            if (rule.id != "generic-api-key")
                             {
-                                var finding = new SecretFound(rule);
-                                finding.RootLocation = new SourceLocation(literal);
-                                findings.Add(finding);
-                            }
-                            else
-                            {
-                                if (literal.Parent.Parent is VariableDeclaratorSyntax variable)
+                                try
                                 {
-                                    var assignment = variable.ToString();
-
-                                    if (Regex.Match(assignment, rule.regex).Success)
+                                    if (Regex.Match(value, rule.regex).Success)
                                     {
                                         var finding = new SecretFound(rule);
-                                        finding.RootLocation = new SourceLocation(variable);
+                                        finding.RootLocation = new SourceLocation(literal);
                                         findings.Add(finding);
                                     }
+                                    else
+                                    {
+                                        if (literal.Parent.Parent is VariableDeclaratorSyntax variable)
+                                        {
+                                            var assignment = variable.ToString();
+
+                                            if (Regex.Match(assignment, rule.regex).Success)
+                                            {
+                                                var finding = new SecretFound(rule);
+                                                finding.RootLocation = new SourceLocation(variable);
+                                                findings.Add(finding);
+                                            }
+                                        }
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    Globals.RuntimeErrors.Add(new InvalidRegex(rule.regex, ex));
                                 }
                             }
-                        }
-                        catch (Exception ex)
-                        {
-                            Globals.RuntimeErrors.Add(new InvalidRegex(rule.regex, ex));
                         }
                     }
                 }
@@ -72,7 +77,7 @@ namespace Opperis.SAST.Engine.Analyzers
                 {
                     Globals.RuntimeErrors.Add(new UnknownSingleFindingError(literal, ex));
                 }
-            }
+            });
 
             return findings;
         }

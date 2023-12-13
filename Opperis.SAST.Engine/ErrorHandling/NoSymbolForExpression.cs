@@ -5,15 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.ErrorHandling
-{
-    internal class NoSymbolForExpression : BaseError
-    {
-        internal override ErrorCategory Category => ErrorCategory.NoSymbolForExpression;
+namespace Opperis.SAST.Engine.ErrorHandling;
 
-        internal NoSymbolForExpression(ExpressionSyntax syntax)
-        { 
-            base.CodeLocation = new Findings.SourceLocation(syntax);
-        }
+internal class NoSymbolForExpression : BaseError
+{
+    internal override ErrorCategory Category => ErrorCategory.NoSymbolForExpression;
+
+    internal NoSymbolForExpression(ExpressionSyntax syntax)
+    { 
+        base.CodeLocation = new Findings.SourceLocation(syntax);
     }
 }

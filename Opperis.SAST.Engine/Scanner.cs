@@ -17,7 +17,7 @@ namespace Opperis.SAST.Engine
 {
     internal static class Scanner
     {
-        internal static List<BaseFinding> Scan(string solutionFilePath)
+        internal static List<BaseFinding> Scan(string solutionFilePath, bool includeNuGet)
         {
             if (!MSBuildLocator.IsRegistered)
                 MSBuildLocator.RegisterDefaults();
@@ -30,7 +30,13 @@ namespace Opperis.SAST.Engine
 
                 findings.AddRange(OverpostingAnalyzer.FindEFObjectsAsParameters());
 
-                var rules = Opperis.SAST.Secrets.RulesEngine.GetGitLeaksRules();
+                List<GitLeaksRule> rules = new List<GitLeaksRule>();
+                
+                //if (includeSecrets)
+                //    rules = Opperis.SAST.Secrets.RulesEngine.GetGitLeaksRules();
+
+                if (includeNuGet)
+                    findings.AddRange(ScaAnalyzer.GetVulnerableNuGetPackages());
 
                 foreach (var project in Globals.Solution.Projects)
                 {
@@ -81,7 +87,9 @@ namespace Opperis.SAST.Engine
                         SearchForXssIssues(findings, root);
                         SearchForCookieManipulations(findings, root);
                         SearchForFileManipulations(findings, root);
-                        SearchForSecrets(findings, root, rules);
+
+                        //if (includeSecrets)
+                        //    SearchForSecrets(findings, root, rules);
                     }
                 }
             }

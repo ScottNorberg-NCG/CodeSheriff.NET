@@ -14,103 +14,102 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.Analyzers
+namespace Opperis.SAST.Engine.Analyzers;
+
+internal static class ExternalRedirectAnalyzer
 {
-    internal static class ExternalRedirectAnalyzer
+    internal static List<BaseFinding> FindProblematicExternalRedirects(ExternalRedirectSyntaxWalker walker, SyntaxNode root)
     {
-        internal static List<BaseFinding> FindProblematicExternalRedirects(ExternalRedirectSyntaxWalker walker, SyntaxNode root)
+        if (walker.UnvalidatedRedirects.Count == 0)
+            walker.Visit(root);
+
+        var findings = new List<BaseFinding>();
+
+        foreach (var redirect in walker.UnvalidatedRedirects)
         {
-            if (walker.UnvalidatedRedirects.Count == 0)
-                walker.Visit(root);
-
-            var findings = new List<BaseFinding>();
-
-            foreach (var redirect in walker.UnvalidatedRedirects)
+            try
             {
-                try
+                foreach (var arg in redirect.ArgumentList.Arguments.Select(a => a.Expression))
                 {
-                    foreach (var arg in redirect.ArgumentList.Arguments.Select(a => a.Expression))
+                    if (arg is IdentifierNameSyntax)
                     {
-                        if (arg is IdentifierNameSyntax)
+                        AddIfStringParameter(root, findings, arg, arg);
+                    }
+                    else if (arg is BinaryExpressionSyntax binary)
+                    {
+                        foreach (var expression in binary.GetNonLiteralPortions())
                         {
-                            AddIfStringParameter(root, findings, arg, arg);
-                        }
-                        else if (arg is BinaryExpressionSyntax binary)
-                        {
-                            foreach (var expression in binary.GetNonLiteralPortions())
-                            {
-                                //TODO: Handle this
-                                if (expression is InvocationExpressionSyntax)
-                                    continue;
+                            //TODO: Handle this
+                            if (expression is InvocationExpressionSyntax)
+                                continue;
 
-                                AddIfStringParameter(root, findings, expression, expression);
-                            }
-                        }
-                        else if (arg is InterpolatedStringExpressionSyntax interpolated)
-                        {
-                            foreach (var expression in interpolated.GetNonLiteralPortions())
-                            {
-                                //TODO: Handle this
-                                if (expression is InvocationExpressionSyntax)
-                                    continue;
-
-                                AddIfStringParameter(root, findings, expression, expression);
-                            }
-                        }
-                        else if (arg is MemberAccessExpressionSyntax member)
-                        {
-                            AddIfStringParameter(root, findings, member, member.Expression);
-                        }
-                        else if (arg is LiteralExpressionSyntax)
-                        {
-                            //Do nothing, not a finding
-                        }
-                        else
-                        {
-                            //Do nothing for now
-                            //throw new NotSupportedException();
+                            AddIfStringParameter(root, findings, expression, expression);
                         }
                     }
-                }
-                catch (Exception ex) 
-                {
-                    Globals.RuntimeErrors.Add(new UnknownSingleFindingError(redirect, ex));
+                    else if (arg is InterpolatedStringExpressionSyntax interpolated)
+                    {
+                        foreach (var expression in interpolated.GetNonLiteralPortions())
+                        {
+                            //TODO: Handle this
+                            if (expression is InvocationExpressionSyntax)
+                                continue;
+
+                            AddIfStringParameter(root, findings, expression, expression);
+                        }
+                    }
+                    else if (arg is MemberAccessExpressionSyntax member)
+                    {
+                        AddIfStringParameter(root, findings, member, member.Expression);
+                    }
+                    else if (arg is LiteralExpressionSyntax)
+                    {
+                        //Do nothing, not a finding
+                    }
+                    else
+                    {
+                        //Do nothing for now
+                        //throw new NotSupportedException();
+                    }
                 }
             }
-
-            return findings;
-        }
-
-        private static void AddIfStringParameter(SyntaxNode root, List<BaseFinding> findings, ExpressionSyntax? redirectArgument, ExpressionSyntax? redirectContainer)
-        {
-            var underlyingType = redirectArgument.GetUnderlyingType();
-
-            if (underlyingType != null && underlyingType.ToDisplayString().In("string", "string?") && 
-                ValueCameFromExternallyFacingMethodParam(redirectArgument, root) || ValueCameFromExternallyFacingMethodParam(redirectContainer, root))
+            catch (Exception ex) 
             {
-                var finding = new UnprotectedExternalRedirect();
-                finding.RootLocation = new SourceLocation(redirectArgument);
-
-                findings.Add(finding);
+                Globals.RuntimeErrors.Add(new UnknownSingleFindingError(redirect, ex));
             }
         }
 
-        private static bool ValueCameFromExternallyFacingMethodParam(ExpressionSyntax arg, SyntaxNode root)
+        return findings;
+    }
+
+    private static void AddIfStringParameter(SyntaxNode root, List<BaseFinding> findings, ExpressionSyntax? redirectArgument, ExpressionSyntax? redirectContainer)
+    {
+        var underlyingType = redirectArgument.GetUnderlyingType();
+
+        if (underlyingType != null && underlyingType.ToDisplayString().In("string", "string?") && 
+            ValueCameFromExternallyFacingMethodParam(redirectArgument, root) || ValueCameFromExternallyFacingMethodParam(redirectContainer, root))
         {
-            var definition = arg.GetDefinitionNode(root);
+            var finding = new UnprotectedExternalRedirect();
+            finding.RootLocation = new SourceLocation(redirectArgument);
 
-            if (definition is ParameterSyntax parameter)
-            {
-                //parameter.Parent is probably a ParameterList
-
-                if (definition.Parent.Parent is MethodDeclarationSyntax method) 
-                {
-                    if (method.IsUIProcessor())
-                        return true;
-                }
-            }
-
-            return false;
+            findings.Add(finding);
         }
+    }
+
+    private static bool ValueCameFromExternallyFacingMethodParam(ExpressionSyntax arg, SyntaxNode root)
+    {
+        var definition = arg.GetDefinitionNode(root);
+
+        if (definition is ParameterSyntax parameter)
+        {
+            //parameter.Parent is probably a ParameterList
+
+            if (definition.Parent.Parent is MethodDeclarationSyntax method) 
+            {
+                if (method.IsUIProcessor())
+                    return true;
+            }
+        }
+
+        return false;
     }
 }

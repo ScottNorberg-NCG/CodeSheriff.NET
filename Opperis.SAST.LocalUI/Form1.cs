@@ -12,7 +12,8 @@ namespace Opperis.SAST.LocalUI
 
 #if DEBUG
             txtResultsFolder.Text = "C:\\temp\\ScanResults";
-            txtSolutionFile.Text = "C:\\Users\\scott\\Downloads\\sentry-dotnet-main\\sentry-dotnet-main\\Sentry.NoMobile.sln";
+            //txtSolutionFile.Text = "C:\\Users\\scott\\Downloads\\sentry-dotnet-main\\sentry-dotnet-main\\Sentry.NoMobile.sln";
+            txtSolutionFile.Text = "C:\\Users\\scott\\Source\\repos\\VulnerabilityBuffet2\\AspNetCore\\NCG.SecurityDetection.VulnerabilityBuffet.sln";
             chkIncludeBindings.Checked = true;
 #endif
         }
@@ -42,7 +43,7 @@ namespace Opperis.SAST.LocalUI
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            var findings = Scanner.Scan(txtSolutionFile.Text);
+            var findings = Scanner.Scan(txtSolutionFile.Text, chkNuGet.Checked);
             stopwatch.Stop();
 
             var content = new StringBuilder();
@@ -87,12 +88,19 @@ namespace Opperis.SAST.LocalUI
                 content.AppendLine("<h2>Diagnostic info</h2>");
                 foreach (var error in Globals.RuntimeErrors)
                 {
+                    string message;
+
+                    if (error.CodeLocation != null)
+                        message = error.CodeLocation.ToString();
+                    else
+                        message = error.BaseException.Message;
+
                     var stackTrace = error.BaseException != null ? error.BaseException.ToString() : "N/A";
 
                     content.AppendLine("<div>");
                     content.AppendLine($"<div>Type: {error.Category.ToString()}</div>");
-                    content.AppendLine($"<div>Source Code Location: {error.CodeLocation.ToString()}</div>");
-                    content.AppendLine($"<div><pre>Stack trace: {stackTrace}</pre></div>");
+                    content.AppendLine($"<div>Source Code Location: {System.Web.HttpUtility.HtmlEncode(message)}</div>");
+                    content.AppendLine($"<div><pre>Stack trace: {System.Web.HttpUtility.HtmlEncode(stackTrace)}</pre></div>");
                     content.AppendLine("<hr />");
                     content.AppendLine("</div>");
                 }
@@ -118,7 +126,7 @@ namespace Opperis.SAST.LocalUI
         {
             sb.AppendLine("<p>");
             sb.AppendLine("<div style='font-weight: bold;'>");
-            sb.AppendLine(label);
+            sb.AppendLine(System.Web.HttpUtility.HtmlEncode(label));
             sb.AppendLine("</div>");
             sb.AppendLine("<div>");
             sb.AppendLine(string.Join("<hr>", content.Select(c => System.Web.HttpUtility.HtmlEncode(c))));

@@ -38,6 +38,7 @@
             btnChooseFolder = new Button();
             btnScan = new Button();
             chkIncludeBindings = new CheckBox();
+            chkNuGet = new CheckBox();
             SuspendLayout();
             // 
             // label1
@@ -99,7 +100,7 @@
             // 
             // btnScan
             // 
-            btnScan.Location = new Point(186, 166);
+            btnScan.Location = new Point(155, 176);
             btnScan.Name = "btnScan";
             btnScan.Size = new Size(118, 30);
             btnScan.TabIndex = 6;
@@ -110,7 +111,7 @@
             // chkIncludeBindings
             // 
             chkIncludeBindings.AutoSize = true;
-            chkIncludeBindings.Location = new Point(12, 127);
+            chkIncludeBindings.Location = new Point(12, 140);
             chkIncludeBindings.Name = "chkIncludeBindings";
             chkIncludeBindings.Size = new Size(185, 19);
             chkIncludeBindings.TabIndex = 7;
@@ -118,11 +119,25 @@
             chkIncludeBindings.TextAlign = ContentAlignment.MiddleRight;
             chkIncludeBindings.UseVisualStyleBackColor = true;
             // 
+            // chkNuGet
+            // 
+            chkNuGet.AutoSize = true;
+            chkNuGet.Checked = true;
+            chkNuGet.CheckState = CheckState.Checked;
+            chkNuGet.Location = new Point(12, 115);
+            chkNuGet.Name = "chkNuGet";
+            chkNuGet.Size = new Size(224, 19);
+            chkNuGet.TabIndex = 9;
+            chkNuGet.Text = "Check for vulnerable NuGet packages";
+            chkNuGet.TextAlign = ContentAlignment.MiddleRight;
+            chkNuGet.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(465, 212);
+            ClientSize = new Size(465, 221);
+            Controls.Add(chkNuGet);
             Controls.Add(chkIncludeBindings);
             Controls.Add(btnScan);
             Controls.Add(btnChooseFolder);
@@ -149,5 +164,6 @@
         private Button btnChooseFolder;
         private Button btnScan;
         private CheckBox chkIncludeBindings;
+        private CheckBox chkNuGet;
     }
 }

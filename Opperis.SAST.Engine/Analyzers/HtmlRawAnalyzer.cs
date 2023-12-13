@@ -1,53 +1,42 @@
 ﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.FindSymbols;
-using Opperis.SAST.Engine.CompiledCSHtmlParsing;
 using Opperis.SAST.Engine.ErrorHandling;
 using Opperis.SAST.Engine.Findings;
-using Opperis.SAST.Engine.Findings.CSRF;
 using Opperis.SAST.Engine.Findings.XSS;
-using Opperis.SAST.Engine.RoslynObjectExtensions;
 using Opperis.SAST.Engine.SyntaxWalkers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.Analyzers
+namespace Opperis.SAST.Engine.Analyzers;
+
+internal class HtmlRawAnalyzer : BaseCshtmlToCodeAnalyzer
 {
-    internal class HtmlRawAnalyzer : BaseCshtmlToCodeAnalyzer
+    internal List<BaseFinding> FindXssIssues(HtmlRawSyntaxWalker walker, SyntaxNode root)
     {
-        internal List<BaseFinding> FindXssIssues(HtmlRawSyntaxWalker walker, SyntaxNode root)
+        if (!walker.HtmlRawCalls.Any())
+            walker.Visit(root);
+
+        var findings = new List<BaseFinding>();
+
+        foreach (var call in walker.HtmlRawCalls)
         {
-            if (!walker.HtmlRawCalls.Any())
-                walker.Visit(root);
-
-            var findings = new List<BaseFinding>();
-
-            foreach (var call in walker.HtmlRawCalls)
-            {
-                try
-                { 
-                    GetFindingsForCshtmlInvocation(findings, call);
-                }
-                catch (Exception ex) 
-                {
-                    Globals.RuntimeErrors.Add(new UnknownSingleFindingError(call, ex));
-                }
+            try
+            { 
+                GetFindingsForCshtmlInvocation(findings, call);
             }
-
-            return findings;
+            catch (Exception ex) 
+            {
+                Globals.RuntimeErrors.Add(new UnknownSingleFindingError(call, ex));
+            }
         }
 
-        protected override BaseFinding GetNewFindingForControllerAndGet()
-        {
-            return new HtmlRawPropertyFromGetControllerParameter();
-        }
+        return findings;
+    }
 
-        protected override BaseFinding GetNewFindingForControllerAndPost()
-        {
-            return new HtmlRawPropertyFromOtherControllerParameter();
-        }
+    protected override BaseFinding GetNewFindingForControllerAndGet()
+    {
+        return new HtmlRawPropertyFromGetControllerParameter();
+    }
+
+    protected override BaseFinding GetNewFindingForControllerAndPost()
+    {
+        return new HtmlRawPropertyFromOtherControllerParameter();
     }
 }

@@ -8,28 +8,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.IntegrationTests.Processors
+namespace Opperis.SAST.IntegrationTests.Processors;
+
+internal static class CookieConfigurationProcessor
 {
-    internal static class CookieConfigurationProcessor
+    internal static List<BaseFinding> GetCookieConfigurationIssues()
     {
-        internal static List<BaseFinding> GetCookieConfigurationIssues()
+        var retVal = new List<BaseFinding>();
+
+        foreach (var project in Globals.Solution.Projects)
         {
-            var retVal = new List<BaseFinding>();
+            Globals.Compilation = project.GetCompilationAsync().Result;
 
-            foreach (var project in Globals.Solution.Projects)
+            foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
             {
-                Globals.Compilation = project.GetCompilationAsync().Result;
+                var root = syntaxTree.GetRoot();
 
-                foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
-                {
-                    var root = syntaxTree.GetRoot();
-
-                    var walker = new CookieAppendSyntaxWalker();
-                    retVal.AddRange(CookieConfigurationAnalyzer.FindMisconfiguredCookies(walker, root));
-                }
+                var walker = new CookieAppendSyntaxWalker();
+                retVal.AddRange(CookieConfigurationAnalyzer.FindMisconfiguredCookies(walker, root));
             }
-
-            return retVal;
         }
+
+        return retVal;
     }
 }

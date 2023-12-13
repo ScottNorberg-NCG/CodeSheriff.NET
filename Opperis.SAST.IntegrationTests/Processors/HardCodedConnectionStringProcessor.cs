@@ -8,28 +8,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.IntegrationTests.Processors
+namespace Opperis.SAST.IntegrationTests.Processors;
+
+internal static class HardCodedConnectionStringProcessor
 {
-    internal static class HardCodedConnectionStringProcessor
+    internal static List<BaseFinding> GetConnectionStrings()
     {
-        internal static List<BaseFinding> GetConnectionStrings()
+        var retVal = new List<BaseFinding>();
+
+        foreach (var project in Globals.Solution.Projects)
         {
-            var retVal = new List<BaseFinding>();
+            Globals.Compilation = project.GetCompilationAsync().Result;
 
-            foreach (var project in Globals.Solution.Projects)
+            foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
             {
-                Globals.Compilation = project.GetCompilationAsync().Result;
+                var root = syntaxTree.GetRoot();
 
-                foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
-                {
-                    var root = syntaxTree.GetRoot();
-
-                    var walker = new DatabaseConnectionStringSyntaxWalker();
-                    retVal.AddRange(HardCodedConnectionStringAnalyzer.FindHardCodedConnectionStrings(walker, root));
-                }
+                var walker = new DatabaseConnectionStringSyntaxWalker();
+                retVal.AddRange(HardCodedConnectionStringAnalyzer.FindHardCodedConnectionStrings(walker, root));
             }
-
-            return retVal;
         }
+
+        return retVal;
     }
 }

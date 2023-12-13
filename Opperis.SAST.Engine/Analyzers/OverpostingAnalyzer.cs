@@ -11,82 +11,81 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.Analyzers
+namespace Opperis.SAST.Engine.Analyzers;
+
+internal static class OverpostingAnalyzer
 {
-    internal static class OverpostingAnalyzer
+    internal static List<BaseFinding> FindEFObjectsAsParameters()
     {
-        internal static List<BaseFinding> FindEFObjectsAsParameters()
+        var findings = new List<BaseFinding>();
+
+        foreach (var method in Globals.SolutionControllerMethods)
         {
-            var findings = new List<BaseFinding>();
-
-            foreach (var method in Globals.SolutionControllerMethods)
+            try
             {
-                try
-                {
-                    foreach (var parameter in method.ParameterList.Parameters)
-                    {
-                        foreach (var type in Globals.EntityFrameworkObjects)
-                        {
-                            if (type.Equals(parameter.Type.GetUnderlyingType()))
-                            {
-                                var finding = new OverpostingViaControllerMethod();
-
-                                finding.RootLocation = new SourceLocation(parameter);
-
-                                var callStack = new CallStack();
-                                callStack.AddLocation(parameter);
-                                callStack.AddLocation(method);
-                                finding.CallStacks.Add(callStack);
-
-                                findings.Add(finding);
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex) 
-                { 
-                    Globals.RuntimeErrors.Add(new UnknownSingleFindingError(method, ex));
-                }
-            }
-
-            return findings;
-        }
-
-        internal static List<BaseFinding> FindEFObjectsAsBindObjects(RazorPageBindObjectSyntaxWalker walker, SyntaxNode root)
-        {
-            if (walker.RazorPageBindObjects.Count == 0)
-                walker.Visit(root);
-
-            var findings = new List<BaseFinding>();
-
-            foreach (var bindObject in walker.RazorPageBindObjects)
-            {
-                try
+                foreach (var parameter in method.ParameterList.Parameters)
                 {
                     foreach (var type in Globals.EntityFrameworkObjects)
                     {
-                        if (bindObject.ObjectType.Equals(type))
+                        if (type.Equals(parameter.Type.GetUnderlyingType()))
                         {
-                            var finding = new OverpostingViaBindObject();
+                            var finding = new OverpostingViaControllerMethod();
 
-                            finding.RootLocation = new SourceLocation(bindObject.ObjectType);
+                            finding.RootLocation = new SourceLocation(parameter);
 
                             var callStack = new CallStack();
-                            callStack.AddLocation(bindObject.ObjectType);
-                            callStack.AddLocation(bindObject.ClassDeclaration);
+                            callStack.AddLocation(parameter);
+                            callStack.AddLocation(method);
                             finding.CallStacks.Add(callStack);
 
                             findings.Add(finding);
                         }
                     }
                 }
-                catch (Exception ex) 
+            }
+            catch (Exception ex) 
+            { 
+                Globals.RuntimeErrors.Add(new UnknownSingleFindingError(method, ex));
+            }
+        }
+
+        return findings;
+    }
+
+    internal static List<BaseFinding> FindEFObjectsAsBindObjects(RazorPageBindObjectSyntaxWalker walker, SyntaxNode root)
+    {
+        if (walker.RazorPageBindObjects.Count == 0)
+            walker.Visit(root);
+
+        var findings = new List<BaseFinding>();
+
+        foreach (var bindObject in walker.RazorPageBindObjects)
+        {
+            try
+            {
+                foreach (var type in Globals.EntityFrameworkObjects)
                 {
-                    Globals.RuntimeErrors.Add(new UnknownSingleFindingError(bindObject.ClassDeclaration, ex));
+                    if (bindObject.ObjectType.Equals(type))
+                    {
+                        var finding = new OverpostingViaBindObject();
+
+                        finding.RootLocation = new SourceLocation(bindObject.ObjectType);
+
+                        var callStack = new CallStack();
+                        callStack.AddLocation(bindObject.ObjectType);
+                        callStack.AddLocation(bindObject.ClassDeclaration);
+                        finding.CallStacks.Add(callStack);
+
+                        findings.Add(finding);
+                    }
                 }
             }
-
-            return findings;
+            catch (Exception ex) 
+            {
+                Globals.RuntimeErrors.Add(new UnknownSingleFindingError(bindObject.ClassDeclaration, ex));
+            }
         }
+
+        return findings;
     }
 }

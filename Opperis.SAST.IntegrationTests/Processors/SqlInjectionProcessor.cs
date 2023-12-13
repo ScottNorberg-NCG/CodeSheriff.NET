@@ -8,28 +8,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.IntegrationTests.Processors
+namespace Opperis.SAST.IntegrationTests.Processors;
+
+internal static class SqlInjectionProcessor
 {
-    internal static class SqlInjectionProcessor
+    internal static List<BaseFinding> GetSqlInjections()
     {
-        internal static List<BaseFinding> GetSqlInjections()
+        var retVal = new List<BaseFinding>();
+
+        foreach (var project in Globals.Solution.Projects)
         {
-            var retVal = new List<BaseFinding>();
+            Globals.Compilation = project.GetCompilationAsync().Result;
 
-            foreach (var project in Globals.Solution.Projects)
+            foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
             {
-                Globals.Compilation = project.GetCompilationAsync().Result;
+                var root = syntaxTree.GetRoot();
 
-                foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
-                {
-                    var root = syntaxTree.GetRoot();
-
-                    var walker = new DatabaseCommandTextSyntaxWalker();
-                    retVal.AddRange(SQLInjectionAnalyzer.GetSQLInjections(walker, root));
-                }
+                var walker = new DatabaseCommandTextSyntaxWalker();
+                retVal.AddRange(SQLInjectionAnalyzer.GetSQLInjections(walker, root));
             }
-
-            return retVal;
         }
+
+        return retVal;
     }
 }

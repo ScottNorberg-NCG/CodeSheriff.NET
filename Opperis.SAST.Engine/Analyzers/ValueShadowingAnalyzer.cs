@@ -10,47 +10,46 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.Analyzers
+namespace Opperis.SAST.Engine.Analyzers;
+
+internal class ValueShadowingAnalyzer
 {
-    internal class ValueShadowingAnalyzer
+    internal static List<BaseFinding> FindValueShadowingPossibilities(ControllerMethodSyntaxWalker walker, SyntaxNode root)
     {
-        internal static List<BaseFinding> FindValueShadowingPossibilities(ControllerMethodSyntaxWalker walker, SyntaxNode root)
+        if (!walker.Methods.Any())
+            walker.Visit(root);
+
+        var findings = new List<BaseFinding>();
+
+        foreach (var method in walker.Methods)
         {
-            if (!walker.Methods.Any())
-                walker.Visit(root);
-
-            var findings = new List<BaseFinding>();
-
-            foreach (var method in walker.Methods)
+            try
             {
-                try
+                foreach (var parameter in method.ParameterList.Parameters)
                 {
-                    foreach (var parameter in method.ParameterList.Parameters)
+                    if (!parameter.HasBindingSourceInfo())
                     {
-                        if (!parameter.HasBindingSourceInfo())
-                        {
-                            var finding = new ControllerParameterMissingBindingInfo();
+                        var finding = new ControllerParameterMissingBindingInfo();
 
-                            finding.RootLocation = new SourceLocation(parameter);
+                        finding.RootLocation = new SourceLocation(parameter);
 
-                            var callStack = new CallStack();
-                            callStack.AddLocation(parameter);
-                            callStack.AddLocation(method);
-                            callStack.AddLocation(method.Parent);
+                        var callStack = new CallStack();
+                        callStack.AddLocation(parameter);
+                        callStack.AddLocation(method);
+                        callStack.AddLocation(method.Parent);
 
-                            finding.CallStacks.Add(callStack);
+                        finding.CallStacks.Add(callStack);
 
-                            findings.Add(finding);
-                        }
+                        findings.Add(finding);
                     }
                 }
-                catch (Exception ex)
-                {
-                    Globals.RuntimeErrors.Add(new UnknownSingleFindingError(method, ex));
-                }
             }
-
-            return findings;
+            catch (Exception ex)
+            {
+                Globals.RuntimeErrors.Add(new UnknownSingleFindingError(method, ex));
+            }
         }
+
+        return findings;
     }
 }

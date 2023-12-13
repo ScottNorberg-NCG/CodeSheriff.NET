@@ -5,72 +5,71 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.IntegrationTests
+namespace Opperis.SAST.IntegrationTests;
+
+internal static class Assert
 {
-    internal static class Assert
+    internal static void AreEqual(object expected, object actual, string message)
     {
-        internal static void AreEqual(object expected, object actual, string message)
+        try
         {
-            try
+            if (expected.Equals(actual))
             {
-                if (expected.Equals(actual))
-                {
-                    Console.WriteLine($"PASSED: {message}");
-                }
-                else
-                {
-                    WriteError($"FAILED: Expected {expected}, Actual {actual}, {message}");
-                }
+                Console.WriteLine($"PASSED: {message}");
             }
-            catch (Exception ex)
+            else
             {
-                WriteError($"FAILED: AreEqual for test {message} threw exception {ex.Message}");
+                WriteError($"FAILED: Expected {expected}, Actual {actual}, {message}");
             }
         }
+        catch (Exception ex)
+        {
+            WriteError($"FAILED: AreEqual for test {message} threw exception {ex.Message}");
+        }
+    }
 
-        internal static void IsTrue(object expected, string message)
+    internal static void IsTrue(object expected, string message)
+    {
+        try
         {
-            try
+            if (Convert.ToBoolean(expected))
             {
-                if (Convert.ToBoolean(expected))
-                {
-                    Console.WriteLine($"PASSED: {message}");
-                }
-                else
-                {
-                    WriteError($"FAILED: IsTrue Failed, {message}");
-                }
+                Console.WriteLine($"PASSED: {message}");
             }
-            catch (Exception ex)
+            else
             {
-                WriteError($"FAILED: IsTrue for test {message} threw exception {ex.Message}");
+                WriteError($"FAILED: IsTrue Failed, {message}");
             }
         }
+        catch (Exception ex)
+        {
+            WriteError($"FAILED: IsTrue for test {message} threw exception {ex.Message}");
+        }
+    }
 
-        internal static void AllRootLocationsSet(List<BaseFinding> findings, string message)
+    internal static void AllRootLocationsSet(List<BaseFinding> findings, string message)
+    {
+        try
         {
-            try
+            if (findings.Count(f => f.RootLocation == null) == 0)
             {
-                if (findings.Count(f => f.RootLocation == null) == 0)
-                {
-                    Console.WriteLine($"PASSED: No null RootLocation values for {message}");
-                }
-                else
-                {
-                    WriteError($"FAILED: Null RootLocation values for {message}");
-                } 
+                Console.WriteLine($"PASSED: No null RootLocation values for {message}");
             }
-            catch (Exception ex)
+            else
             {
-                WriteError($"FAILED: IsTrue for test {message} threw exception {ex.Message}");
-            }
+                WriteError($"FAILED: Null RootLocation values for {message}");
+            } 
         }
+        catch (Exception ex)
+        {
+            WriteError($"FAILED: IsTrue for test {message} threw exception {ex.Message}");
+        }
+    }
 
-        private static void WriteError(string message)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(message);
-            Console.ForegroundColor = ConsoleColor.White;
-        }
+    private static void WriteError(string message)
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine(message);
+        Console.ForegroundColor = ConsoleColor.White;
     }
 }
