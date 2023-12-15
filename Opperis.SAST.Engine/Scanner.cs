@@ -17,7 +17,7 @@ namespace Opperis.SAST.Engine
 {
     internal static class Scanner
     {
-        internal static List<BaseFinding> Scan(string solutionFilePath, bool includeNuGet)
+        internal static List<BaseFinding> Scan(string solutionFilePath, bool includeNuGet, bool includeTrufflehog)
         {
             if (!MSBuildLocator.IsRegistered)
                 MSBuildLocator.RegisterDefaults();
@@ -29,6 +29,22 @@ namespace Opperis.SAST.Engine
                 Globals.Solution = workspace.OpenSolutionAsync(solutionFilePath).Result;
 
                 findings.AddRange(OverpostingAnalyzer.FindEFObjectsAsParameters());
+
+                if (includeTrufflehog)
+                {
+                    foreach (var project in Globals.Solution.Projects)
+                    {
+                        foreach (var doc in project.AdditionalDocuments)
+                        {
+                            findings.AddRange(TrufflehogAnalyzer.RunTrufflehogScan(doc.FilePath));
+                        }
+
+                        foreach (var doc in project.Documents)
+                        {
+                            findings.AddRange(TrufflehogAnalyzer.RunTrufflehogScan(doc.FilePath));
+                        }
+                    }
+                }
 
                 List<GitLeaksRule> rules = new List<GitLeaksRule>();
                 

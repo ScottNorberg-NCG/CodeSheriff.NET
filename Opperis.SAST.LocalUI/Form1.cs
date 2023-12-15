@@ -15,6 +15,7 @@ namespace Opperis.SAST.LocalUI
             //txtSolutionFile.Text = "C:\\Users\\scott\\Downloads\\sentry-dotnet-main\\sentry-dotnet-main\\Sentry.NoMobile.sln";
             txtSolutionFile.Text = "C:\\Users\\scott\\Source\\repos\\VulnerabilityBuffet2\\AspNetCore\\NCG.SecurityDetection.VulnerabilityBuffet.sln";
             chkIncludeBindings.Checked = true;
+            chkTrufflehog.Checked = true;
 #endif
         }
 
@@ -43,7 +44,7 @@ namespace Opperis.SAST.LocalUI
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            var findings = Scanner.Scan(txtSolutionFile.Text, chkNuGet.Checked);
+            var findings = Scanner.Scan(txtSolutionFile.Text, chkNuGet.Checked, chkTrufflehog.Checked);
             stopwatch.Stop();
 
             var content = new StringBuilder();
@@ -132,6 +133,11 @@ namespace Opperis.SAST.LocalUI
             sb.AppendLine(string.Join("<hr>", content.Select(c => System.Web.HttpUtility.HtmlEncode(c))));
             sb.AppendLine("</div>");
             sb.AppendLine("</p>");
+        }
+
+        private void lblTrufflehog_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("To run Trufflehog, you must have it installed on the machine running the scan. For more information about Trufflehog, please see https://github.com/trufflesecurity/trufflehog.");
         }
     }
 }

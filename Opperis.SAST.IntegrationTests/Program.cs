@@ -28,14 +28,7 @@ internal class Program
         {
             Globals.Solution = workspace.OpenSolutionAsync(solutionFilePath).Result;
 
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
 
-            TestGetStoredSecrets();
-
-            stopwatch.Stop();
-
-            Console.WriteLine(stopwatch.ElapsedMilliseconds);
 
             //foreach (var project in Globals.Solution.Projects)
             //{
@@ -50,6 +43,8 @@ internal class Program
             //    }
             //}
 
+            TestTrufflehogFindings();
+            TestGetStoredSecrets();
             TestGetScaIssues();
             TestGetStoredSecrets();
             TestFileManipulationIssues();
@@ -71,6 +66,13 @@ internal class Program
 
             Console.WriteLine($"Scan completed with {Globals.RuntimeErrors.Count} errors");
         }
+    }
+
+    private static void TestTrufflehogFindings()
+    {
+        var truffleHogFindings = TrufflehogProcessor.ProcessSolution();
+        Assert.AreEqual(5, truffleHogFindings.Count, "Unexpected number of Trufflehog findings");
+        Assert.AllRootLocationsSet(truffleHogFindings, "TestTrufflehogFindings");
     }
 
     private static void TestGetScaIssues()

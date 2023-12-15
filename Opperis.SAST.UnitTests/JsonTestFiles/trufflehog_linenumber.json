@@ -1,0 +1,22 @@
+{
+  "SourceMetadata": {
+    "Data": {
+      "Filesystem": {
+        "file": "C:\\Users\\scott\\Source\\repos\\VulnerabilityBuffet2\\AspNetCore\\NCG.SecurityDetection.VulnerabilityBuffet\\Logging\\SafeDatabaseLogger.cs",
+        "line": 20
+      }
+    }
+  },
+  "SourceID": 1,
+  "SourceType": 15,
+  "SourceName": "trufflehog - filesystem",
+  "DetectorType": 898,
+  "DetectorName": "SQLServer",
+  "DecoderName": "PLAIN",
+  "Verified": false,
+  "Raw": "P@ssw0rd*",
+  "RawV2": "sqlserver://ApplicationLogUser:P%40ssw0rd%2A@localhost/%5CSQL2019?database=VulnerabilityBuffet\u0026disableRetry=false",
+  "Redacted": "sqlserver://ApplicationLogUser:********@localhost/%5CSQL2019?database=VulnerabilityBuffet\u0026disableRetry=false",
+  "ExtraData": null,
+  "StructuredData": null
+}

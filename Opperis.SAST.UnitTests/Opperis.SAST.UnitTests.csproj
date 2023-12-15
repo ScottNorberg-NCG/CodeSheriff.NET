@@ -13,6 +13,8 @@
     <None Remove="HtmlTestFiles\Layout.txt" />
     <None Remove="HtmlTestFiles\OpperisBlog.txt" />
     <None Remove="HtmlTestFiles\ValidationPartial.txt" />
+    <None Remove="JsonTestFiles\trufflehog_linenumber.json" />
+    <None Remove="JsonTestFiles\trufflehog_nolinenumber.json" />
     <None Remove="Other\SyntaxTree.txt" />
   </ItemGroup>
 
@@ -21,6 +23,8 @@
     <EmbeddedResource Include="HtmlTestFiles\Layout.txt" />
     <EmbeddedResource Include="HtmlTestFiles\OpperisBlog.txt" />
     <EmbeddedResource Include="HtmlTestFiles\ValidationPartial.txt" />
+    <EmbeddedResource Include="JsonTestFiles\trufflehog_linenumber.json" />
+    <EmbeddedResource Include="JsonTestFiles\trufflehog_nolinenumber.json" />
     <EmbeddedResource Include="Other\SyntaxTree.txt" />
   </ItemGroup>
 

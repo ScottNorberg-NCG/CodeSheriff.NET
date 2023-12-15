@@ -39,6 +39,8 @@
             btnScan = new Button();
             chkIncludeBindings = new CheckBox();
             chkNuGet = new CheckBox();
+            chkTrufflehog = new CheckBox();
+            lblTrufflehog = new Label();
             SuspendLayout();
             // 
             // label1
@@ -100,7 +102,7 @@
             // 
             // btnScan
             // 
-            btnScan.Location = new Point(155, 176);
+            btnScan.Location = new Point(155, 203);
             btnScan.Name = "btnScan";
             btnScan.Size = new Size(118, 30);
             btnScan.TabIndex = 6;
@@ -111,7 +113,7 @@
             // chkIncludeBindings
             // 
             chkIncludeBindings.AutoSize = true;
-            chkIncludeBindings.Location = new Point(12, 140);
+            chkIncludeBindings.Location = new Point(12, 165);
             chkIncludeBindings.Name = "chkIncludeBindings";
             chkIncludeBindings.Size = new Size(185, 19);
             chkIncludeBindings.TabIndex = 7;
@@ -124,7 +126,7 @@
             chkNuGet.AutoSize = true;
             chkNuGet.Checked = true;
             chkNuGet.CheckState = CheckState.Checked;
-            chkNuGet.Location = new Point(12, 115);
+            chkNuGet.Location = new Point(12, 140);
             chkNuGet.Name = "chkNuGet";
             chkNuGet.Size = new Size(224, 19);
             chkNuGet.TabIndex = 9;
@@ -132,11 +134,36 @@
             chkNuGet.TextAlign = ContentAlignment.MiddleRight;
             chkNuGet.UseVisualStyleBackColor = true;
             // 
+            // chkTrufflehog
+            // 
+            chkTrufflehog.AutoSize = true;
+            chkTrufflehog.Location = new Point(12, 115);
+            chkTrufflehog.Name = "chkTrufflehog";
+            chkTrufflehog.Size = new Size(107, 19);
+            chkTrufflehog.TabIndex = 10;
+            chkTrufflehog.Text = "Use Trufflehog?";
+            chkTrufflehog.TextAlign = ContentAlignment.MiddleRight;
+            chkTrufflehog.UseVisualStyleBackColor = true;
+            // 
+            // lblTrufflehog
+            // 
+            lblTrufflehog.AutoSize = true;
+            lblTrufflehog.Font = new Font("Segoe UI", 9F, FontStyle.Underline);
+            lblTrufflehog.ForeColor = SystemColors.Highlight;
+            lblTrufflehog.Location = new Point(125, 116);
+            lblTrufflehog.Name = "lblTrufflehog";
+            lblTrufflehog.Size = new Size(20, 15);
+            lblTrufflehog.TabIndex = 11;
+            lblTrufflehog.Text = "(?)";
+            lblTrufflehog.Click += lblTrufflehog_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(465, 221);
+            ClientSize = new Size(465, 248);
+            Controls.Add(lblTrufflehog);
+            Controls.Add(chkTrufflehog);
             Controls.Add(chkNuGet);
             Controls.Add(chkIncludeBindings);
             Controls.Add(btnScan);
@@ -165,5 +192,7 @@
         private Button btnScan;
         private CheckBox chkIncludeBindings;
         private CheckBox chkNuGet;
+        private CheckBox chkTrufflehog;
+        private Label lblTrufflehog;
     }
 }
