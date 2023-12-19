@@ -71,7 +71,7 @@ internal class Program
     private static void TestTrufflehogFindings()
     {
         var truffleHogFindings = TrufflehogProcessor.ProcessSolution();
-        Assert.AreEqual(5, truffleHogFindings.Count, "Unexpected number of Trufflehog findings");
+        Assert.AreEqual(5, truffleHogFindings.Count, "Expected number of Trufflehog findings");
         Assert.AllRootLocationsSet(truffleHogFindings, "TestTrufflehogFindings");
     }
 

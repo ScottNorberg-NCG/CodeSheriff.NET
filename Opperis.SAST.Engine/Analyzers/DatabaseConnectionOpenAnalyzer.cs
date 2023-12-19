@@ -16,7 +16,7 @@ internal static class DatabaseConnectionOpenAnalyzer
 {
     internal static List<BaseFinding> FindUnsafeDatabaseConnectionOpens(DatabaseConnectionOpenSyntaxWalker walker, SyntaxNode root)
     {
-        if (walker.ConnectionOpens.Count == 0)
+        if (!walker.HasRun)
             walker.Visit(root);
 
         var findings = new List<BaseFinding>();

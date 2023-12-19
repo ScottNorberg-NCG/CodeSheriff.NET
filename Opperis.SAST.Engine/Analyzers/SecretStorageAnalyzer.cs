@@ -15,71 +15,70 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.Analyzers
+namespace Opperis.SAST.Engine.Analyzers;
+
+internal static class SecretStorageAnalyzer
 {
-    internal static class SecretStorageAnalyzer
+    internal static List<BaseFinding> GetStoredSecrets(StringLiteralSyntaxWalker walker, SyntaxNode root, List<GitLeaksRule> rules)
     {
-        internal static List<BaseFinding> GetStoredSecrets(StringLiteralSyntaxWalker walker, SyntaxNode root, List<GitLeaksRule> rules)
+        if (!walker.HasRun)
+            walker.Visit(root);
+
+        var findings = new List<BaseFinding>();
+
+        Parallel.ForEach(walker.StringLiterals, literal =>
+        //foreach (var literal in walker.StringLiterals)
         {
-            if (walker.StringLiterals.Count == 0)
-                walker.Visit(root);
-
-            var findings = new List<BaseFinding>();
-
-            Parallel.ForEach(walker.StringLiterals, literal =>
-            //foreach (var literal in walker.StringLiterals)
+            try
             {
-                try
+                var value = literal.ToString().Trim('"');
+
+                if (value.Length >= Globals.MinStringLengthForSecretMatching)
                 {
-                    var value = literal.ToString().Trim('"');
-
-                    if (value.Length >= Globals.MinStringLengthForSecretMatching)
+                    //Parallel.ForEach(rules, rule =>
+                    foreach (var rule in rules)
                     {
-                        //Parallel.ForEach(rules, rule =>
-                        foreach (var rule in rules)
+                        //We get too many false positives with this one, so skip it
+                        //TODO: make skipping this configurable
+                        if (rule.id != "generic-api-key")
                         {
-                            //We get too many false positives with this one, so skip it
-                            //TODO: make skipping this configurable
-                            if (rule.id != "generic-api-key")
+                            try
                             {
-                                try
+                                if (Regex.Match(value, rule.regex).Success)
                                 {
-                                    if (Regex.Match(value, rule.regex).Success)
+                                    var finding = new SecretFound(rule);
+                                    finding.RootLocation = new SourceLocation(literal);
+                                    findings.Add(finding);
+                                }
+                                else
+                                {
+                                    if (literal.Parent.Parent is VariableDeclaratorSyntax variable)
                                     {
-                                        var finding = new SecretFound(rule);
-                                        finding.RootLocation = new SourceLocation(literal);
-                                        findings.Add(finding);
-                                    }
-                                    else
-                                    {
-                                        if (literal.Parent.Parent is VariableDeclaratorSyntax variable)
-                                        {
-                                            var assignment = variable.ToString();
+                                        var assignment = variable.ToString();
 
-                                            if (Regex.Match(assignment, rule.regex).Success)
-                                            {
-                                                var finding = new SecretFound(rule);
-                                                finding.RootLocation = new SourceLocation(variable);
-                                                findings.Add(finding);
-                                            }
+                                        if (Regex.Match(assignment, rule.regex).Success)
+                                        {
+                                            var finding = new SecretFound(rule);
+                                            finding.RootLocation = new SourceLocation(variable);
+                                            findings.Add(finding);
                                         }
                                     }
                                 }
-                                catch (Exception ex)
-                                {
-                                    Globals.RuntimeErrors.Add(new InvalidRegex(rule.regex, ex));
-                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Globals.RuntimeErrors.Add(new InvalidRegex(rule.regex, ex));
                             }
                         }
                     }
                 }
-                catch (Exception ex)
-                {
-                    Globals.RuntimeErrors.Add(new UnknownSingleFindingError(literal, ex));
-                }
-            });
+            }
+            catch (Exception ex)
+            {
+                Globals.RuntimeErrors.Add(new UnknownSingleFindingError(literal, ex));
+            }
+        });
 
-            return findings;
-        }
+        return findings;
     }
 }

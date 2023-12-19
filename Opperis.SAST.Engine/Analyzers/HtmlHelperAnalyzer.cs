@@ -12,7 +12,7 @@ internal class HtmlHelperAnalyzer : BaseCshtmlToCodeAnalyzer
 {
     internal List<BaseFinding> FindXssIssues(HtmlHelperSyntaxWalker walker, SyntaxNode root)
     {
-        if (!walker.UnsafeHtmlHelpers.Any())
+        if (!walker.HasRun)
             walker.Visit(root);
 
         var findings = new List<BaseFinding>();

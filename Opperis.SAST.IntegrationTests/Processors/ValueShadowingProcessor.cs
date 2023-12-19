@@ -24,7 +24,7 @@ internal static class ValueShadowingProcessor
             {
                 var root = syntaxTree.GetRoot();
 
-                var walker = new ControllerMethodSyntaxWalker();
+                var walker = new UIProcessorMethodSyntaxWalker();
                 retVal.AddRange(ValueShadowingAnalyzer.FindValueShadowingPossibilities(walker, root));
             }
         }

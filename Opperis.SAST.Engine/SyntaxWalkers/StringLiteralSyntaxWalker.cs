@@ -6,16 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.SyntaxWalkers
-{
-    internal class StringLiteralSyntaxWalker : CSharpSyntaxWalker
-    {
-        public List<LiteralExpressionSyntax> StringLiterals { get; private set; } = new List<LiteralExpressionSyntax>();
+namespace Opperis.SAST.Engine.SyntaxWalkers;
 
-        public override void VisitLiteralExpression(LiteralExpressionSyntax node)
-        {
-            if (node.Kind().ToString() == "StringLiteralExpression")
-                StringLiterals.Add(node);
-        }
+internal class StringLiteralSyntaxWalker : CSharpSyntaxWalker, ISyntaxWalker
+{
+    public List<LiteralExpressionSyntax> StringLiterals { get; private set; } = new List<LiteralExpressionSyntax>();
+
+    public bool HasRun => StringLiterals.Any();
+
+    public override void VisitLiteralExpression(LiteralExpressionSyntax node)
+    {
+        if (node.Kind().ToString() == "StringLiteralExpression")
+            StringLiterals.Add(node);
     }
 }

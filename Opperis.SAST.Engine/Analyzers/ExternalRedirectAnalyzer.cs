@@ -20,7 +20,7 @@ internal static class ExternalRedirectAnalyzer
 {
     internal static List<BaseFinding> FindProblematicExternalRedirects(ExternalRedirectSyntaxWalker walker, SyntaxNode root)
     {
-        if (walker.UnvalidatedRedirects.Count == 0)
+        if (!walker.HasRun)
             walker.Visit(root);
 
         var findings = new List<BaseFinding>();

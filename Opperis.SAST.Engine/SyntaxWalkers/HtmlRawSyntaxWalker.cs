@@ -7,26 +7,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.SyntaxWalkers
+namespace Opperis.SAST.Engine.SyntaxWalkers;
+
+internal class HtmlRawSyntaxWalker : CSharpSyntaxWalker, ISyntaxWalker
 {
-    internal class HtmlRawSyntaxWalker : CSharpSyntaxWalker
+    internal List<InvocationExpressionSyntax> HtmlRawCalls = new List<InvocationExpressionSyntax>();
+
+    public bool HasRun => HtmlRawCalls.Any();
+
+    public override void VisitInvocationExpression(InvocationExpressionSyntax node)
     {
-        internal List<InvocationExpressionSyntax> HtmlRawCalls = new List<InvocationExpressionSyntax>();
-
-        public override void VisitInvocationExpression(InvocationExpressionSyntax node)
+        if (node.Expression is MemberAccessExpressionSyntax memberAccess &&
+            memberAccess.Name.Identifier.Text == "Raw")
         {
-            if (node.Expression is MemberAccessExpressionSyntax memberAccess &&
-                memberAccess.Name.Identifier.Text == "Raw")
+            var symbol = memberAccess.ToSymbol();
+
+            if (symbol != null && symbol.ContainingType.Name == "IHtmlHelper")
             {
-                var symbol = memberAccess.ToSymbol();
-
-                if (symbol != null && symbol.ContainingType.Name == "IHtmlHelper")
-                {
-                    HtmlRawCalls.Add(node);
-                }
+                HtmlRawCalls.Add(node);
             }
-
-            base.VisitInvocationExpression(node);
         }
+
+        base.VisitInvocationExpression(node);
     }
 }

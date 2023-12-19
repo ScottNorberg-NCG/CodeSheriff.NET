@@ -6,16 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.SyntaxWalkers
-{
-    internal class ReturnStatementSyntaxWalker : CSharpSyntaxWalker
-    {
-        public List<ReturnStatementSyntax> ReturnStatements = new List<ReturnStatementSyntax>();
+namespace Opperis.SAST.Engine.SyntaxWalkers;
 
-        public override void VisitReturnStatement(ReturnStatementSyntax node)
-        {
-            ReturnStatements.Add(node);
-            base.VisitReturnStatement(node);
-        }
+internal class ReturnStatementSyntaxWalker : CSharpSyntaxWalker, ISyntaxWalker
+{
+    public List<ReturnStatementSyntax> ReturnStatements = new List<ReturnStatementSyntax>();
+
+    public bool HasRun => ReturnStatements.Any();
+
+    public override void VisitReturnStatement(ReturnStatementSyntax node)
+    {
+        ReturnStatements.Add(node);
+        base.VisitReturnStatement(node);
     }
 }

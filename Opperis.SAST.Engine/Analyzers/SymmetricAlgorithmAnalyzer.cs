@@ -17,7 +17,7 @@ internal static class SymmetricAlgorithmAnalyzer
 {
     internal static List<BaseFinding> FindDeprecatedAlgorithms(SymmetricAlgorithmSyntaxWalker walker, SyntaxNode root)
     {
-        if (walker.SymmetricAlgorithms.Count == 0)
+        if (!walker.HasRun)
             walker.Visit(root);
 
         var findings = new List<BaseFinding>();

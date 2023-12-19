@@ -248,7 +248,8 @@ public partial class Form1 : Form
                     lblStatusSqlInjection.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 
-                    var controllerMethods = new ControllerMethodSyntaxWalker();
+                    //TODO: Refactor this so we go off the global list to avoid doing the analysis twice
+                    var controllerMethods = new UIProcessorMethodSyntaxWalker();
                     _findings.AddRange(CsrfAnalyzer.FindCsrfIssues(controllerMethods, root));
                     _findings.AddRange(ValueShadowingAnalyzer.FindValueShadowingPossibilities(controllerMethods, root));
                     lblStatusCsrf.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);

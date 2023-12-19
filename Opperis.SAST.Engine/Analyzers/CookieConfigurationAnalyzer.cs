@@ -17,7 +17,7 @@ internal static class CookieConfigurationAnalyzer
 {
     internal static List<BaseFinding> FindMisconfiguredCookies(CookieAppendSyntaxWalker walker, SyntaxNode root)
     {
-        if (walker.CookieAdds.Count == 0)
+        if (!walker.HasRun)
             walker.Visit(root);
 
         var findings = new List<BaseFinding>();

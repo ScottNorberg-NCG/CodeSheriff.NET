@@ -11,7 +11,7 @@ internal static class HardCodedConnectionStringAnalyzer
 {
     internal static List<BaseFinding> FindHardCodedConnectionStrings(DatabaseConnectionStringSyntaxWalker walker, SyntaxNode root)
     {
-        if (walker.ConnectionStringSets.Count == 0 && walker.NewConnectionStrings.Count == 0)
+        if (!walker.HasRun)
             walker.Visit(root);
 
         var findings = new List<BaseFinding>();

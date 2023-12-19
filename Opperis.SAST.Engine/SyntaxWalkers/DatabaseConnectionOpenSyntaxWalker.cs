@@ -7,32 +7,33 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.SyntaxWalkers
+namespace Opperis.SAST.Engine.SyntaxWalkers;
+
+internal class DatabaseConnectionOpenSyntaxWalker : CSharpSyntaxWalker, ISyntaxWalker
 {
-    internal class DatabaseConnectionOpenSyntaxWalker : CSharpSyntaxWalker
+    internal List<InvocationExpressionSyntax> ConnectionOpens = new List<InvocationExpressionSyntax>();
+
+    public bool HasRun => ConnectionOpens.Any();
+
+    public override void VisitInvocationExpression(InvocationExpressionSyntax node)
     {
-        internal List<InvocationExpressionSyntax> ConnectionOpens = new List<InvocationExpressionSyntax>();
-
-        public override void VisitInvocationExpression(InvocationExpressionSyntax node)
+        if (node.Expression is MemberAccessExpressionSyntax memberAccess &&
+            memberAccess.Name.Identifier.Text == "Open")
         {
-            if (node.Expression is MemberAccessExpressionSyntax memberAccess &&
-                memberAccess.Name.Identifier.Text == "Open")
+            var model = Globals.Compilation.GetSemanticModel(node.SyntaxTree);
+            var symbol = model.GetSymbolInfo(memberAccess).Symbol;
+
+            if (symbol == null)
             {
-                var model = Globals.Compilation.GetSemanticModel(node.SyntaxTree);
-                var symbol = model.GetSymbolInfo(memberAccess).Symbol;
-
-                if (symbol == null)
-                {
-                    Globals.RuntimeErrors.Add(new NoSymbolForExpression(memberAccess));
-                }
-                else if (symbol.ContainingType.Name == "SqlConnection")
-                {
-                    if (!node.Ancestors().OfType<UsingStatementSyntax>().Any())
-                        ConnectionOpens.Add(node);
-                }
+                Globals.RuntimeErrors.Add(new NoSymbolForExpression(memberAccess));
             }
-
-            base.VisitInvocationExpression(node);
+            else if (symbol.ContainingType.Name == "SqlConnection")
+            {
+                if (!node.Ancestors().OfType<UsingStatementSyntax>().Any())
+                    ConnectionOpens.Add(node);
+            }
         }
+
+        base.VisitInvocationExpression(node);
     }
 }

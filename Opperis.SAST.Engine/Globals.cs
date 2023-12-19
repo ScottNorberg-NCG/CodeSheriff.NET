@@ -137,10 +137,10 @@ internal static class Globals
                 var root = syntaxTree.GetRoot();
 
                 //Get Controller Methods
-                var methodFinder = new ControllerMethodSyntaxWalker();
+                var methodFinder = new UIProcessorMethodSyntaxWalker();
                 methodFinder.Visit(root);
 
-                foreach (var method in methodFinder.Methods)
+                foreach (var method in methodFinder.ControllerMethods)
                 {
                     _solutionControllerMethods.Add(method);
                 }

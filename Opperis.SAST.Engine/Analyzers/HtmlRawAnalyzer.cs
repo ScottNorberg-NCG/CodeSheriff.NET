@@ -10,7 +10,7 @@ internal class HtmlRawAnalyzer : BaseCshtmlToCodeAnalyzer
 {
     internal List<BaseFinding> FindXssIssues(HtmlRawSyntaxWalker walker, SyntaxNode root)
     {
-        if (!walker.HtmlRawCalls.Any())
+        if (!walker.HasRun)
             walker.Visit(root);
 
         var findings = new List<BaseFinding>();

@@ -24,7 +24,7 @@ internal static class CsrfProcessor
             {
                 var root = syntaxTree.GetRoot();
 
-                var walker = new ControllerMethodSyntaxWalker();
+                var walker = new UIProcessorMethodSyntaxWalker();
                 retVal.AddRange(CsrfAnalyzer.FindCsrfIssues(walker, root));
             }
         }

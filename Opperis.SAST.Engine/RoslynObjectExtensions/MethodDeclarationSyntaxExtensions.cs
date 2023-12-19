@@ -18,6 +18,36 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
             if (!method.Modifiers.Any(m => m.ValueText == "public"))
                 return false;
 
+            if (method.IsControllerMethod() || method.IsRazorMethod())
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        internal static bool IsControllerMethod(this MethodDeclarationSyntax method)
+        {
+            if (!method.Modifiers.Any(m => m.ValueText == "public"))
+                return false;
+
+            if (method.Parent is ClassDeclarationSyntax classDeclaration)
+            {
+                if (classDeclaration.InheritsFrom("Microsoft.AspNetCore.Mvc.Controller"))
+                {
+                    //TODO: look at return type too to be sure
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        internal static bool IsRazorMethod(this MethodDeclarationSyntax method)
+        {
+            if (!method.Modifiers.Any(m => m.ValueText == "public"))
+                return false;
+
             if (method.Parent is ClassDeclarationSyntax classDeclaration)
             {
                 if (classDeclaration.InheritsFrom("Microsoft.AspNetCore.Mvc.RazorPages.PageModel"))
@@ -26,11 +56,6 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
 
                     if (methodName == "OnPostAsync" || methodName == "OnGetAsync")
                         return true;
-                }
-                else if (classDeclaration.InheritsFrom("Microsoft.AspNetCore.Mvc.Controller"))
-                { 
-                    //TODO: look at return type too to be sure
-                    return true;                
                 }
             }
 

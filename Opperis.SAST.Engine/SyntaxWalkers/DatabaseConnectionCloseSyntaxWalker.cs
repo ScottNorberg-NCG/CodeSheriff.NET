@@ -6,27 +6,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.SyntaxWalkers
+namespace Opperis.SAST.Engine.SyntaxWalkers;
+
+internal class DatabaseConnectionCloseSyntaxWalker : CSharpSyntaxWalker, ISyntaxWalker
 {
-    internal class DatabaseConnectionCloseSyntaxWalker : CSharpSyntaxWalker
+    internal List<InvocationExpressionSyntax> ConnectionCloses = new List<InvocationExpressionSyntax>();
+
+    public bool HasRun => ConnectionCloses.Any();
+
+    public override void VisitInvocationExpression(InvocationExpressionSyntax node)
     {
-        internal List<InvocationExpressionSyntax> ConnectionCloses = new List<InvocationExpressionSyntax>();
-
-        public override void VisitInvocationExpression(InvocationExpressionSyntax node)
+        if (node.Expression is MemberAccessExpressionSyntax memberAccess &&
+            memberAccess.Name.Identifier.Text == "Close")
         {
-            if (node.Expression is MemberAccessExpressionSyntax memberAccess &&
-                memberAccess.Name.Identifier.Text == "Close")
+            var model = Globals.Compilation.GetSemanticModel(node.SyntaxTree);
+            var symbol = model.GetSymbolInfo(memberAccess).Symbol;
+
+            if (symbol.ContainingType.Name == "SqlConnection")
             {
-                var model = Globals.Compilation.GetSemanticModel(node.SyntaxTree);
-                var symbol = model.GetSymbolInfo(memberAccess).Symbol;
-
-                if (symbol.ContainingType.Name == "SqlConnection")
-                {
-                    ConnectionCloses.Add(node);
-                }
+                ConnectionCloses.Add(node);
             }
-
-            base.VisitInvocationExpression(node);
         }
+
+        base.VisitInvocationExpression(node);
     }
 }

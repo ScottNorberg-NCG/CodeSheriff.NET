@@ -9,29 +9,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.SyntaxWalkers
+namespace Opperis.SAST.Engine.SyntaxWalkers;
+
+internal class ExternalRedirectSyntaxWalker : CSharpSyntaxWalker, ISyntaxWalker
 {
-    internal class ExternalRedirectSyntaxWalker : CSharpSyntaxWalker
+    internal List<InvocationExpressionSyntax> UnvalidatedRedirects = new List<InvocationExpressionSyntax>();
+
+    public bool HasRun => UnvalidatedRedirects.Any();
+
+    public override void VisitInvocationExpression(InvocationExpressionSyntax node)
     {
-        internal List<InvocationExpressionSyntax> UnvalidatedRedirects = new List<InvocationExpressionSyntax>();
-
-        public override void VisitInvocationExpression(InvocationExpressionSyntax node)
+        if (node.Expression is IdentifierNameSyntax id && id.Identifier.Text == "Redirect")
         {
-            if (node.Expression is IdentifierNameSyntax id && id.Identifier.Text == "Redirect")
-            {
-                var model = Globals.Compilation.GetSemanticModel(node.SyntaxTree);
-                var symbol = model.GetSymbolInfo(id).Symbol;
+            var model = Globals.Compilation.GetSemanticModel(node.SyntaxTree);
+            var symbol = model.GetSymbolInfo(id).Symbol;
 
-                if (symbol != null) 
-                { 
-                    if (symbol.ContainingType.Name == "PageModel" || symbol.ContainingType.Name == "ControllerBase")
-                    {
-                        UnvalidatedRedirects.Add(node);
-                    }                
-                }
+            if (symbol != null) 
+            { 
+                if (symbol.ContainingType.Name == "PageModel" || symbol.ContainingType.Name == "ControllerBase")
+                {
+                    UnvalidatedRedirects.Add(node);
+                }                
             }
-
-            base.VisitInvocationExpression(node);
         }
+
+        base.VisitInvocationExpression(node);
     }
 }

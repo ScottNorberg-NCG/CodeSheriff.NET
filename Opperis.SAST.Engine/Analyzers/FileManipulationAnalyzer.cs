@@ -12,7 +12,7 @@ internal static class FileManipulationAnalyzer
 {
     internal static List<BaseFinding> FindFileManipulations(FileManipulationSyntaxWalker walker, SyntaxNode root)
     {
-        if (!walker.FileManipulations.Any())
+        if (!walker.HasRun)
             walker.Visit(root);
 
         var findings = new List<BaseFinding>();

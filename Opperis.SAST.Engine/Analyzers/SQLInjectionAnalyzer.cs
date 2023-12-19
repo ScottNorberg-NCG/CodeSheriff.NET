@@ -18,7 +18,7 @@ internal static class SQLInjectionAnalyzer
 {
     internal static List<BaseFinding> GetSQLInjections(DatabaseCommandTextSyntaxWalker walker, SyntaxNode root)
     {
-        if (walker.CommandTextSets.Count == 0)
+        if (!walker.HasRun)
             walker.Visit(root);
 
         var findings = new List<BaseFinding>();

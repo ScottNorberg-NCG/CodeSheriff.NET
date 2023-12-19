@@ -8,69 +8,70 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.SyntaxWalkers
+namespace Opperis.SAST.Engine.SyntaxWalkers;
+
+internal class DatabaseConnectionStringSyntaxWalker : CSharpSyntaxWalker, ISyntaxWalker
 {
-    internal class DatabaseConnectionStringSyntaxWalker : CSharpSyntaxWalker
+    public List<MemberAccessExpressionSyntax> ConnectionStringSets { get; private set; } = new List<MemberAccessExpressionSyntax>();
+    public List<ObjectCreationExpressionSyntax> NewConnectionStrings { get; private set; } = new List<ObjectCreationExpressionSyntax>();
+
+    public bool HasRun => ConnectionStringSets.Any() || NewConnectionStrings.Any();
+
+    public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
     {
-        public List<MemberAccessExpressionSyntax> ConnectionStringSets { get; private set; } = new List<MemberAccessExpressionSyntax>();
-        public List<ObjectCreationExpressionSyntax> NewConnectionStrings { get; private set; } = new List<ObjectCreationExpressionSyntax>();
-
-        public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
+        if (node.Parent is ClassDeclarationSyntax classDeclaration &&
+            classDeclaration.IsTestClass())
         {
-            if (node.Parent is ClassDeclarationSyntax classDeclaration &&
-                classDeclaration.IsTestClass())
-            {
-                base.VisitMethodDeclaration(node);
-                return;
-            }
-            
-            foreach (var child in node.DescendantNodes())
-            {
-                var member = child as MemberAccessExpressionSyntax;
-
-                if (member != null && IsDatabaseConnectionSet(member))
-                {
-                    ConnectionStringSets.Add(member);
-                }
-            }
-
             base.VisitMethodDeclaration(node);
+            return;
+        }
+        
+        foreach (var child in node.DescendantNodes())
+        {
+            var member = child as MemberAccessExpressionSyntax;
+
+            if (member != null && IsDatabaseConnectionSet(member))
+            {
+                ConnectionStringSets.Add(member);
+            }
         }
 
-        public override void VisitObjectCreationExpression(ObjectCreationExpressionSyntax node)
-        {
-            if (node.Type is IdentifierNameSyntax identifier)
-            {
-                if (identifier.Identifier.Text == "SqlConnection")
-                {
-                    NewConnectionStrings.Add(node);
-                }
-            }
+        base.VisitMethodDeclaration(node);
+    }
 
-            base.VisitObjectCreationExpression(node);
+    public override void VisitObjectCreationExpression(ObjectCreationExpressionSyntax node)
+    {
+        if (node.Type is IdentifierNameSyntax identifier)
+        {
+            if (identifier.Identifier.Text == "SqlConnection")
+            {
+                NewConnectionStrings.Add(node);
+            }
         }
 
-        private bool IsDatabaseConnectionSet(MemberAccessExpressionSyntax memberAccess)
-        {
-            if (memberAccess.Name.Identifier.Text != "ConnectionString")
-                return false;
+        base.VisitObjectCreationExpression(node);
+    }
 
-            if (memberAccess.Expression is IdentifierNameSyntax identifierName)
-            {
-                var objectType = identifierName.GetUnderlyingType();
-
-                if (objectType != null)
-                {
-                    var typeString = objectType.ToString();
-
-                    if (typeString == "Microsoft.Data.SqlClient.SqlConnection" || typeString == "System.Data.SqlClient.SqlConnection")
-                    {
-                        return true;
-                    }
-                }
-            }
-
+    private bool IsDatabaseConnectionSet(MemberAccessExpressionSyntax memberAccess)
+    {
+        if (memberAccess.Name.Identifier.Text != "ConnectionString")
             return false;
+
+        if (memberAccess.Expression is IdentifierNameSyntax identifierName)
+        {
+            var objectType = identifierName.GetUnderlyingType();
+
+            if (objectType != null)
+            {
+                var typeString = objectType.ToString();
+
+                if (typeString == "Microsoft.Data.SqlClient.SqlConnection" || typeString == "System.Data.SqlClient.SqlConnection")
+                {
+                    return true;
+                }
+            }
         }
+
+        return false;
     }
 }

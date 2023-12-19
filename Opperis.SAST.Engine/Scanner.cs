@@ -72,7 +72,7 @@ namespace Opperis.SAST.Engine
                         var databaseCalls = new DatabaseCommandTextSyntaxWalker();
                         findings.AddRange(SQLInjectionAnalyzer.GetSQLInjections(databaseCalls, root));
 
-                        var controllerMethods = new ControllerMethodSyntaxWalker();
+                        var controllerMethods = new UIProcessorMethodSyntaxWalker();
                         findings.AddRange(CsrfAnalyzer.FindCsrfIssues(controllerMethods, root));
                         findings.AddRange(ValueShadowingAnalyzer.FindValueShadowingPossibilities(controllerMethods, root));
 
