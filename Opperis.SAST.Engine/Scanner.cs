@@ -97,10 +97,14 @@ namespace Opperis.SAST.Engine
                         var rawAnalyzer = new HtmlRawAnalyzer();
                         findings.AddRange(rawAnalyzer.FindXssIssues(problematicHtmlRaws, root));
 
+                        var problematicHtmlHelpers = new HtmlHelperSyntaxWalker();
+                        var helperAnalyzer = new HtmlHelperAnalyzer();
+                        findings.AddRange(helperAnalyzer.FindXssIssues(problematicHtmlHelpers, root));
+
                         var overpostingsAsBindObjects = new RazorPageBindObjectSyntaxWalker();
                         findings.AddRange(OverpostingAnalyzer.FindEFObjectsAsBindObjects(overpostingsAsBindObjects, root));
 
-                        SearchForXssIssues(findings, root);
+
                         SearchForCookieManipulations(findings, root);
                         SearchForFileManipulations(findings, root);
 
@@ -129,15 +133,6 @@ namespace Opperis.SAST.Engine
         {
             var styleTags = CSHtmlStyleTagParser.GetStyleTags(cshtmlFile.GetTextAsync().Result.ToString());
             findings.AddRange(CSHtmlStyleTagParser.ParseStyleTagFindings(styleTags, cshtmlFile));
-        }
-
-
-
-        private static void SearchForXssIssues(List<BaseFinding> findings, SyntaxNode root)
-        {
-            var problematicHtmlHelpers = new HtmlHelperSyntaxWalker();
-            var helperAnalyzer = new HtmlHelperAnalyzer();
-            findings.AddRange(helperAnalyzer.FindXssIssues(problematicHtmlHelpers, root));
         }
 
         private static void SearchForCookieManipulations(List<BaseFinding> findings, SyntaxNode root)
