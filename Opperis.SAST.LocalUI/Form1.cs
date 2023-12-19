@@ -157,7 +157,7 @@ public partial class Form1 : Form
 
     private void RunScan()
     {
-        lblStatusStep.UpdateText("Scan started");
+        lblStatusStep.UpdateText("Loading projects");
 
         if (!MSBuildLocator.IsRegistered)
             MSBuildLocator.RegisterDefaults();
@@ -190,6 +190,7 @@ public partial class Form1 : Form
                         _findings.AddRange(TrufflehogAnalyzer.RunTrufflehogScan(doc.FilePath));
                         completed++;
                         lblStatusTrufflehog.UpdatePercentComplete(completed, totalDocs);
+                        RefreshFindingCount();
                     }
 
                     foreach (var doc in project.Documents)
@@ -197,13 +198,12 @@ public partial class Form1 : Form
                         _findings.AddRange(TrufflehogAnalyzer.RunTrufflehogScan(doc.FilePath));
                         completed++;
                         lblStatusTrufflehog.UpdatePercentComplete(completed, totalDocs);
+                        RefreshFindingCount();
                     }
                 }
-
-                RefreshFindingCount();
             }
 
-            lblStatusTrufflehog.UpdateText(COMPLETED);
+            lblStatusTrufflehog.UpdateText("100%");
 
             if (chkNuGet.Checked)
             {

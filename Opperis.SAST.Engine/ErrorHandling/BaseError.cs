@@ -15,7 +15,8 @@ internal abstract class BaseError
         InvalidRegex,
         NoSymbolForExpression,
         NuGetProcessingError,
-        UnknownForSingleFinding
+        UnknownForSingleFinding,
+        VariableMissingIdentifier
     }
 
     internal abstract ErrorCategory Category { get; }

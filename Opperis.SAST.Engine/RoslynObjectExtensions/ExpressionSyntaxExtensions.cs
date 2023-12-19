@@ -222,7 +222,13 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
                         var syntax = localSymbol.DeclaringSyntaxReferences.Single().GetSyntax();
                         var parent = syntax.Parent as VariableDeclarationSyntax;
 
-                        result.AddRange(GetCallStacksRecursive(parent.Variables.First().Initializer.Value, localCallStack));
+                        if (parent.Variables.First().Initializer != null)
+                            result.AddRange(GetCallStacksRecursive(parent.Variables.First().Initializer.Value, localCallStack));
+                        else
+                        { 
+                            result.Add(localCallStack);
+                            Globals.RuntimeErrors.Add(new VariableMissingIdentifier(asSymbol));
+                        }
                     }
                     else
                     {
