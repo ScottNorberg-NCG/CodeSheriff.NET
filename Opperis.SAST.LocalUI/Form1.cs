@@ -14,7 +14,7 @@ namespace Opperis.SAST.LocalUI;
 
 public partial class Form1 : Form
 {
-    private static readonly string COMPLETED = "Completed!";
+    private static readonly string COMPLETED = "100%";
     private static List<BaseFinding> _findings = new List<BaseFinding>();
 
     public Form1()
@@ -354,5 +354,6 @@ public partial class Form1 : Form
     private void RefreshFindingCount()
     {
         lblStatusFindings.Text = $"Findings: {_findings.Count}";
+        lblStatusFindings.Refresh();
     }
 }
