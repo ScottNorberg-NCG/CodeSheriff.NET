@@ -310,6 +310,11 @@ public partial class Form1 : Form
                     lblStatusFile.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 
+                    var uiMethodWalker = new UIProcessorMethodSyntaxWalker();
+                    _findings.AddRange(ModelValidationAnalyzer.FindMissingModelValidations(uiMethodWalker, root));
+                    lblStatusOverposting.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
+                    RefreshFindingCount();
+
                     syntaxTreeIndex++;
                     //if (includeSecrets)
                     //    SearchForSecrets(findings, root, rules);

@@ -90,6 +90,8 @@
             lblStatusFindings = new Label();
             label22 = new Label();
             lblStatusUnclosedConnection = new Label();
+            label24 = new Label();
+            lblStatusInputValidation = new Label();
             SuspendLayout();
             // 
             // label1
@@ -418,7 +420,7 @@
             // label19
             // 
             label19.AutoSize = true;
-            label19.Location = new Point(284, 401);
+            label19.Location = new Point(284, 416);
             label19.Name = "label19";
             label19.Size = new Size(126, 15);
             label19.TabIndex = 49;
@@ -427,7 +429,7 @@
             // lblStatusJSTag
             // 
             lblStatusJSTag.AutoSize = true;
-            lblStatusJSTag.Location = new Point(235, 401);
+            lblStatusJSTag.Location = new Point(235, 416);
             lblStatusJSTag.Name = "lblStatusJSTag";
             lblStatusJSTag.Size = new Size(23, 15);
             lblStatusJSTag.TabIndex = 48;
@@ -437,7 +439,7 @@
             // label21
             // 
             label21.AutoSize = true;
-            label21.Location = new Point(284, 416);
+            label21.Location = new Point(284, 431);
             label21.Name = "label21";
             label21.Size = new Size(99, 15);
             label21.TabIndex = 47;
@@ -446,7 +448,7 @@
             // lblStatusStyleTag
             // 
             lblStatusStyleTag.AutoSize = true;
-            lblStatusStyleTag.Location = new Point(235, 416);
+            lblStatusStyleTag.Location = new Point(235, 431);
             lblStatusStyleTag.Name = "lblStatusStyleTag";
             lblStatusStyleTag.Size = new Size(23, 15);
             lblStatusStyleTag.TabIndex = 46;
@@ -456,7 +458,7 @@
             // label23
             // 
             label23.AutoSize = true;
-            label23.Location = new Point(284, 431);
+            label23.Location = new Point(284, 446);
             label23.Name = "label23";
             label23.Size = new Size(96, 15);
             label23.TabIndex = 45;
@@ -465,7 +467,7 @@
             // lblStatusLinkTag
             // 
             lblStatusLinkTag.AutoSize = true;
-            lblStatusLinkTag.Location = new Point(235, 431);
+            lblStatusLinkTag.Location = new Point(235, 446);
             lblStatusLinkTag.Name = "lblStatusLinkTag";
             lblStatusLinkTag.Size = new Size(23, 15);
             lblStatusLinkTag.TabIndex = 44;
@@ -475,7 +477,7 @@
             // label25
             // 
             label25.AutoSize = true;
-            label25.Location = new Point(284, 363);
+            label25.Location = new Point(284, 378);
             label25.Name = "label25";
             label25.Size = new Size(112, 15);
             label25.TabIndex = 43;
@@ -484,7 +486,7 @@
             // lblStatusXssViaHelper
             // 
             lblStatusXssViaHelper.AutoSize = true;
-            lblStatusXssViaHelper.Location = new Point(235, 363);
+            lblStatusXssViaHelper.Location = new Point(235, 378);
             lblStatusXssViaHelper.Name = "lblStatusXssViaHelper";
             lblStatusXssViaHelper.Size = new Size(23, 15);
             lblStatusXssViaHelper.TabIndex = 42;
@@ -494,7 +496,7 @@
             // label27
             // 
             label27.AutoSize = true;
-            label27.Location = new Point(284, 348);
+            label27.Location = new Point(284, 363);
             label27.Name = "label27";
             label27.Size = new Size(107, 15);
             label27.TabIndex = 41;
@@ -503,7 +505,7 @@
             // lblStatusXssViaRaw
             // 
             lblStatusXssViaRaw.AutoSize = true;
-            lblStatusXssViaRaw.Location = new Point(235, 348);
+            lblStatusXssViaRaw.Location = new Point(235, 363);
             lblStatusXssViaRaw.Name = "lblStatusXssViaRaw";
             lblStatusXssViaRaw.Size = new Size(23, 15);
             lblStatusXssViaRaw.TabIndex = 40;
@@ -601,7 +603,7 @@
             // 
             label14.AutoSize = true;
             label14.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label14.Location = new Point(235, 386);
+            label14.Location = new Point(235, 401);
             label14.Name = "label14";
             label14.Size = new Size(40, 15);
             label14.TabIndex = 55;
@@ -621,7 +623,7 @@
             // 
             label18.AutoSize = true;
             label18.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label18.Location = new Point(235, 333);
+            label18.Location = new Point(235, 348);
             label18.Name = "label18";
             label18.Size = new Size(29, 15);
             label18.TabIndex = 57;
@@ -675,11 +677,32 @@
             lblStatusUnclosedConnection.Text = "0%";
             lblStatusUnclosedConnection.TextAlign = ContentAlignment.MiddleRight;
             // 
+            // label24
+            // 
+            label24.AutoSize = true;
+            label24.Location = new Point(284, 325);
+            label24.Name = "label24";
+            label24.Size = new Size(134, 15);
+            label24.TabIndex = 64;
+            label24.Text = "Missing Input Validation";
+            // 
+            // lblStatusInputValidation
+            // 
+            lblStatusInputValidation.AutoSize = true;
+            lblStatusInputValidation.Location = new Point(235, 325);
+            lblStatusInputValidation.Name = "lblStatusInputValidation";
+            lblStatusInputValidation.Size = new Size(23, 15);
+            lblStatusInputValidation.TabIndex = 63;
+            lblStatusInputValidation.Text = "0%";
+            lblStatusInputValidation.TextAlign = ContentAlignment.MiddleRight;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(465, 574);
+            Controls.Add(label24);
+            Controls.Add(lblStatusInputValidation);
             Controls.Add(label22);
             Controls.Add(lblStatusUnclosedConnection);
             Controls.Add(lblStatusFindings);
@@ -810,5 +833,7 @@
         private Label lblStatusFindings;
         private Label label22;
         private Label lblStatusUnclosedConnection;
+        private Label label24;
+        private Label lblStatusInputValidation;
     }
 }

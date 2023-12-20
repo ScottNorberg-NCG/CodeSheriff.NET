@@ -10,6 +10,11 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
 {
     internal static class AttributeSyntaxExtensions
     {
+        internal static bool IsOfType(this AttributeSyntax attribute, string typeName, SemanticModel model)
+        {
+            return model.GetTypeInfo(attribute).Type.ToString() == typeName;
+        }
+
         internal static bool HasCsrfAttribute(this AttributeSyntax attributeSyntax, SemanticModel model)
         {
             return model.GetTypeInfo(attributeSyntax).Type.ToString().In("Microsoft.AspNetCore.Mvc.ValidateAntiForgeryTokenAttribute",

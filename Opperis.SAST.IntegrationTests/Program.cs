@@ -28,8 +28,6 @@ internal class Program
         {
             Globals.Solution = workspace.OpenSolutionAsync(solutionFilePath).Result;
 
-
-
             //foreach (var project in Globals.Solution.Projects)
             //{
             //    Globals.Compilation = project.GetCompilationAsync().Result;
@@ -43,6 +41,7 @@ internal class Program
             //    }
             //}
 
+            TestModelValidationIssues();
             TestTrufflehogFindings();
             TestGetStoredSecrets();
             TestGetScaIssues();
@@ -66,6 +65,14 @@ internal class Program
 
             Console.WriteLine($"Scan completed with {Globals.RuntimeErrors.Count} errors");
         }
+    }
+
+    private static void TestModelValidationIssues()
+    {
+        var modelErrors = ModelValidationProcessor.GetAllModelsMissingValidation();
+        Assert.AreEqual(16, modelErrors.Count, "Expected number of model validation issues");
+        Assert.AreEqual(4, modelErrors.Select(c => c.GetType().ToString()).Distinct().Count(), "Number of distinct types of model validation issues");
+        Assert.AllRootLocationsSet(modelErrors, "TestModelValidationIssues");
     }
 
     private static void TestTrufflehogFindings()
