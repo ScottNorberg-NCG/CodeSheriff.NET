@@ -37,10 +37,10 @@ internal class Program
                 {
                     var root = syntaxTree.GetRoot();
 
-                    var walker = new RSAConstructorSyntaxWalker();
+                    var walker = new RSAKeySizeSyntaxWalker();
                     //walker.Visit(root);
 
-                    var findings = RSAKeyLengthAnalyzer.FindInadequateKeyLengths(walker, syntaxTree.GetRoot());
+                    var findings = RSAKeySizeInPropertyAnalyzer.FindInadequateKeyLengths(walker, syntaxTree.GetRoot());
                     int i = 1;
                 }
             }

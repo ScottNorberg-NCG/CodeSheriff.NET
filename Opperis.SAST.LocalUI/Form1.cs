@@ -321,7 +321,9 @@ public partial class Form1 : Form
                     RefreshFindingCount();
 
                     var rsaConstructorWalker = new RSAConstructorSyntaxWalker();
-                    _findings.AddRange(RSAKeyLengthAnalyzer.FindInadequateKeyLengths(rsaConstructorWalker, root));
+                    _findings.AddRange(RSAKeySizeInConstructorAnalyzer.FindInadequateKeyLengths(rsaConstructorWalker, root));
+                    var rsaKeySizeWalker = new RSAKeySizeSyntaxWalker();
+                    _findings.AddRange(RSAKeySizeInPropertyAnalyzer.FindInadequateKeyLengths(rsaKeySizeWalker, root));
                     lblStatusRSA.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 

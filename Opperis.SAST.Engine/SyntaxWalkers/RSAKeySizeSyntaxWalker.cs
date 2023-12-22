@@ -10,34 +10,34 @@ using System.Threading.Tasks;
 
 namespace Opperis.SAST.Engine.SyntaxWalkers;
 
-internal class DatabaseCommandTextSyntaxWalker : CSharpSyntaxWalker, ISyntaxWalker
+internal class RSAKeySizeSyntaxWalker : CSharpSyntaxWalker, ISyntaxWalker
 {
-    public List<MemberAccessExpressionSyntax> CommandTextSets { get; private set; } = new List<MemberAccessExpressionSyntax>();
+    public List<MemberAccessExpressionSyntax> KeyLengthSets { get; private set; } = new List<MemberAccessExpressionSyntax>();
 
-    public bool HasRun => CommandTextSets.Any();
+    public bool HasRun => KeyLengthSets.Any();
 
     public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
     {
-        CheckForCommandTextSets(node);
+        CheckForKeySizeSets(node);
         base.VisitMethodDeclaration(node);
     }
 
-    private void CheckForCommandTextSets(SyntaxNode node)
+    private void CheckForKeySizeSets(SyntaxNode node)
     {
         foreach (var child in node.DescendantNodes())
         {
             var member = child as MemberAccessExpressionSyntax;
 
-            if (member != null && IsDatabaseConnectionMethod(member))
+            if (member != null && IsKeySizeSetProperty(member))
             {
-                CommandTextSets.Add(member);
+                KeyLengthSets.Add(member);
             }
         }
     }
 
-    private bool IsDatabaseConnectionMethod(MemberAccessExpressionSyntax memberAccess)
+    private bool IsKeySizeSetProperty(MemberAccessExpressionSyntax memberAccess)
     {
-        if (memberAccess.Name.Identifier.Text != "CommandText")
+        if (memberAccess.Name.Identifier.Text != "KeySize")
             return false;
 
         var identifierName = memberAccess.Expression as IdentifierNameSyntax;
@@ -51,7 +51,7 @@ internal class DatabaseCommandTextSyntaxWalker : CSharpSyntaxWalker, ISyntaxWalk
         { 
             var typeString = objectType.ToString().Replace("?", "");
 
-            if (typeString.In("Microsoft.Data.SqlClient.SqlCommand", "System.Data.SqlClient.SqlCommand", "System.Data.Common.DbCommand"))
+            if (typeString == "System.Security.Cryptography.RSACryptoServiceProvider")
             {
                 return true;
             }            

@@ -19,7 +19,7 @@ internal class RSAConstructorSyntaxWalker : CSharpSyntaxWalker, ISyntaxWalker
     {
         var type = node.Type.GetUnderlyingType();
 
-        if (type.ToString() == "System.Security.Cryptography.RSACryptoServiceProvider")
+        if (type != null && type.ToString() == "System.Security.Cryptography.RSACryptoServiceProvider")
             RSAConstructors.Add(node);
         else
             base.VisitObjectCreationExpression(node);

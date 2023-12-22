@@ -15,7 +15,7 @@ namespace Opperis.SAST.Engine.Findings.Cryptography
 
         internal override string Description => "RSA allows for many different key lengths, but shorter key lengths are easier for criminals to break. Key lengths of at least 2048 bits are recommended.";
 
-        public RSAWithInadequateKeyLength(ObjectCreationExpressionSyntax syntax)
+        public RSAWithInadequateKeyLength(ExpressionSyntax syntax)
         {
             this.RootLocation = new SourceLocation(syntax);
         }

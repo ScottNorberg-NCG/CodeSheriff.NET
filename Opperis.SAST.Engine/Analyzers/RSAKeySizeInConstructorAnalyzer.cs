@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Opperis.SAST.Engine.Analyzers;
 
-internal static class RSAKeyLengthAnalyzer
+internal static class RSAKeySizeInConstructorAnalyzer
 {
     internal static List<BaseFinding> FindInadequateKeyLengths(RSAConstructorSyntaxWalker walker, SyntaxNode root)
     {
