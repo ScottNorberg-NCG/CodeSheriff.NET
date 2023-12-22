@@ -320,6 +320,11 @@ public partial class Form1 : Form
                     lblStatusJWT.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 
+                    var rsaConstructorWalker = new RSAConstructorSyntaxWalker();
+                    _findings.AddRange(RSAKeyLengthAnalyzer.FindInadequateKeyLengths(rsaConstructorWalker, root));
+                    lblStatusRSA.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
+                    RefreshFindingCount();
+
                     syntaxTreeIndex++;
                     //if (includeSecrets)
                     //    SearchForSecrets(findings, root, rules);

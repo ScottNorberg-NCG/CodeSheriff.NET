@@ -37,10 +37,11 @@ internal class Program
                 {
                     var root = syntaxTree.GetRoot();
 
-                    var walker = new JwtTokenParameterSetSyntaxWalker();
-                    walker.Visit(root);
+                    var walker = new RSAConstructorSyntaxWalker();
+                    //walker.Visit(root);
 
-                    var findings = JwtTokenMisconfigurationAnalyzer.FindMisconfigurations(walker, syntaxTree.GetRoot());
+                    var findings = RSAKeyLengthAnalyzer.FindInadequateKeyLengths(walker, syntaxTree.GetRoot());
+                    int i = 1;
                 }
             }
 
