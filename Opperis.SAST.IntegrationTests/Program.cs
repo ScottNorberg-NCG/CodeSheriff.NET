@@ -16,10 +16,11 @@ internal class Program
 {
     static void Main(string[] args)
     {
-        var solutionFilePath = "C:\\Users\\scott\\Source\\repos\\VulnerabilityBuffet2\\AspNetCore\\NCG.SecurityDetection.VulnerabilityBuffet.sln";
+        //var solutionFilePath = "C:\\Users\\scott\\Source\\repos\\VulnerabilityBuffet2\\AspNetCore\\NCG.SecurityDetection.VulnerabilityBuffet.sln";
         //var solutionFilePath = "C:\\Users\\scott\\Downloads\\WebGoat.NETCore-master\\WebGoat.NET-master\\WebGoat.NET.sln";
         //var solutionFilePath = "C:\\Users\\scott\\Downloads\\sentry-dotnet-main\\sentry-dotnet-main\\Sentry.NoMobile.sln";
         //var solutionFilePath = "C:\\Users\\scott\\Source\\repos\\Opperis.IAST\\Opperis.IAST.sln";
+        var solutionFilePath = "C:\\Users\\scott\\Source\\repos\\SASTTest\\SASTTest.sln";
 
         if (!MSBuildLocator.IsRegistered)
             MSBuildLocator.RegisterDefaults();
@@ -28,21 +29,23 @@ internal class Program
         {
             Globals.Solution = workspace.OpenSolutionAsync(solutionFilePath).Result;
 
-            //foreach (var project in Globals.Solution.Projects)
-            //{
-            //    Globals.Compilation = project.GetCompilationAsync().Result;
+            foreach (var project in Globals.Solution.Projects)
+            {
+                Globals.Compilation = project.GetCompilationAsync().Result;
 
-            //    foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
-            //    {
-            //        var root = syntaxTree.GetRoot();
+                foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
+                {
+                    var root = syntaxTree.GetRoot();
 
-            //        var walker = new CookieAppendSyntaxWalker();
-            //        walker.Visit(root);
-            //    }
-            //}
+                    var walker = new JwtTokenParameterSetSyntaxWalker();
+                    walker.Visit(root);
+
+                    var findings = JwtTokenMisconfigurationAnalyzer.FindMisconfigurations(walker, syntaxTree.GetRoot());
+                }
+            }
 
             TestModelValidationIssues();
-            TestTrufflehogFindings();
+            //TestTrufflehogFindings();
             TestGetStoredSecrets();
             TestGetScaIssues();
             TestGetStoredSecrets();

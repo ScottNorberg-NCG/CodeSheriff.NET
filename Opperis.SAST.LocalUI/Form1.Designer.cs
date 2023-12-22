@@ -92,6 +92,8 @@
             lblStatusUnclosedConnection = new Label();
             label24 = new Label();
             lblStatusInputValidation = new Label();
+            label26 = new Label();
+            lblStatusJWT = new Label();
             SuspendLayout();
             // 
             // label1
@@ -652,7 +654,7 @@
             // 
             lblStatusFindings.AutoSize = true;
             lblStatusFindings.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lblStatusFindings.Location = new Point(11, 538);
+            lblStatusFindings.Location = new Point(12, 562);
             lblStatusFindings.Name = "lblStatusFindings";
             lblStatusFindings.Size = new Size(65, 15);
             lblStatusFindings.TabIndex = 60;
@@ -696,11 +698,32 @@
             lblStatusInputValidation.Text = "0%";
             lblStatusInputValidation.TextAlign = ContentAlignment.MiddleRight;
             // 
+            // label26
+            // 
+            label26.AutoSize = true;
+            label26.Location = new Point(59, 529);
+            label26.Name = "label26";
+            label26.Size = new Size(127, 15);
+            label26.TabIndex = 66;
+            label26.Text = "JWT Misconfigurations";
+            // 
+            // lblStatusJWT
+            // 
+            lblStatusJWT.AutoSize = true;
+            lblStatusJWT.Location = new Point(10, 529);
+            lblStatusJWT.Name = "lblStatusJWT";
+            lblStatusJWT.Size = new Size(23, 15);
+            lblStatusJWT.TabIndex = 65;
+            lblStatusJWT.Text = "0%";
+            lblStatusJWT.TextAlign = ContentAlignment.MiddleRight;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(465, 574);
+            ClientSize = new Size(465, 609);
+            Controls.Add(label26);
+            Controls.Add(lblStatusJWT);
             Controls.Add(label24);
             Controls.Add(lblStatusInputValidation);
             Controls.Add(label22);
@@ -835,5 +858,7 @@
         private Label lblStatusUnclosedConnection;
         private Label label24;
         private Label lblStatusInputValidation;
+        private Label label26;
+        private Label lblStatusJWT;
     }
 }

@@ -315,6 +315,11 @@ public partial class Form1 : Form
                     lblStatusOverposting.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 
+                    var jwtParameterWalker = new JwtTokenParameterSetSyntaxWalker();
+                    _findings.AddRange(JwtTokenMisconfigurationAnalyzer.FindMisconfigurations(jwtParameterWalker, root));
+                    lblStatusJWT.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
+                    RefreshFindingCount();
+
                     syntaxTreeIndex++;
                     //if (includeSecrets)
                     //    SearchForSecrets(findings, root, rules);
