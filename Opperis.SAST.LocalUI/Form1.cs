@@ -275,6 +275,11 @@ public partial class Form1 : Form
                     lblStatusDeprecatedCrypto.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 
+                    var hashAlgorithmFinder = new ComputeHashSyntaxWalker();
+                    _findings.AddRange(HashAlgorithmAnalyzer.FindDeprecatedAlgorithms(hashAlgorithmFinder, root));
+                    lblStatusHashingAlgorithm.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
+                    RefreshFindingCount();
+
                     var externalRedirects = new ExternalRedirectSyntaxWalker();
                     _findings.AddRange(ExternalRedirectAnalyzer.FindProblematicExternalRedirects(externalRedirects, root));
                     lblStatusRedirect.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
@@ -373,5 +378,10 @@ public partial class Form1 : Form
     {
         lblStatusFindings.Text = $"Findings: {_findings.Count}";
         lblStatusFindings.Refresh();
+    }
+
+    private void Form1_Load(object sender, EventArgs e)
+    {
+
     }
 }

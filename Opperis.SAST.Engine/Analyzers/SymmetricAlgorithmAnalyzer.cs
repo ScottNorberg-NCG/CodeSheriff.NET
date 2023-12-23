@@ -36,7 +36,7 @@ internal static class SymmetricAlgorithmAnalyzer
 
                 if (!type.Name.StartsWith("Aes") && !type.Name.StartsWith("Rijndael"))
                 {
-                    var finding = new UseOfDeprecatedAlgorithm();
+                    var finding = new UseOfDeprecatedSymmetricAlgorithm();
                     finding.RootLocation = new SourceLocation(algorithm);
 
                     finding.AdditionalInformation = $"Algorithm found: {type.Name}";

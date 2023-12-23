@@ -7,20 +7,20 @@ using System.Threading.Tasks;
 
 namespace Opperis.SAST.Engine.Findings.Cryptography
 {
-    internal class UseOfDeprecatedAlgorithm : BaseFinding
+    internal class UseOfDeprecatedHashAlgorithm : BaseFinding
     {
         internal override Priority Priority
         {
             get
             {
                 if (_priority == null)
-                    _priority = Priority.Medium;
+                    _priority = Priority.MediumLow;
 
                 return _priority;
             }
         }
 
-        internal override string FindingText { get { return "Use of Deprecated Symmetric Encryption Algorithm"; } }
-        internal override string Description { get { return "Use of a deprecated symmetric encryption algorithm was found. AES is the best choice of algorithm in most cases."; } }
+        internal override string FindingText { get { return "Use of Deprecated Hashing Algorithm"; } }
+        internal override string Description { get { return "Use of a deprecated hashing algorithm was found. Algorithms in the SHA3 family are the best choice of algorithm in most cases."; } }
     }
 }

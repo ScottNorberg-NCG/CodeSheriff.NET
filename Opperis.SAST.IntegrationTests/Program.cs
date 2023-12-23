@@ -29,6 +29,7 @@ internal class Program
         {
             Globals.Solution = workspace.OpenSolutionAsync(solutionFilePath).Result;
 
+            var findings = new List<BaseFinding>();
             foreach (var project in Globals.Solution.Projects)
             {
                 Globals.Compilation = project.GetCompilationAsync().Result;
@@ -37,10 +38,10 @@ internal class Program
                 {
                     var root = syntaxTree.GetRoot();
 
-                    var walker = new RSAKeySizeSyntaxWalker();
+                    var walker = new ComputeHashSyntaxWalker();
                     //walker.Visit(root);
 
-                    var findings = RSAKeySizeInPropertyAnalyzer.FindInadequateKeyLengths(walker, syntaxTree.GetRoot());
+                    findings.AddRange(HashAlgorithmAnalyzer.FindDeprecatedAlgorithms(walker, syntaxTree.GetRoot()));
                     int i = 1;
                 }
             }
