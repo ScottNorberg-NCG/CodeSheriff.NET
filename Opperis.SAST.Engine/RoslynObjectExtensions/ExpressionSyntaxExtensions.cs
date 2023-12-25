@@ -148,17 +148,56 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
             {
                 if (baseCallStack.AddLocation(invocation))
                 {
-                    var text = invocation.ToString();
-
-                    if (text.StartsWith("string.Format") || text.StartsWith("String.Format"))
+                    if (invocation.IsInvocationFromType("System.Text.StringBuilder"))
                     {
-                        for (int i = 1; i < invocation.ArgumentList.Arguments.Count; i++)
-                        {
-                            var arg = invocation.ArgumentList.Arguments[i].Expression;
+                        var model = Globals.SearchForSemanticModel(invocation.SyntaxTree);
 
-                            if (!(arg is LiteralExpressionSyntax))
+                        if (model != null)
+                        {
+                            if (invocation.Expression is MemberAccessExpressionSyntax member)
                             {
-                                result.AddRange(arg.GetCallStacksRecursive(baseCallStack));
+                                if (member.Expression is IdentifierNameSyntax sbAsIdentifier)
+                                {
+                                    var root = sbAsIdentifier.Ancestors().First(a => a is MethodDeclarationSyntax containingMethod);
+
+                                    var appendInvocations = root.DescendantNodes()
+                                        .OfType<InvocationExpressionSyntax>()
+                                        .Where(invocation =>
+                                        {
+                                            // Check if the invocation is a member access on the same StringBuilder instance
+                                            var memberAccess = invocation.Expression as MemberAccessExpressionSyntax;
+                                            return memberAccess != null &&
+                                                   memberAccess.Expression is IdentifierNameSyntax identifier &&
+                                                   identifier.Identifier.Text == sbAsIdentifier.Identifier.Text &&
+                                                   memberAccess.Name.Identifier.Text.In("Append", "AppendFormat", "AppendLine");
+                                        });
+
+                                    foreach (var appendInvocation in appendInvocations)
+                                    {
+                                        foreach (var arg in appendInvocation.ArgumentList.Arguments)
+                                        {
+                                            if (!(arg.Expression is LiteralExpressionSyntax))
+                                                result.AddRange(arg.Expression.GetCallStacksRecursive(baseCallStack));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var text = invocation.ToString();
+
+                        if (text.StartsWith("string.Format") || text.StartsWith("String.Format"))
+                        {
+                            for (int i = 1; i < invocation.ArgumentList.Arguments.Count; i++)
+                            {
+                                var arg = invocation.ArgumentList.Arguments[i].Expression;
+
+                                if (!(arg is LiteralExpressionSyntax))
+                                {
+                                    result.AddRange(arg.GetCallStacksRecursive(baseCallStack));
+                                }
                             }
                         }
                     }

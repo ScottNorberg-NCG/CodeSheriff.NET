@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Opperis.SAST.Engine.ErrorHandling;
 using Opperis.SAST.Engine.Findings;
 using Opperis.SAST.Engine.Findings.Database;
+using Opperis.SAST.Engine.RoslynObjectExtensions;
 using Opperis.SAST.Engine.SyntaxWalkers;
 
 namespace Opperis.SAST.Engine.Analyzers;
@@ -24,15 +25,20 @@ internal static class HardCodedConnectionStringAnalyzer
                 {
                     if (assignment.Right is LiteralExpressionSyntax literal)
                     {
-                        BaseFinding finding;
+                        AddFindingForLiteral(findings, assignment, literal);
+                    }
+                    else if (assignment.Right is IdentifierNameSyntax id)
+                    {
+                        var definition = id.GetDefinitionNode(id.Ancestors().Last());
 
-                        if (literal.ToString().Contains("Password"))
-                            finding = new HardCodedConnectionStringWithPassword();
-                        else
-                            finding = new HardCodedConnectionStringWithoutPassword();
-
-                        finding.RootLocation = new SourceLocation(assignment);
-                        findings.Add(finding);
+                        if (definition != null)
+                        {
+                            //Check to see if we have two nodes. If so, this should be an EqualsValueClauseSyntax and a LiteralExpressionSyntax
+                            if (definition.DescendantNodes().Count() == 2)
+                            {
+                                AddFindingForVariable(findings, id, definition);
+                            }
+                        }
                     }
                 }
             }
@@ -60,10 +66,56 @@ internal static class HardCodedConnectionStringAnalyzer
                     finding.RootLocation = new SourceLocation(constructor);
                     findings.Add(finding);
                 }
+                else if (argValue is IdentifierNameSyntax id)
+                {
+                    var definition = id.GetDefinitionNode(id.Ancestors().Last());
+
+                    if (definition != null)
+                    {
+                        //Check to see if we have two nodes. If so, this should be an EqualsValueClauseSyntax and a LiteralExpressionSyntax
+                        if (definition.DescendantNodes().Count() == 2)
+                        {
+                            AddFindingForVariable(findings, id, definition);
+                        }
+                    }
+                }
             } 
         }
 
         return findings;
     }
 
+    private static void AddFindingForLiteral(List<BaseFinding> findings, AssignmentExpressionSyntax assignment, LiteralExpressionSyntax literal)
+    {
+        BaseFinding finding;
+
+        if (literal.ToString().Contains("Password"))
+            finding = new HardCodedConnectionStringWithPassword();
+        else
+            finding = new HardCodedConnectionStringWithoutPassword();
+
+        finding.RootLocation = new SourceLocation(assignment);
+        findings.Add(finding);
+    }
+
+    private static void AddFindingForVariable(List<BaseFinding> findings, IdentifierNameSyntax id, SyntaxNode? definition)
+    {
+        var variable = definition.DescendantNodes().SingleOrDefault(n => n is LiteralExpressionSyntax) as LiteralExpressionSyntax;
+
+        BaseFinding finding;
+
+        if (variable.ToString().Contains("Password"))
+            finding = new HardCodedConnectionStringWithPassword();
+        else
+            finding = new HardCodedConnectionStringWithoutPassword();
+
+        finding.RootLocation = new SourceLocation(variable);
+
+        var callStack = new CallStack();
+
+        callStack.AddLocation(variable);
+        callStack.AddLocation(id);
+
+        findings.Add(finding);
+    }
 }

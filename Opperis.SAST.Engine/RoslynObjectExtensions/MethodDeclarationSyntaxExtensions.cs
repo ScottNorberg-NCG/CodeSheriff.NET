@@ -54,7 +54,7 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
                 {
                     var methodName = method.Identifier.Text;
 
-                    if (methodName == "OnPostAsync" || methodName == "OnGetAsync")
+                    if (methodName.In("OnGet", "OnGetAsync", "OnPost", "OnPostAsync"))
                         return true;
                 }
             }

@@ -24,5 +24,20 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
             else
                 return false;
         }
+
+        internal static bool IsInvocationFromType(this InvocationExpressionSyntax invocation, string typeString)
+        {
+            if (invocation.Expression is MemberAccessExpressionSyntax member)
+            {
+                var type = member.Expression.GetUnderlyingType();
+
+                if (type == null) 
+                    return false; 
+
+                return type.ToString().Replace("?", "") == typeString;
+            }
+            else
+                return false; //Is this a safe assumption?
+        }
     }
 }

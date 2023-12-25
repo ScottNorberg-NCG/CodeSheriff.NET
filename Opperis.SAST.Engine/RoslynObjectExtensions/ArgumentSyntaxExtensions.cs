@@ -16,7 +16,7 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
             if (underlyingType == null)
                 return false;
 
-            return underlyingType.ToString() == typeName;
+            return underlyingType.ToString().Replace("?", "") == typeName;
         }
     }
 }

@@ -65,7 +65,7 @@ internal class DatabaseConnectionStringSyntaxWalker : CSharpSyntaxWalker, ISynta
             {
                 var typeString = objectType.ToString();
 
-                if (typeString == "Microsoft.Data.SqlClient.SqlConnection" || typeString == "System.Data.SqlClient.SqlConnection")
+                if (typeString.Replace("?", "").In("Microsoft.Data.SqlClient.SqlConnection", "System.Data.SqlClient.SqlConnection"))
                 {
                     return true;
                 }

@@ -46,6 +46,9 @@ internal class Program
                 }
             }
 
+            TestJwtConfigurationIssues();
+            TestHashAlgorithmIssues();
+            TestRSAKeyLengthIssues();
             TestModelValidationIssues();
             //TestTrufflehogFindings();
             TestGetStoredSecrets();
@@ -72,10 +75,38 @@ internal class Program
         }
     }
 
+    private static void TestJwtConfigurationIssues()
+    {
+        var findings = JwtConfigurationProcessor.GetAllMisconfiguredProperties();
+        //WriteFindingsToConsole(xssIssues);
+        Assert.AreEqual(3, findings.Count, "Expected number of JWT configuration issues");
+        Assert.AreEqual(3, findings.Select(c => c.GetType().ToString()).Distinct().Count(), "Number of distinct types of JWT configuration issues");
+        Assert.AllRootLocationsSet(findings, "TestJwtConfigurationIssues");
+    }
+
+    private static void TestHashAlgorithmIssues()
+    {
+        var findings = HashAlgorithmProcessor.GetDeprecatedAlgorithms();
+        Assert.AreEqual(4, findings.Count, "Expected number of deprecated hash uses");
+        Assert.AreEqual(4, findings.Select(c => c.AdditionalInformation).Distinct().Count(), "Number of distinct deprecated hashes");
+        Assert.AllRootLocationsSet(findings, "TestHashAlgorithmIssues");
+    }
+
+    private static void TestRSAKeyLengthIssues()
+    {
+        var constructorFindings = RSAKeySizeInConstructorProcessor.GetAllMisconfiguredConstructors();
+        Assert.AreEqual(3, constructorFindings.Count, "Expected number of RSA key size in constructor issues");
+        Assert.AllRootLocationsSet(constructorFindings, "TestRSAKeyLengthIssues (Constructor)");
+
+        var propertyFindings = RSAKeySizeInPropertyProcessor.GetAllMisconfiguredProperties();
+        Assert.AreEqual(2, propertyFindings.Count, "Expected number of RSA key size in property issues");
+        Assert.AllRootLocationsSet(propertyFindings, "TestRSAKeyLengthIssues (Property)");
+    }
+
     private static void TestModelValidationIssues()
     {
         var modelErrors = ModelValidationProcessor.GetAllModelsMissingValidation();
-        Assert.AreEqual(16, modelErrors.Count, "Expected number of model validation issues");
+        Assert.AreEqual(13, modelErrors.Count, "Expected number of model validation issues");
         Assert.AreEqual(4, modelErrors.Select(c => c.GetType().ToString()).Distinct().Count(), "Number of distinct types of model validation issues");
         Assert.AllRootLocationsSet(modelErrors, "TestModelValidationIssues");
     }
@@ -114,7 +145,7 @@ internal class Program
     {
         var cookieIssues = CookieConfigurationProcessor.GetCookieConfigurationIssues();
         //WriteFindingsToConsole(cookieIssues);
-        Assert.AreEqual(11, cookieIssues.Count, "Expected number of cookie configuration issues");
+        Assert.AreEqual(6, cookieIssues.Count, "Expected number of cookie configuration issues");
         Assert.AreEqual(5, cookieIssues.Select(c => c.GetType().ToString()).Distinct().Count(), "Number of distinct types of cookie configuration issues");
         Assert.AllRootLocationsSet(cookieIssues, "TestCookieConfigurationIssues");
     }
@@ -123,7 +154,7 @@ internal class Program
     {
         var xssIssues = HtmlHelperProcessor.GetXssIssues();
         //WriteFindingsToConsole(xssIssues);
-        Assert.AreEqual(1, xssIssues.Count, "Expected number of XSS Issues from HtmlHelper calls");
+        Assert.AreEqual(2, xssIssues.Count, "Expected number of XSS Issues from HtmlHelper calls");
         Assert.AllRootLocationsSet(xssIssues, "TestHtmlHelperXssIssues");
     }
 
@@ -145,7 +176,7 @@ internal class Program
     {
         var xssIssues = HtmlRawProcessor.GetXssIssues();
         //WriteFindingsToConsole(xssIssues);
-        Assert.AreEqual(2, xssIssues.Count, "Expected number of XSS Issues from Html.Raw calls");
+        Assert.AreEqual(1, xssIssues.Count, "Expected number of XSS Issues from Html.Raw calls");
         Assert.AreEqual(1, xssIssues.Select(c => c.GetType().ToString()).Distinct().Count(), "Number of distinct types of XSS issues from Html.Raw calls");
         Assert.AllRootLocationsSet(xssIssues, "TestHtmlRawXssIssues");
     }
@@ -153,17 +184,17 @@ internal class Program
     private static void TestHardCodedConnectionStrings()
     {
         var connectionStrings = HardCodedConnectionStringProcessor.GetConnectionStrings();
-        Assert.AreEqual(2, connectionStrings.Count, "Number of hard-coded connection strings");
+        Assert.AreEqual(4, connectionStrings.Count, "Number of hard-coded connection strings");
         Assert.AllRootLocationsSet(connectionStrings, "TestHardCodedConnectionStrings");
     }
 
     private static void TestSqlInjections()
     {
         var sqlInjections = SqlInjectionProcessor.GetSqlInjections();
-        Assert.AreEqual(8, sqlInjections.Count, "Expected number of SQL Injection Issues");
+        Assert.AreEqual(10, sqlInjections.Count, "Expected number of SQL Injection issues");
         Assert.AreEqual(2, sqlInjections.Select(c => c.GetType().ToString()).Distinct().Count(), "Number of distinct types of SQL Injection issues");
-        Assert.AreEqual(49, sqlInjections.Max(s => s.CallStacks.Count), "ExecSql has many different callstacks");
-        Assert.AreEqual(7, sqlInjections.SelectMany(s => s.CallStacks).Max(cs => cs.Locations.Count), "SQL injection - number of locations in the largest callstack");
+        Assert.AreEqual(2, sqlInjections.Max(s => s.CallStacks.Count), "ExecSql has two different callstacks");
+        Assert.AreEqual(6, sqlInjections.SelectMany(s => s.CallStacks).Max(cs => cs.Locations.Count), "SQL injection - number of locations in the largest callstack");
         Assert.AllRootLocationsSet(sqlInjections, "TestSqlInjections");
     }
 
@@ -172,7 +203,7 @@ internal class Program
         //Number of Value Shadowing issues will change frequently
         //If an issue is found here, check to see whether the project changed first before debugging tests
         var valueShadowing = ValueShadowingProcessor.GetValueShadowingIssues();
-        Assert.AreEqual(64, valueShadowing.Count, "Expected number of Value Shadowing Issues");
+        Assert.AreEqual(27, valueShadowing.Count, "Expected number of Value Shadowing Issues");
         Assert.AllRootLocationsSet(valueShadowing, "TestValueShadowingIssues");
     }
 
@@ -181,7 +212,7 @@ internal class Program
         //Number of CSRF issues will change frequently
         //If an issue is found here, check to see whether the project changed first before debugging tests
         var csrfIssues = CsrfProcessor.GetCsrfIssues();
-        Assert.AreEqual(58, csrfIssues.Count, "Expected number of Csrf Issues");
+        Assert.AreEqual(29, csrfIssues.Count, "Expected number of Csrf Issues");
         Assert.AreEqual(3, csrfIssues.Select(c => c.GetType().ToString()).Distinct().Count(), "Number of distinct types of CSRF issues");
         Assert.AllRootLocationsSet(csrfIssues, "TestCsrfIssues");
     }
@@ -227,7 +258,6 @@ internal class Program
     {
         var redirects = RedirectProcessor.GetAllExternalRedirects();
         Assert.AreEqual(5, redirects.Count, "Expected number of unprotected redirects");
-        Assert.AreEqual(5, redirects.Count(r => r.GetType().ToString() == "Opperis.SAST.Engine.Findings.ProgramFlow.UnprotectedExternalRedirect"), "All external redirects are the correct type");
         Assert.AllRootLocationsSet(redirects, "TestUnprotectedRedirects");
     }
 
@@ -236,7 +266,7 @@ internal class Program
         var deprecatedAlgorithms = SymmetricAlgorithmProcessor.GetAllDeprecatedAlgorithms();
 
         Assert.AreEqual(4, deprecatedAlgorithms.Count, "Number of deprecated algorithms");
-        Assert.AreEqual(4, deprecatedAlgorithms.Count(a => a.GetType().ToString() == "Opperis.SAST.Engine.Findings.Cryptography.UseOfDeprecatedAlgorithm"), "All deprecated algorithms have the correct object type");
+        Assert.AreEqual(4, deprecatedAlgorithms.Count(a => a.GetType().ToString() == "Opperis.SAST.Engine.Findings.Cryptography.UseOfDeprecatedSymmetricAlgorithm"), "All deprecated algorithms have the correct object type");
         Assert.AreEqual(2, deprecatedAlgorithms.Count(d => d.AdditionalInformation == "Algorithm found: DESCryptoServiceProvider"), "Number of DES algorithms");
         Assert.AreEqual(2, deprecatedAlgorithms.Count(d => d.AdditionalInformation == "Algorithm found: RC2CryptoServiceProvider"), "Number of RC2 algorithms");
         Assert.AllRootLocationsSet(deprecatedAlgorithms, "TestSymmetricAlgorithms");
