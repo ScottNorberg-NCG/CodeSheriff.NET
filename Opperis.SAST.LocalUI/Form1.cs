@@ -332,6 +332,11 @@ public partial class Form1 : Form
                     lblStatusRSA.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 
+                    var dbCallViaEFWalker = new EntityFrameworkDbCallSyntaxWalker();
+                    _findings.AddRange(SQLInjectionViaEntityFrameworkAnalyzer.GetSQLInjections(dbCallViaEFWalker, root));
+                    lblStatusSQLiViaEF.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
+                    RefreshFindingCount();
+
                     syntaxTreeIndex++;
                     //if (includeSecrets)
                     //    SearchForSecrets(findings, root, rules);

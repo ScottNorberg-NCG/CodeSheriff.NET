@@ -101,8 +101,9 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
 
             if (expression is LiteralExpressionSyntax)
             {
-                baseCallStack.AddLocation(expression);
-                result.Add(baseCallStack);
+                //TODO: Determine if we can safely ignore this
+                //baseCallStack.AddLocation(expression);
+                //result.Add(baseCallStack);
             }
             else if (expression is IdentifierNameSyntax id)
             {

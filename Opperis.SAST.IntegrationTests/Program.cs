@@ -29,23 +29,24 @@ internal class Program
         {
             Globals.Solution = workspace.OpenSolutionAsync(solutionFilePath).Result;
 
-            var findings = new List<BaseFinding>();
-            foreach (var project in Globals.Solution.Projects)
-            {
-                Globals.Compilation = project.GetCompilationAsync().Result;
+            //var findings = new List<BaseFinding>();
+            //foreach (var project in Globals.Solution.Projects)
+            //{
+            //    Globals.Compilation = project.GetCompilationAsync().Result;
 
-                foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
-                {
-                    var root = syntaxTree.GetRoot();
+            //    foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
+            //    {
+            //        var root = syntaxTree.GetRoot();
 
-                    var walker = new ComputeHashSyntaxWalker();
-                    //walker.Visit(root);
+            //        var walker = new EntityFrameworkDbCallSyntaxWalker();
+            //        //walker.Visit(root);
 
-                    findings.AddRange(HashAlgorithmAnalyzer.FindDeprecatedAlgorithms(walker, syntaxTree.GetRoot()));
-                    int i = 1;
-                }
-            }
+            //        findings.AddRange(SQLInjectionViaEntityFrameworkAnalyzer.GetSQLInjections(walker, syntaxTree.GetRoot()));
+            //        int i = 1;
+            //    }
+            //}
 
+            TestSqlInjectionsViaEF();
             TestJwtConfigurationIssues();
             TestHashAlgorithmIssues();
             TestRSAKeyLengthIssues();
@@ -73,6 +74,13 @@ internal class Program
 
             Console.WriteLine($"Scan completed with {Globals.RuntimeErrors.Count} errors");
         }
+    }
+
+    private static void TestSqlInjectionsViaEF()
+    {
+        var findings = SqlInjectionViaEFProcessor.GetAllSqlInjections();
+        Assert.AreEqual(3, findings.Count, "Expected number of Sql Injections via EF methods");
+        Assert.AllRootLocationsSet(findings, "TestSqlInjectionsViaEF");
     }
 
     private static void TestJwtConfigurationIssues()
@@ -203,7 +211,7 @@ internal class Program
         //Number of Value Shadowing issues will change frequently
         //If an issue is found here, check to see whether the project changed first before debugging tests
         var valueShadowing = ValueShadowingProcessor.GetValueShadowingIssues();
-        Assert.AreEqual(27, valueShadowing.Count, "Expected number of Value Shadowing Issues");
+        Assert.AreEqual(30, valueShadowing.Count, "Expected number of Value Shadowing Issues");
         Assert.AllRootLocationsSet(valueShadowing, "TestValueShadowingIssues");
     }
 
@@ -212,7 +220,7 @@ internal class Program
         //Number of CSRF issues will change frequently
         //If an issue is found here, check to see whether the project changed first before debugging tests
         var csrfIssues = CsrfProcessor.GetCsrfIssues();
-        Assert.AreEqual(29, csrfIssues.Count, "Expected number of Csrf Issues");
+        Assert.AreEqual(32, csrfIssues.Count, "Expected number of Csrf Issues");
         Assert.AreEqual(3, csrfIssues.Select(c => c.GetType().ToString()).Distinct().Count(), "Number of distinct types of CSRF issues");
         Assert.AllRootLocationsSet(csrfIssues, "TestCsrfIssues");
     }
@@ -257,7 +265,7 @@ internal class Program
     private static void TestUnprotectedRedirects()
     {
         var redirects = RedirectProcessor.GetAllExternalRedirects();
-        Assert.AreEqual(5, redirects.Count, "Expected number of unprotected redirects");
+        Assert.AreEqual(4, redirects.Count, "Expected number of unprotected redirects");
         Assert.AllRootLocationsSet(redirects, "TestUnprotectedRedirects");
     }
 

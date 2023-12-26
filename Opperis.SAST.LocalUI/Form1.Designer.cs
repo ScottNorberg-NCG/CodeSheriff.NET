@@ -98,6 +98,8 @@
             lblStatusRSA = new Label();
             label30 = new Label();
             lblStatusHashingAlgorithm = new Label();
+            label32 = new Label();
+            lblStatusSQLiViaEF = new Label();
             SuspendLayout();
             // 
             // label1
@@ -312,7 +314,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(59, 415);
+            label4.Location = new Point(60, 431);
             label4.Name = "label4";
             label4.Size = new Size(167, 15);
             label4.TabIndex = 31;
@@ -321,7 +323,7 @@
             // lblStatusCryptoIVs
             // 
             lblStatusCryptoIVs.AutoSize = true;
-            lblStatusCryptoIVs.Location = new Point(10, 415);
+            lblStatusCryptoIVs.Location = new Point(11, 431);
             lblStatusCryptoIVs.Name = "lblStatusCryptoIVs";
             lblStatusCryptoIVs.Size = new Size(23, 15);
             lblStatusCryptoIVs.TabIndex = 30;
@@ -331,7 +333,7 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(59, 430);
+            label8.Location = new Point(60, 446);
             label8.Name = "label8";
             label8.Size = new Size(98, 15);
             label8.TabIndex = 29;
@@ -340,7 +342,7 @@
             // lblStatusCryptoECB
             // 
             lblStatusCryptoECB.AutoSize = true;
-            lblStatusCryptoECB.Location = new Point(10, 430);
+            lblStatusCryptoECB.Location = new Point(11, 446);
             lblStatusCryptoECB.Name = "lblStatusCryptoECB";
             lblStatusCryptoECB.Size = new Size(23, 15);
             lblStatusCryptoECB.TabIndex = 28;
@@ -350,7 +352,7 @@
             // label11
             // 
             label11.AutoSize = true;
-            label11.Location = new Point(59, 445);
+            label11.Location = new Point(60, 461);
             label11.Name = "label11";
             label11.Size = new Size(184, 15);
             label11.TabIndex = 27;
@@ -359,7 +361,7 @@
             // lblStatusDeprecatedCrypto
             // 
             lblStatusDeprecatedCrypto.AutoSize = true;
-            lblStatusDeprecatedCrypto.Location = new Point(10, 445);
+            lblStatusDeprecatedCrypto.Location = new Point(11, 461);
             lblStatusDeprecatedCrypto.Name = "lblStatusDeprecatedCrypto";
             lblStatusDeprecatedCrypto.Size = new Size(23, 15);
             lblStatusDeprecatedCrypto.TabIndex = 26;
@@ -388,7 +390,7 @@
             // label15
             // 
             label15.AutoSize = true;
-            label15.Location = new Point(59, 400);
+            label15.Location = new Point(60, 416);
             label15.Name = "label15";
             label15.Size = new Size(176, 15);
             label15.TabIndex = 23;
@@ -397,7 +399,7 @@
             // lblStatusCryptoKeys
             // 
             lblStatusCryptoKeys.AutoSize = true;
-            lblStatusCryptoKeys.Location = new Point(10, 400);
+            lblStatusCryptoKeys.Location = new Point(11, 416);
             lblStatusCryptoKeys.Name = "lblStatusCryptoKeys";
             lblStatusCryptoKeys.Size = new Size(23, 15);
             lblStatusCryptoKeys.TabIndex = 22;
@@ -485,9 +487,9 @@
             label25.AutoSize = true;
             label25.Location = new Point(304, 378);
             label25.Name = "label25";
-            label25.Size = new Size(112, 15);
+            label25.Size = new Size(164, 15);
             label25.TabIndex = 43;
-            label25.Text = "XSS via IHtmlHelper";
+            label25.Text = "Reflected XSS via IHtmlHelper";
             // 
             // lblStatusXssViaHelper
             // 
@@ -504,9 +506,9 @@
             label27.AutoSize = true;
             label27.Location = new Point(304, 363);
             label27.Name = "label27";
-            label27.Size = new Size(107, 15);
+            label27.Size = new Size(159, 15);
             label27.TabIndex = 41;
-            label27.Text = "XSS via Html.Raw()";
+            label27.Text = "Reflected XSS via Html.Raw()";
             // 
             // lblStatusXssViaRaw
             // 
@@ -559,7 +561,7 @@
             // label35
             // 
             label35.AutoSize = true;
-            label35.Location = new Point(59, 348);
+            label35.Location = new Point(59, 363);
             label35.Name = "label35";
             label35.Size = new Size(172, 15);
             label35.TabIndex = 33;
@@ -568,7 +570,7 @@
             // lblStatusConnectionString
             // 
             lblStatusConnectionString.AutoSize = true;
-            lblStatusConnectionString.Location = new Point(10, 348);
+            lblStatusConnectionString.Location = new Point(10, 363);
             lblStatusConnectionString.Name = "lblStatusConnectionString";
             lblStatusConnectionString.Size = new Size(23, 15);
             lblStatusConnectionString.TabIndex = 32;
@@ -589,7 +591,7 @@
             // 
             label10.AutoSize = true;
             label10.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label10.Location = new Point(9, 385);
+            label10.Location = new Point(10, 401);
             label10.Name = "label10";
             label10.Size = new Size(82, 15);
             label10.TabIndex = 53;
@@ -667,7 +669,7 @@
             // label22
             // 
             label22.AutoSize = true;
-            label22.Location = new Point(59, 363);
+            label22.Location = new Point(59, 378);
             label22.Name = "label22";
             label22.Size = new Size(177, 15);
             label22.TabIndex = 62;
@@ -676,7 +678,7 @@
             // lblStatusUnclosedConnection
             // 
             lblStatusUnclosedConnection.AutoSize = true;
-            lblStatusUnclosedConnection.Location = new Point(10, 363);
+            lblStatusUnclosedConnection.Location = new Point(10, 378);
             lblStatusUnclosedConnection.Name = "lblStatusUnclosedConnection";
             lblStatusUnclosedConnection.Size = new Size(23, 15);
             lblStatusUnclosedConnection.TabIndex = 61;
@@ -724,7 +726,7 @@
             // label28
             // 
             label28.AutoSize = true;
-            label28.Location = new Point(59, 475);
+            label28.Location = new Point(60, 491);
             label28.Name = "label28";
             label28.Size = new Size(95, 15);
             label28.TabIndex = 68;
@@ -733,7 +735,7 @@
             // lblStatusRSA
             // 
             lblStatusRSA.AutoSize = true;
-            lblStatusRSA.Location = new Point(10, 475);
+            lblStatusRSA.Location = new Point(11, 491);
             lblStatusRSA.Name = "lblStatusRSA";
             lblStatusRSA.Size = new Size(23, 15);
             lblStatusRSA.TabIndex = 67;
@@ -743,7 +745,7 @@
             // label30
             // 
             label30.AutoSize = true;
-            label30.Location = new Point(59, 460);
+            label30.Location = new Point(60, 476);
             label30.Name = "label30";
             label30.Size = new Size(171, 15);
             label30.TabIndex = 70;
@@ -752,18 +754,39 @@
             // lblStatusHashingAlgorithm
             // 
             lblStatusHashingAlgorithm.AutoSize = true;
-            lblStatusHashingAlgorithm.Location = new Point(10, 460);
+            lblStatusHashingAlgorithm.Location = new Point(11, 476);
             lblStatusHashingAlgorithm.Name = "lblStatusHashingAlgorithm";
             lblStatusHashingAlgorithm.Size = new Size(23, 15);
             lblStatusHashingAlgorithm.TabIndex = 69;
             lblStatusHashingAlgorithm.Text = "0%";
             lblStatusHashingAlgorithm.TextAlign = ContentAlignment.MiddleRight;
             // 
+            // label32
+            // 
+            label32.AutoSize = true;
+            label32.Location = new Point(59, 348);
+            label32.Name = "label32";
+            label32.Size = new Size(190, 15);
+            label32.TabIndex = 72;
+            label32.Text = "SQL Injection via Entity Framework";
+            // 
+            // lblStatusSQLiViaEF
+            // 
+            lblStatusSQLiViaEF.AutoSize = true;
+            lblStatusSQLiViaEF.Location = new Point(10, 348);
+            lblStatusSQLiViaEF.Name = "lblStatusSQLiViaEF";
+            lblStatusSQLiViaEF.Size = new Size(23, 15);
+            lblStatusSQLiViaEF.TabIndex = 71;
+            lblStatusSQLiViaEF.Text = "0%";
+            lblStatusSQLiViaEF.TextAlign = ContentAlignment.MiddleRight;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(494, 596);
+            Controls.Add(label32);
+            Controls.Add(lblStatusSQLiViaEF);
             Controls.Add(label30);
             Controls.Add(lblStatusHashingAlgorithm);
             Controls.Add(label28);
@@ -911,5 +934,7 @@
         private Label lblStatusRSA;
         private Label label30;
         private Label lblStatusHashingAlgorithm;
+        private Label label32;
+        private Label lblStatusSQLiViaEF;
     }
 }
