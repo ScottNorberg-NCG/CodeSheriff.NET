@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Opperis.SAST.Engine.SyntaxWalkers;
 
-internal class FileManipulationSyntaxWalker : CSharpSyntaxWalker, ISyntaxWalker
+internal class PasswordSignInSyntaxWalker : CSharpSyntaxWalker, ISyntaxWalker
 {
-    internal List<InvocationExpressionSyntax> FileManipulations = new List<InvocationExpressionSyntax>();
+    internal List<InvocationExpressionSyntax> SignIns = new List<InvocationExpressionSyntax>();
 
-    public bool HasRun => FileManipulations.Any();
+    public bool HasRun => SignIns.Any();
 
     public override void VisitInvocationExpression(InvocationExpressionSyntax node)
     {
@@ -21,16 +21,13 @@ internal class FileManipulationSyntaxWalker : CSharpSyntaxWalker, ISyntaxWalker
 
         if (asSymbol != null && asSymbol.ContainingType != null) 
         {
-            if (asSymbol.ContainingType.ToString().Replace("?", "") == "System.IO.File")
+            if (asSymbol.ContainingType.ToString().Replace("?", "").StartsWith("Microsoft.AspNetCore.Identity.SignInManager<"))
             {
                 if (node.Expression is MemberAccessExpressionSyntax member)
                 {
-                    var methodName = member.Name.Identifier.Text;
-
-                    if (methodName.StartsWith("Append") || methodName.StartsWith("Create") || methodName.StartsWith("Open") || 
-                        methodName.StartsWith("Read") || methodName.StartsWith("Write") || methodName.StartsWith("Delete") || methodName.StartsWith("Move"))
+                    if (member.Name.Identifier.Text == "PasswordSignInAsync")
                     {
-                        FileManipulations.Add(node);
+                        SignIns.Add(node);
                     }
                 }
             }

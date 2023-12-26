@@ -100,6 +100,8 @@
             lblStatusHashingAlgorithm = new Label();
             label32 = new Label();
             lblStatusSQLiViaEF = new Label();
+            label33 = new Label();
+            lblStatusPasswordLockout = new Label();
             SuspendLayout();
             // 
             // label1
@@ -780,11 +782,32 @@
             lblStatusSQLiViaEF.Text = "0%";
             lblStatusSQLiViaEF.TextAlign = ContentAlignment.MiddleRight;
             // 
+            // label33
+            // 
+            label33.AutoSize = true;
+            label33.Location = new Point(304, 541);
+            label33.Name = "label33";
+            label33.Size = new Size(143, 15);
+            label33.TabIndex = 74;
+            label33.Text = "Password Lockout is False";
+            // 
+            // lblStatusPasswordLockout
+            // 
+            lblStatusPasswordLockout.AutoSize = true;
+            lblStatusPasswordLockout.Location = new Point(255, 541);
+            lblStatusPasswordLockout.Name = "lblStatusPasswordLockout";
+            lblStatusPasswordLockout.Size = new Size(23, 15);
+            lblStatusPasswordLockout.TabIndex = 73;
+            lblStatusPasswordLockout.Text = "0%";
+            lblStatusPasswordLockout.TextAlign = ContentAlignment.MiddleRight;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(494, 596);
+            Controls.Add(label33);
+            Controls.Add(lblStatusPasswordLockout);
             Controls.Add(label32);
             Controls.Add(lblStatusSQLiViaEF);
             Controls.Add(label30);
@@ -936,5 +959,7 @@
         private Label lblStatusHashingAlgorithm;
         private Label label32;
         private Label lblStatusSQLiViaEF;
+        private Label label33;
+        private Label lblStatusPasswordLockout;
     }
 }

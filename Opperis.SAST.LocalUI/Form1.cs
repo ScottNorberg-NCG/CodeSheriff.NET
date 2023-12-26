@@ -337,6 +337,11 @@ public partial class Form1 : Form
                     lblStatusSQLiViaEF.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 
+                    var passwordLockoutWalker = new PasswordSignInSyntaxWalker();
+                    _findings.AddRange(PasswordSignInAnalyzer.FindDisabledLockouts(passwordLockoutWalker, root));
+                    lblStatusPasswordLockout.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
+                    RefreshFindingCount();
+
                     syntaxTreeIndex++;
                     //if (includeSecrets)
                     //    SearchForSecrets(findings, root, rules);

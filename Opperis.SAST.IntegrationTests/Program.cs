@@ -46,6 +46,7 @@ internal class Program
             //    }
             //}
 
+            TestPasswordLockouts();
             TestSqlInjectionsViaEF();
             TestJwtConfigurationIssues();
             TestHashAlgorithmIssues();
@@ -74,6 +75,13 @@ internal class Program
 
             Console.WriteLine($"Scan completed with {Globals.RuntimeErrors.Count} errors");
         }
+    }
+
+    private static void TestPasswordLockouts()
+    {
+        var findings = PasswordSignInProcessor.GetIssues();
+        Assert.AreEqual(1, findings.Count, "Number of password lockout issues");
+        Assert.AllRootLocationsSet(findings, "TestPasswordLockouts");
     }
 
     private static void TestSqlInjectionsViaEF()
