@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,12 @@ internal class UnknownSingleFindingError : BaseError
     private Exception ex;
 
     internal override ErrorCategory Category => ErrorCategory.UnknownForSingleFinding;
+
+    internal UnknownSingleFindingError(ISymbol symbol, Exception exception)
+    {
+        base.CodeLocation = new Findings.SourceLocation(symbol);
+        base.BaseException = exception;
+    }
 
     internal UnknownSingleFindingError(ExpressionSyntax syntax, Exception exception)
     {
@@ -27,7 +34,7 @@ internal class UnknownSingleFindingError : BaseError
 
     public UnknownSingleFindingError(ClassDeclarationSyntax classDeclaration, Exception exception)
     {
-        base.CodeLocation= new Findings.SourceLocation(classDeclaration);
+        base.CodeLocation = new Findings.SourceLocation(classDeclaration);
         base.BaseException = exception;
     }
 }

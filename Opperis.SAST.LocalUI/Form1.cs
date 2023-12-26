@@ -342,6 +342,11 @@ public partial class Form1 : Form
                     lblStatusPasswordLockout.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 
+                    var iUserStoreWalker = new IUserStoreSyntaxWalker();
+                    _findings.AddRange(IUserStoreAnalyzer.FindMisconfiguredUserStores(iUserStoreWalker, root));
+                    lblStatusIUserStore.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
+                    RefreshFindingCount();
+
                     syntaxTreeIndex++;
                     //if (includeSecrets)
                     //    SearchForSecrets(findings, root, rules);
@@ -388,10 +393,5 @@ public partial class Form1 : Form
     {
         lblStatusFindings.Text = $"Findings: {_findings.Count}";
         lblStatusFindings.Refresh();
-    }
-
-    private void Form1_Load(object sender, EventArgs e)
-    {
-
     }
 }

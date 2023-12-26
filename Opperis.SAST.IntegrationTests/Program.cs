@@ -29,7 +29,7 @@ internal class Program
         {
             Globals.Solution = workspace.OpenSolutionAsync(solutionFilePath).Result;
 
-            //var findings = new List<BaseFinding>();
+            var findings = new List<BaseFinding>();
             //foreach (var project in Globals.Solution.Projects)
             //{
             //    Globals.Compilation = project.GetCompilationAsync().Result;
@@ -38,14 +38,15 @@ internal class Program
             //    {
             //        var root = syntaxTree.GetRoot();
 
-            //        var walker = new EntityFrameworkDbCallSyntaxWalker();
-            //        //walker.Visit(root);
+            //        var walker = new IUserStoreSyntaxWalker();
+            //        walker.Visit(root);
 
-            //        findings.AddRange(SQLInjectionViaEntityFrameworkAnalyzer.GetSQLInjections(walker, syntaxTree.GetRoot()));
+            //        //findings.AddRange(SQLInjectionViaEntityFrameworkAnalyzer.GetSQLInjections(walker, syntaxTree.GetRoot()));
             //        int i = 1;
             //    }
             //}
 
+            TestIUserStoreMisconfigurations();
             TestPasswordLockouts();
             TestSqlInjectionsViaEF();
             TestJwtConfigurationIssues();
@@ -75,6 +76,13 @@ internal class Program
 
             Console.WriteLine($"Scan completed with {Globals.RuntimeErrors.Count} errors");
         }
+    }
+
+    private static void TestIUserStoreMisconfigurations()
+    {
+        var findings = IUserStoreProcessor.GetIUserStoreMisconfigurations();
+        Assert.AreEqual(1, findings.Count, "Number of IUserStore issues");
+        Assert.AllRootLocationsSet(findings, "TestIUserStoreMisconfigurations");
     }
 
     private static void TestPasswordLockouts()

@@ -102,6 +102,9 @@
             lblStatusSQLiViaEF = new Label();
             label33 = new Label();
             lblStatusPasswordLockout = new Label();
+            label34 = new Label();
+            lblStatusIUserStore = new Label();
+            label36 = new Label();
             SuspendLayout();
             // 
             // label1
@@ -662,7 +665,7 @@
             // 
             lblStatusFindings.AutoSize = true;
             lblStatusFindings.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lblStatusFindings.Location = new Point(12, 562);
+            lblStatusFindings.Location = new Point(11, 579);
             lblStatusFindings.Name = "lblStatusFindings";
             lblStatusFindings.Size = new Size(65, 15);
             lblStatusFindings.TabIndex = 60;
@@ -709,7 +712,7 @@
             // label26
             // 
             label26.AutoSize = true;
-            label26.Location = new Point(304, 526);
+            label26.Location = new Point(60, 526);
             label26.Name = "label26";
             label26.Size = new Size(127, 15);
             label26.TabIndex = 66;
@@ -718,7 +721,7 @@
             // lblStatusJWT
             // 
             lblStatusJWT.AutoSize = true;
-            lblStatusJWT.Location = new Point(255, 526);
+            lblStatusJWT.Location = new Point(11, 526);
             lblStatusJWT.Name = "lblStatusJWT";
             lblStatusJWT.Size = new Size(23, 15);
             lblStatusJWT.TabIndex = 65;
@@ -785,7 +788,7 @@
             // label33
             // 
             label33.AutoSize = true;
-            label33.Location = new Point(304, 541);
+            label33.Location = new Point(60, 541);
             label33.Name = "label33";
             label33.Size = new Size(143, 15);
             label33.TabIndex = 74;
@@ -794,18 +797,50 @@
             // lblStatusPasswordLockout
             // 
             lblStatusPasswordLockout.AutoSize = true;
-            lblStatusPasswordLockout.Location = new Point(255, 541);
+            lblStatusPasswordLockout.Location = new Point(11, 541);
             lblStatusPasswordLockout.Name = "lblStatusPasswordLockout";
             lblStatusPasswordLockout.Size = new Size(23, 15);
             lblStatusPasswordLockout.TabIndex = 73;
             lblStatusPasswordLockout.Text = "0%";
             lblStatusPasswordLockout.TextAlign = ContentAlignment.MiddleRight;
             // 
+            // label34
+            // 
+            label34.AutoSize = true;
+            label34.Location = new Point(60, 556);
+            label34.Name = "label34";
+            label34.Size = new Size(159, 15);
+            label34.TabIndex = 76;
+            label34.Text = "IUserStore Misconfigurations";
+            // 
+            // lblStatusIUserStore
+            // 
+            lblStatusIUserStore.AutoSize = true;
+            lblStatusIUserStore.Location = new Point(11, 556);
+            lblStatusIUserStore.Name = "lblStatusIUserStore";
+            lblStatusIUserStore.Size = new Size(23, 15);
+            lblStatusIUserStore.TabIndex = 75;
+            lblStatusIUserStore.Text = "0%";
+            lblStatusIUserStore.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // label36
+            // 
+            label36.AutoSize = true;
+            label36.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label36.Location = new Point(10, 511);
+            label36.Name = "label36";
+            label36.Size = new Size(171, 15);
+            label36.TabIndex = 77;
+            label36.Text = "Authentication/Authorization";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(494, 596);
+            ClientSize = new Size(494, 617);
+            Controls.Add(label36);
+            Controls.Add(label34);
+            Controls.Add(lblStatusIUserStore);
             Controls.Add(label33);
             Controls.Add(lblStatusPasswordLockout);
             Controls.Add(label32);
@@ -880,7 +915,6 @@
             Controls.Add(label1);
             Name = "Form1";
             Text = "Start Scan";
-            Load += Form1_Load;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -961,5 +995,8 @@
         private Label lblStatusSQLiViaEF;
         private Label label33;
         private Label lblStatusPasswordLockout;
+        private Label label34;
+        private Label lblStatusIUserStore;
+        private Label label36;
     }
 }
