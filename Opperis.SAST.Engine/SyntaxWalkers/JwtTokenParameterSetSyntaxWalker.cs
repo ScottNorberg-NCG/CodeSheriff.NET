@@ -31,7 +31,7 @@ internal class JwtTokenParameterSetSyntaxWalker : CSharpSyntaxWalker, ISyntaxWal
                 if (parent is ObjectCreationExpressionSyntax creation)
                 {
                     var type = creation.GetUnderlyingType();
-                    if (type != null && type.ToString() == "Microsoft.IdentityModel.Tokens.TokenValidationParameters")
+                    if (type != null && type.ToString().Replace("?", "") == "Microsoft.IdentityModel.Tokens.TokenValidationParameters")
                     {
                         TokenValidationParameters.Add(node);
                         //return;

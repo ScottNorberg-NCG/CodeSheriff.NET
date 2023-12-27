@@ -387,6 +387,9 @@ public partial class Form1 : Form
     {
         var fileManipulationWalker = new FileManipulationSyntaxWalker();
         _findings.AddRange(FileManipulationAnalyzer.FindFileManipulations(fileManipulationWalker, root));
+
+        var fileResultWalker = new FileResultSyntaxWalker();
+        _findings.AddRange(FileResultAnalyzer.GetFileResults(fileResultWalker, root));
     }
 
     private void RefreshFindingCount()

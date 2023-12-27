@@ -46,6 +46,7 @@ internal class Program
             //    }
             //}
 
+            TestFileResultIssues();
             TestIUserStoreMisconfigurations();
             TestPasswordLockouts();
             TestSqlInjectionsViaEF();
@@ -76,6 +77,15 @@ internal class Program
 
             Console.WriteLine($"Scan completed with {Globals.RuntimeErrors.Count} errors");
         }
+    }
+
+    private static void TestFileResultIssues()
+    {
+        var findings = FileResultProcessor.GetFileManipulations();
+        //WriteFindingsToConsole(xssIssues);
+        Assert.AreEqual(2, findings.Count, "Expected number of file result issues");
+        Assert.AreEqual(2, findings.Select(c => c.GetType().ToString()).Distinct().Count(), "Number of distinct types of file result issues");
+        Assert.AllRootLocationsSet(findings, "TestFileResultIssues");
     }
 
     private static void TestIUserStoreMisconfigurations()
@@ -227,7 +237,7 @@ internal class Program
         //Number of Value Shadowing issues will change frequently
         //If an issue is found here, check to see whether the project changed first before debugging tests
         var valueShadowing = ValueShadowingProcessor.GetValueShadowingIssues();
-        Assert.AreEqual(30, valueShadowing.Count, "Expected number of Value Shadowing Issues");
+        Assert.AreEqual(32, valueShadowing.Count, "Expected number of Value Shadowing Issues");
         Assert.AllRootLocationsSet(valueShadowing, "TestValueShadowingIssues");
     }
 
