@@ -254,9 +254,9 @@ internal class Program
     private static void TestDanglingConnectionOpens()
     {
         var opens = DatabaseConnectionOpenProcessor.GetDanglingConnectionOpens();
-        Assert.AreEqual(1, opens.Count, "Expected number of Unsafe Database Connection Opens");
+        Assert.AreEqual(2, opens.Count, "Expected number of Unsafe Database Connection Opens");
         Assert.AreEqual(1, opens.Count(r => r.GetType().ToString() == "Opperis.SAST.Engine.Findings.Database.SqlConnectionNotClosedInTryFinally"), "Number of connections opened without a using or finally block");
-        Assert.AreEqual(0, opens.Count(r => r.GetType().ToString() == "Opperis.SAST.Engine.Findings.Database.SqlConnectionNotClosed"), "Number of connections opened without being closed");
+        Assert.AreEqual(1, opens.Count(r => r.GetType().ToString() == "Opperis.SAST.Engine.Findings.Database.SqlConnectionNotClosed"), "Number of connections opened without being closed");
         Assert.AllRootLocationsSet(opens, "TestDanglingConnectionOpens");
     }
 

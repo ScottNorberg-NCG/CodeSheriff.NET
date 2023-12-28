@@ -23,7 +23,7 @@ internal static class HashAlgorithmAnalyzer
 
         var findings = new List<BaseFinding>();
 
-        foreach (var algorithm in walker.ComputeHashCalls)
+        foreach (var algorithm in walker.MethodCalls)
         {
             try
             {

@@ -18,5 +18,16 @@ namespace Opperis.SAST.Engine
 
             return false;
         }
+
+        internal static bool In(this string str, List<string> strArr)
+        {
+            foreach (var s in strArr)
+            {
+                if (s == str)
+                    return true;
+            }
+
+            return false;
+        }
     }
 }

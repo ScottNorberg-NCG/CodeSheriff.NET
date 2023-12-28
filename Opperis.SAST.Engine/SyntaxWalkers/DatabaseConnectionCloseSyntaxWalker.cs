@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Opperis.SAST.Engine.SyntaxWalkers.BaseSyntaxWalkers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,26 +9,10 @@ using System.Threading.Tasks;
 
 namespace Opperis.SAST.Engine.SyntaxWalkers;
 
-internal class DatabaseConnectionCloseSyntaxWalker : CSharpSyntaxWalker, ISyntaxWalker
+internal class DatabaseConnectionCloseSyntaxWalker : MethodInvocationSyntaxWalker
 {
-    internal List<InvocationExpressionSyntax> ConnectionCloses = new List<InvocationExpressionSyntax>();
+    protected override List<string> MethodNames => new List<string>() { "Close" };
 
-    public bool HasRun => ConnectionCloses.Any();
-
-    public override void VisitInvocationExpression(InvocationExpressionSyntax node)
-    {
-        if (node.Expression is MemberAccessExpressionSyntax memberAccess &&
-            memberAccess.Name.Identifier.Text == "Close")
-        {
-            var model = Globals.Compilation.GetSemanticModel(node.SyntaxTree);
-            var symbol = model.GetSymbolInfo(memberAccess).Symbol;
-
-            if (symbol.ContainingType.Name == "SqlConnection")
-            {
-                ConnectionCloses.Add(node);
-            }
-        }
-
-        base.VisitInvocationExpression(node);
-    }
+    //TODO: figure out why both versions (with namespace and without) are needed here
+    protected override List<string> ObjectContainerNames => new List<string>() { "SqlConnection", "Microsoft.Data.SqlClient.SqlConnection" };
 }

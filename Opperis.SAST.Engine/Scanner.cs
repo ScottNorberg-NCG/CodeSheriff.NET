@@ -19,102 +19,104 @@ namespace Opperis.SAST.Engine
     {
         internal static List<BaseFinding> Scan(string solutionFilePath, bool includeNuGet, bool includeTrufflehog)
         {
-            if (!MSBuildLocator.IsRegistered)
-                MSBuildLocator.RegisterDefaults();
+            throw new NotImplementedException();
 
-            var findings = new List<BaseFinding>();
+            //if (!MSBuildLocator.IsRegistered)
+            //    MSBuildLocator.RegisterDefaults();
 
-            using (var workspace = MSBuildWorkspace.Create())
-            {
-                Globals.Solution = workspace.OpenSolutionAsync(solutionFilePath).Result;
+            //var findings = new List<BaseFinding>();
 
-                findings.AddRange(OverpostingAnalyzer.FindEFObjectsAsParameters());
+            //using (var workspace = MSBuildWorkspace.Create())
+            //{
+            //    Globals.Solution = workspace.OpenSolutionAsync(solutionFilePath).Result;
 
-                if (includeTrufflehog)
-                {
-                    foreach (var project in Globals.Solution.Projects)
-                    {
-                        foreach (var doc in project.AdditionalDocuments)
-                        {
-                            findings.AddRange(TrufflehogAnalyzer.RunTrufflehogScan(doc.FilePath));
-                        }
+            //    findings.AddRange(OverpostingAnalyzer.FindEFObjectsAsParameters());
 
-                        foreach (var doc in project.Documents)
-                        {
-                            findings.AddRange(TrufflehogAnalyzer.RunTrufflehogScan(doc.FilePath));
-                        }
-                    }
-                }
+            //    if (includeTrufflehog)
+            //    {
+            //        foreach (var project in Globals.Solution.Projects)
+            //        {
+            //            foreach (var doc in project.AdditionalDocuments)
+            //            {
+            //                findings.AddRange(TrufflehogAnalyzer.RunTrufflehogScan(doc.FilePath));
+            //            }
 
-                List<GitLeaksRule> rules = new List<GitLeaksRule>();
+            //            foreach (var doc in project.Documents)
+            //            {
+            //                findings.AddRange(TrufflehogAnalyzer.RunTrufflehogScan(doc.FilePath));
+            //            }
+            //        }
+            //    }
+
+            //    List<GitLeaksRule> rules = new List<GitLeaksRule>();
                 
-                //if (includeSecrets)
-                //    rules = Opperis.SAST.Secrets.RulesEngine.GetGitLeaksRules();
+            //    //if (includeSecrets)
+            //    //    rules = Opperis.SAST.Secrets.RulesEngine.GetGitLeaksRules();
 
-                if (includeNuGet)
-                    findings.AddRange(ScaAnalyzer.GetVulnerableNuGetPackages());
+            //    if (includeNuGet)
+            //        findings.AddRange(ScaAnalyzer.GetVulnerableNuGetPackages());
 
-                foreach (var project in Globals.Solution.Projects)
-                {
-                    Globals.Compilation = project.GetCompilationAsync().Result;
+            //    foreach (var project in Globals.Solution.Projects)
+            //    {
+            //        Globals.Compilation = project.GetCompilationAsync().Result;
 
-                    foreach (var cshtmlFile in project.AdditionalDocuments.Where(d => d.FilePath.EndsWith(".cshtml")))
-                    {
-                        ParseJavaScriptTags(findings, cshtmlFile);
-                        ParseLinkTags(findings, cshtmlFile);
-                        ParseStyleTags(findings, cshtmlFile);
-                    }
+            //        foreach (var cshtmlFile in project.AdditionalDocuments.Where(d => d.FilePath.EndsWith(".cshtml")))
+            //        {
+            //            ParseJavaScriptTags(findings, cshtmlFile);
+            //            ParseLinkTags(findings, cshtmlFile);
+            //            ParseStyleTags(findings, cshtmlFile);
+            //        }
 
-                    foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
-                    {
-                        var root = syntaxTree.GetRoot();
+            //        foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
+            //        {
+            //            var root = syntaxTree.GetRoot();
 
-                        var databaseCalls = new DatabaseCommandTextSyntaxWalker();
-                        findings.AddRange(SQLInjectionAnalyzer.GetSQLInjections(databaseCalls, root));
+            //            var databaseCalls = new DatabaseCommandTextSyntaxWalker();
+            //            findings.AddRange(SQLInjectionAnalyzer.GetSQLInjections(databaseCalls, root));
 
-                        var controllerMethods = new UIProcessorMethodSyntaxWalker();
-                        findings.AddRange(CsrfAnalyzer.FindCsrfIssues(controllerMethods, root));
-                        findings.AddRange(ValueShadowingAnalyzer.FindValueShadowingPossibilities(controllerMethods, root));
+            //            var controllerMethods = new UIProcessorMethodSyntaxWalker();
+            //            findings.AddRange(CsrfAnalyzer.FindCsrfIssues(controllerMethods, root));
+            //            findings.AddRange(ValueShadowingAnalyzer.FindValueShadowingPossibilities(controllerMethods, root));
 
-                        var databaseConnections = new DatabaseConnectionOpenSyntaxWalker();
-                        findings.AddRange(DatabaseConnectionOpenAnalyzer.FindUnsafeDatabaseConnectionOpens(databaseConnections, root));
+            //            var databaseConnections = new DatabaseConnectionOpenSyntaxWalker();
+            //            findings.AddRange(DatabaseConnectionOpenAnalyzer.FindUnsafeDatabaseConnectionOpens(databaseConnections, root));
 
-                        var cryptoKeyFinder = new SymmetricCryptographyPropertySyntaxWalker();
-                        findings.AddRange(SymmetricAlgorithmPropertyAnalyzer.FindHardCodedKeys(cryptoKeyFinder, root));
-                        findings.AddRange(SymmetricAlgorithmPropertyAnalyzer.FindHardCodedIVs(cryptoKeyFinder, root));
-                        findings.AddRange(SymmetricAlgorithmPropertyAnalyzer.FindECBUses(cryptoKeyFinder, root));
+            //            var cryptoKeyFinder = new SymmetricCryptographyPropertySyntaxWalker();
+            //            findings.AddRange(SymmetricAlgorithmPropertyAnalyzer.FindHardCodedKeys(cryptoKeyFinder, root));
+            //            findings.AddRange(SymmetricAlgorithmPropertyAnalyzer.FindHardCodedIVs(cryptoKeyFinder, root));
+            //            findings.AddRange(SymmetricAlgorithmPropertyAnalyzer.FindECBUses(cryptoKeyFinder, root));
 
-                        var cryptoAlgorithmFinder = new SymmetricAlgorithmSyntaxWalker();
-                        findings.AddRange(SymmetricAlgorithmAnalyzer.FindDeprecatedAlgorithms(cryptoAlgorithmFinder, root));
+            //            var cryptoAlgorithmFinder = new SymmetricAlgorithmSyntaxWalker();
+            //            findings.AddRange(SymmetricAlgorithmAnalyzer.FindDeprecatedAlgorithms(cryptoAlgorithmFinder, root));
 
-                        var externalRedirects = new ExternalRedirectSyntaxWalker();
-                        findings.AddRange(ExternalRedirectAnalyzer.FindProblematicExternalRedirects(externalRedirects, root));
+            //            var externalRedirects = new ExternalRedirectSyntaxWalker();
+            //            findings.AddRange(ExternalRedirectAnalyzer.FindProblematicExternalRedirects(externalRedirects, root));
 
-                        var hardCodedConnectionStrings = new DatabaseConnectionStringSyntaxWalker();
-                        findings.AddRange(HardCodedConnectionStringAnalyzer.FindHardCodedConnectionStrings(hardCodedConnectionStrings, root));
+            //            var hardCodedConnectionStrings = new DatabaseConnectionStringSyntaxWalker();
+            //            findings.AddRange(HardCodedConnectionStringAnalyzer.FindHardCodedConnectionStrings(hardCodedConnectionStrings, root));
 
-                        var problematicHtmlRaws = new HtmlRawSyntaxWalker();
-                        var rawAnalyzer = new HtmlRawAnalyzer();
-                        findings.AddRange(rawAnalyzer.FindXssIssues(problematicHtmlRaws, root));
+            //            var problematicHtmlRaws = new HtmlRawSyntaxWalker();
+            //            var rawAnalyzer = new HtmlRawAnalyzer();
+            //            findings.AddRange(rawAnalyzer.FindXssIssues(problematicHtmlRaws, root));
 
-                        var problematicHtmlHelpers = new HtmlHelperSyntaxWalker();
-                        var helperAnalyzer = new HtmlHelperAnalyzer();
-                        findings.AddRange(helperAnalyzer.FindXssIssues(problematicHtmlHelpers, root));
+            //            var problematicHtmlHelpers = new HtmlHelperSyntaxWalker();
+            //            var helperAnalyzer = new HtmlHelperAnalyzer();
+            //            findings.AddRange(helperAnalyzer.FindXssIssues(problematicHtmlHelpers, root));
 
-                        var overpostingsAsBindObjects = new RazorPageBindObjectSyntaxWalker();
-                        findings.AddRange(OverpostingAnalyzer.FindEFObjectsAsBindObjects(overpostingsAsBindObjects, root));
+            //            var overpostingsAsBindObjects = new RazorPageBindObjectSyntaxWalker();
+            //            findings.AddRange(OverpostingAnalyzer.FindEFObjectsAsBindObjects(overpostingsAsBindObjects, root));
 
 
-                        SearchForCookieManipulations(findings, root);
-                        SearchForFileManipulations(findings, root);
+            //            SearchForCookieManipulations(findings, root);
+            //            SearchForFileManipulations(findings, root);
 
-                        //if (includeSecrets)
-                        //    SearchForSecrets(findings, root, rules);
-                    }
-                }
-            }
+            //            //if (includeSecrets)
+            //            //    SearchForSecrets(findings, root, rules);
+            //        }
+            //    }
+            //}
 
-            return findings;
+            //return findings;
         }
 
         private static void ParseJavaScriptTags(List<BaseFinding> findings, TextDocument? cshtmlFile)

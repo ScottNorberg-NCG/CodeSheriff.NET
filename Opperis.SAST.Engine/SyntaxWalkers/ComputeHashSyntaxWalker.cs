@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Opperis.SAST.Engine.RoslynObjectExtensions;
+using Opperis.SAST.Engine.SyntaxWalkers.BaseSyntaxWalkers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,25 +10,9 @@ using System.Threading.Tasks;
 
 namespace Opperis.SAST.Engine.SyntaxWalkers;
 
-internal class ComputeHashSyntaxWalker : CSharpSyntaxWalker, ISyntaxWalker
+internal class ComputeHashSyntaxWalker : MethodInvocationSyntaxWalker
 {
-    internal List<InvocationExpressionSyntax> ComputeHashCalls = new List<InvocationExpressionSyntax>();
+    protected override List<string> MethodNames { get; } = new List<string>() { "ComputeHash" };
 
-    public bool HasRun => ComputeHashCalls.Any();
-
-    public override void VisitInvocationExpression(InvocationExpressionSyntax node)
-    {
-        if (node.Expression is MemberAccessExpressionSyntax memberAccess &&
-            memberAccess.Name.Identifier.Text == "ComputeHash")
-        {
-            var symbol = memberAccess.ToSymbol();
-
-            if (symbol != null && symbol.ContainingType.ToString() == "System.Security.Cryptography.HashAlgorithm")
-            {
-                ComputeHashCalls.Add(node);
-            }
-        }
-
-        base.VisitInvocationExpression(node);
-    }
+    protected override List<string> ObjectContainerNames => new List<string>() { "System.Security.Cryptography.HashAlgorithm" };
 }

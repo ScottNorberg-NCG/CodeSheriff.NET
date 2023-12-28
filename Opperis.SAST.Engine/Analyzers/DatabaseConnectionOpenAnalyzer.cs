@@ -31,7 +31,7 @@ internal static class DatabaseConnectionOpenAnalyzer
 
                 //Not *really* safe, since we might have multiple connection objects that are opened but only one closed
                 //This should be good enough for now until a better solution is found
-                if (!dbCloseSyntaxWalker.ConnectionCloses.Any())
+                if (!dbCloseSyntaxWalker.MethodCalls.Any())
                 {
                     var finding = new SqlConnectionNotClosed();
                     finding.RootLocation = new SourceLocation(open);
@@ -39,7 +39,7 @@ internal static class DatabaseConnectionOpenAnalyzer
                 }
                 else
                 {
-                    foreach (var close in dbCloseSyntaxWalker.ConnectionCloses)
+                    foreach (var close in dbCloseSyntaxWalker.MethodCalls)
                     {
                         if (!close.Ancestors().OfType<FinallyClauseSyntax>().Any())
                         {

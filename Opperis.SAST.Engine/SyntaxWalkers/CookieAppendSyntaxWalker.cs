@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Opperis.SAST.Engine.RoslynObjectExtensions;
+using Opperis.SAST.Engine.SyntaxWalkers.BaseSyntaxWalkers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,31 +11,9 @@ using System.Threading.Tasks;
 
 namespace Opperis.SAST.Engine.SyntaxWalkers;
 
-internal class CookieAppendSyntaxWalker : CSharpSyntaxWalker, ISyntaxWalker
+internal class CookieAppendSyntaxWalker : MethodInvocationSyntaxWalker
 {
-    public List<InvocationExpressionSyntax> CookieAdds = new List<InvocationExpressionSyntax>();
+    protected override List<string> MethodNames => new List<string>() { "Append" };
 
-    public bool HasRun => CookieAdds.Any();
-
-    public override void VisitInvocationExpression(InvocationExpressionSyntax node)
-    {
-        if (node.Expression is MemberAccessExpressionSyntax member)
-        {
-            if (member.Name.ToString() == "Append")
-            {
-                var asSymbol = node.ToSymbol();
-
-                if (asSymbol is IMethodSymbol method)
-                {
-                    if (method.ContainingType != null)
-                    {
-                        if (method.ContainingType.ToString() == "Microsoft.AspNetCore.Http.IResponseCookies")
-                            CookieAdds.Add(node);
-                    }
-                }
-            }
-        }
-
-        base.VisitInvocationExpression(node);
-    }
+    protected override List<string> ObjectContainerNames => new List<string>() { "Microsoft.AspNetCore.Http.IResponseCookies" };
 }

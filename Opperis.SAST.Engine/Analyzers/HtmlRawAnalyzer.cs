@@ -15,7 +15,7 @@ internal class HtmlRawAnalyzer : BaseCshtmlToCodeAnalyzer
 
         var findings = new List<BaseFinding>();
 
-        foreach (var call in walker.HtmlRawCalls)
+        foreach (var call in walker.MethodCalls)
         {
             try
             { 

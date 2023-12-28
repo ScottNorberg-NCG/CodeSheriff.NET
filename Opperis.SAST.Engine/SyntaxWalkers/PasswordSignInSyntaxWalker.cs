@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Opperis.SAST.Engine.RoslynObjectExtensions;
+using Opperis.SAST.Engine.SyntaxWalkers.BaseSyntaxWalkers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,30 +10,9 @@ using System.Threading.Tasks;
 
 namespace Opperis.SAST.Engine.SyntaxWalkers;
 
-internal class PasswordSignInSyntaxWalker : CSharpSyntaxWalker, ISyntaxWalker
+internal class PasswordSignInSyntaxWalker : MethodInvocationSyntaxWalker
 {
-    internal List<InvocationExpressionSyntax> SignIns = new List<InvocationExpressionSyntax>();
+    protected override List<string> MethodNames => new List<string>() { "PasswordSignInAsync" };
 
-    public bool HasRun => SignIns.Any();
-
-    public override void VisitInvocationExpression(InvocationExpressionSyntax node)
-    {
-        var asSymbol = node.ToSymbol();
-
-        if (asSymbol != null && asSymbol.ContainingType != null) 
-        {
-            if (asSymbol.ContainingType.ToString().Replace("?", "").StartsWith("Microsoft.AspNetCore.Identity.SignInManager<"))
-            {
-                if (node.Expression is MemberAccessExpressionSyntax member)
-                {
-                    if (member.Name.Identifier.Text == "PasswordSignInAsync")
-                    {
-                        SignIns.Add(node);
-                    }
-                }
-            }
-        }
-
-        //base.VisitInvocationExpression(node);
-    }
+    protected override List<string> ObjectContainerNames => new List<string>() { "Microsoft.AspNetCore.Identity.SignInManager" };
 }

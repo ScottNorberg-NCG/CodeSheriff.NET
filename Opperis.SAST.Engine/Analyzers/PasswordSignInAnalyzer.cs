@@ -23,7 +23,7 @@ internal static class PasswordSignInAnalyzer
 
         var findings = new List<BaseFinding>();
 
-        foreach (var signIn in walker.SignIns)
+        foreach (var signIn in walker.MethodCalls)
         {
             try
             {

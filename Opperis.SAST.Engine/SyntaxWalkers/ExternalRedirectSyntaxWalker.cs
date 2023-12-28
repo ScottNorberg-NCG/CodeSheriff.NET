@@ -21,15 +21,11 @@ internal class ExternalRedirectSyntaxWalker : CSharpSyntaxWalker, ISyntaxWalker
     {
         if (node.Expression is IdentifierNameSyntax id && id.Identifier.Text == "Redirect")
         {
-            var model = Globals.Compilation.GetSemanticModel(node.SyntaxTree);
-            var symbol = model.GetSymbolInfo(id).Symbol;
+            var method = id.Ancestors().FirstOrDefault(a => a is MethodDeclarationSyntax) as MethodDeclarationSyntax;
 
-            if (symbol != null) 
+            if (method.IsUIProcessor())
             { 
-                if (symbol.ContainingType.Name == "PageModel" || symbol.ContainingType.Name == "ControllerBase")
-                {
-                    UnvalidatedRedirects.Add(node);
-                }                
+                UnvalidatedRedirects.Add(node);            
             }
         }
 

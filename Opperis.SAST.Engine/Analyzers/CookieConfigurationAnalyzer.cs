@@ -22,7 +22,7 @@ internal static class CookieConfigurationAnalyzer
 
         var findings = new List<BaseFinding>();
 
-        foreach (var cookie in walker.CookieAdds) 
+        foreach (var cookie in walker.MethodCalls) 
         {
             try
             {
