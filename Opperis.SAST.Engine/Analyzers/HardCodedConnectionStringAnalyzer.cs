@@ -10,8 +10,10 @@ namespace Opperis.SAST.Engine.Analyzers;
 
 internal static class HardCodedConnectionStringAnalyzer
 {
-    internal static List<BaseFinding> FindHardCodedConnectionStrings(DatabaseConnectionStringSyntaxWalker walker, SyntaxNode root)
+    internal static List<BaseFinding> FindHardCodedConnectionStrings(SyntaxNode root)
     {
+        var walker = new DatabaseConnectionStringSyntaxWalker();
+
         if (!walker.HasRun)
             walker.Visit(root);
 

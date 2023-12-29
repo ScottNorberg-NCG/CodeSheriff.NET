@@ -10,8 +10,10 @@ namespace Opperis.SAST.Engine.Analyzers;
 
 internal static class FileManipulationAnalyzer
 {
-    internal static List<BaseFinding> FindFileManipulations(FileManipulationSyntaxWalker walker, SyntaxNode root)
+    internal static List<BaseFinding> FindFileManipulations(SyntaxNode root)
     {
+        var walker = new FileManipulationSyntaxWalker();
+
         if (!walker.HasRun)
             walker.Visit(root);
 

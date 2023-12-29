@@ -23,9 +23,7 @@ internal static class DatabaseConnectionOpenProcessor
             foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
             {
                 var root = syntaxTree.GetRoot();
-
-                var walker = new DatabaseConnectionOpenSyntaxWalker();
-                retVal.AddRange(DatabaseConnectionOpenAnalyzer.FindUnsafeDatabaseConnectionOpens(walker, root));
+                retVal.AddRange(DatabaseConnectionOpenAnalyzer.FindUnsafeDatabaseConnectionOpens(root));
             }
         }
 

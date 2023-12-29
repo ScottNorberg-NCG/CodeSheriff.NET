@@ -15,8 +15,10 @@ namespace Opperis.SAST.Engine.Analyzers;
 
 internal static class SymmetricAlgorithmAnalyzer
 {
-    internal static List<BaseFinding> FindDeprecatedAlgorithms(SymmetricAlgorithmSyntaxWalker walker, SyntaxNode root)
+    internal static List<BaseFinding> FindDeprecatedAlgorithms(SyntaxNode root)
     {
+        var walker = new SymmetricAlgorithmSyntaxWalker();
+
         if (!walker.HasRun)
             walker.Visit(root);
 

@@ -24,9 +24,7 @@ internal static class SecretStorageProcessor
             foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
             {
                 var root = syntaxTree.GetRoot();
-
-                var walker = new StringLiteralSyntaxWalker();
-                retVal.AddRange(SecretStorageAnalyzer.GetStoredSecrets(walker, root, rules));
+                retVal.AddRange(SecretStorageAnalyzer.GetStoredSecrets(root, rules));
             }
         }
 

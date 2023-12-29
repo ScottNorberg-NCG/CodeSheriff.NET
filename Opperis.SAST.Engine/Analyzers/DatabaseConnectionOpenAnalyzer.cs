@@ -14,8 +14,10 @@ namespace Opperis.SAST.Engine.Analyzers;
 
 internal static class DatabaseConnectionOpenAnalyzer
 {
-    internal static List<BaseFinding> FindUnsafeDatabaseConnectionOpens(DatabaseConnectionOpenSyntaxWalker walker, SyntaxNode root)
+    internal static List<BaseFinding> FindUnsafeDatabaseConnectionOpens(SyntaxNode root)
     {
+        var walker = new DatabaseConnectionOpenSyntaxWalker();
+
         if (!walker.HasRun)
             walker.Visit(root);
 

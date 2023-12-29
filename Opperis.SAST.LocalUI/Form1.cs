@@ -174,7 +174,7 @@ public partial class Form1 : Form
         {
             Globals.Solution = workspace.OpenSolutionAsync(txtSolutionFile.Text).Result;
 
-            _findings.AddRange(OverpostingAnalyzer.FindEFObjectsAsParameters());
+            _findings.AddRange(OverpostingViaControllerAnalyzer.FindEFObjectsAsParameters());
 
             if (chkTrufflehog.Checked)
             {
@@ -243,67 +243,54 @@ public partial class Form1 : Form
                 {
                     var root = syntaxTree.GetRoot();
 
-                    var databaseCalls = new DatabaseCommandTextSyntaxWalker();
-                    _findings.AddRange(SQLInjectionAnalyzer.GetSQLInjections(databaseCalls, root));
+                    _findings.AddRange(SQLInjectionAnalyzer.GetSQLInjections(root));
                     lblStatusSqlInjection.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 
                     //TODO: Refactor this so we go off the global list to avoid doing the analysis twice
-                    var controllerMethods = new UIProcessorMethodSyntaxWalker();
-                    _findings.AddRange(CsrfAnalyzer.FindCsrfIssues(controllerMethods, root));
-                    _findings.AddRange(ValueShadowingAnalyzer.FindValueShadowingPossibilities(controllerMethods, root));
+                    _findings.AddRange(CsrfAnalyzer.FindCsrfIssues(root));
+                    _findings.AddRange(ValueShadowingAnalyzer.FindValueShadowingPossibilities(root));
                     lblStatusCsrf.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     lblStatusValueShadowing.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 
-                    var databaseConnections = new DatabaseConnectionOpenSyntaxWalker();
-                    _findings.AddRange(DatabaseConnectionOpenAnalyzer.FindUnsafeDatabaseConnectionOpens(databaseConnections, root));
+                    _findings.AddRange(DatabaseConnectionOpenAnalyzer.FindUnsafeDatabaseConnectionOpens(root));
                     lblStatusUnclosedConnection.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 
-                    var cryptoKeyFinder = new SymmetricCryptographyPropertySyntaxWalker();
-                    _findings.AddRange(SymmetricAlgorithmPropertyAnalyzer.FindHardCodedKeys(cryptoKeyFinder, root));
-                    _findings.AddRange(SymmetricAlgorithmPropertyAnalyzer.FindHardCodedIVs(cryptoKeyFinder, root));
-                    _findings.AddRange(SymmetricAlgorithmPropertyAnalyzer.FindECBUses(cryptoKeyFinder, root));
+                    _findings.AddRange(SymmetricAlgorithmPropertyAnalyzer.GetMisconfiguredProperties(root));
                     lblStatusCryptoKeys.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     lblStatusCryptoIVs.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     lblStatusCryptoECB.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 
-                    var cryptoAlgorithmFinder = new SymmetricAlgorithmSyntaxWalker();
-                    _findings.AddRange(SymmetricAlgorithmAnalyzer.FindDeprecatedAlgorithms(cryptoAlgorithmFinder, root));
+                    _findings.AddRange(SymmetricAlgorithmAnalyzer.FindDeprecatedAlgorithms(root));
                     lblStatusDeprecatedCrypto.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 
-                    var hashAlgorithmFinder = new ComputeHashSyntaxWalker();
-                    _findings.AddRange(HashAlgorithmAnalyzer.FindDeprecatedAlgorithms(hashAlgorithmFinder, root));
+                    _findings.AddRange(HashAlgorithmAnalyzer.FindDeprecatedAlgorithms(root));
                     lblStatusHashingAlgorithm.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 
-                    var externalRedirects = new ExternalRedirectSyntaxWalker();
-                    _findings.AddRange(ExternalRedirectAnalyzer.FindProblematicExternalRedirects(externalRedirects, root));
+                    _findings.AddRange(ExternalRedirectAnalyzer.FindProblematicExternalRedirects(root));
                     lblStatusRedirect.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 
-                    var hardCodedConnectionStrings = new DatabaseConnectionStringSyntaxWalker();
-                    _findings.AddRange(HardCodedConnectionStringAnalyzer.FindHardCodedConnectionStrings(hardCodedConnectionStrings, root));
+                    _findings.AddRange(HardCodedConnectionStringAnalyzer.FindHardCodedConnectionStrings(root));
                     lblStatusConnectionString.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 
-                    var problematicHtmlRaws = new HtmlRawSyntaxWalker();
                     var rawAnalyzer = new HtmlRawAnalyzer();
-                    _findings.AddRange(rawAnalyzer.FindXssIssues(problematicHtmlRaws, root));
+                    _findings.AddRange(rawAnalyzer.FindXssIssues(root));
                     lblStatusXssViaRaw.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 
-                    var problematicHtmlHelpers = new HtmlHelperSyntaxWalker();
                     var helperAnalyzer = new HtmlHelperAnalyzer();
-                    _findings.AddRange(helperAnalyzer.FindXssIssues(problematicHtmlHelpers, root));
+                    _findings.AddRange(helperAnalyzer.FindXssIssues(root));
                     lblStatusXssViaHelper.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 
-                    var overpostingsAsBindObjects = new RazorPageBindObjectSyntaxWalker();
-                    _findings.AddRange(OverpostingAnalyzer.FindEFObjectsAsBindObjects(overpostingsAsBindObjects, root));
+                    _findings.AddRange(OverpostingViaBindObjectAnalyzer.FindEFObjectsAsBindObjects(root));
                     lblStatusOverposting.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 
@@ -315,35 +302,28 @@ public partial class Form1 : Form
                     lblStatusFile.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 
-                    var uiMethodWalker = new UIProcessorMethodSyntaxWalker();
-                    _findings.AddRange(ModelValidationAnalyzer.FindMissingModelValidations(uiMethodWalker, root));
+                    _findings.AddRange(ModelValidationAnalyzer.FindMissingModelValidations(root));
                     lblStatusOverposting.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 
-                    var jwtParameterWalker = new JwtTokenParameterSetSyntaxWalker();
-                    _findings.AddRange(JwtTokenMisconfigurationAnalyzer.FindMisconfigurations(jwtParameterWalker, root));
+                    _findings.AddRange(JwtTokenMisconfigurationAnalyzer.FindMisconfigurations(root));
                     lblStatusJWT.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 
-                    var rsaConstructorWalker = new RSAConstructorSyntaxWalker();
-                    _findings.AddRange(RSAKeySizeInConstructorAnalyzer.FindInadequateKeyLengths(rsaConstructorWalker, root));
-                    var rsaKeySizeWalker = new RSAKeySizeSyntaxWalker();
-                    _findings.AddRange(RSAKeySizeInPropertyAnalyzer.FindInadequateKeyLengths(rsaKeySizeWalker, root));
+                    _findings.AddRange(RSAKeySizeInConstructorAnalyzer.FindInadequateKeyLengths(root));
+                    _findings.AddRange(RSAKeySizeInPropertyAnalyzer.FindInadequateKeyLengths(root));
                     lblStatusRSA.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 
-                    var dbCallViaEFWalker = new EntityFrameworkDbCallSyntaxWalker();
-                    _findings.AddRange(SQLInjectionViaEntityFrameworkAnalyzer.GetSQLInjections(dbCallViaEFWalker, root));
+                    _findings.AddRange(SQLInjectionViaEntityFrameworkAnalyzer.GetSQLInjections(root));
                     lblStatusSQLiViaEF.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 
-                    var passwordLockoutWalker = new PasswordSignInSyntaxWalker();
-                    _findings.AddRange(PasswordSignInAnalyzer.FindDisabledLockouts(passwordLockoutWalker, root));
+                    _findings.AddRange(PasswordSignInAnalyzer.FindDisabledLockouts(root));
                     lblStatusPasswordLockout.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 
-                    var iUserStoreWalker = new IUserStoreSyntaxWalker();
-                    _findings.AddRange(IUserStoreAnalyzer.FindMisconfiguredUserStores(iUserStoreWalker, root));
+                    _findings.AddRange(IUserStoreAnalyzer.FindMisconfiguredUserStores(root));
                     lblStatusIUserStore.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 
@@ -379,17 +359,13 @@ public partial class Form1 : Form
 
     private void SearchForCookieManipulations(SyntaxNode root)
     {
-        var cookieConfigurationWalker = new CookieAppendSyntaxWalker();
-        _findings.AddRange(CookieConfigurationAnalyzer.FindMisconfiguredCookies(cookieConfigurationWalker, root));
+        _findings.AddRange(CookieConfigurationAnalyzer.FindMisconfiguredCookies(root));
     }
 
     private void SearchForFileManipulations(SyntaxNode root)
     {
-        var fileManipulationWalker = new FileManipulationSyntaxWalker();
-        _findings.AddRange(FileManipulationAnalyzer.FindFileManipulations(fileManipulationWalker, root));
-
-        var fileResultWalker = new FileResultSyntaxWalker();
-        _findings.AddRange(FileResultAnalyzer.GetFileResults(fileResultWalker, root));
+        _findings.AddRange(FileManipulationAnalyzer.FindFileManipulations(root));
+        _findings.AddRange(FileResultAnalyzer.GetFileResults(root));
     }
 
     private void RefreshFindingCount()

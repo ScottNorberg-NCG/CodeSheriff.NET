@@ -18,8 +18,10 @@ namespace Opperis.SAST.Engine.Analyzers;
 
 internal static class FileResultAnalyzer
 {
-    internal static List<BaseFinding> GetFileResults(FileResultSyntaxWalker walker, SyntaxNode root)
+    internal static List<BaseFinding> GetFileResults(SyntaxNode root)
     {
+        var walker = new FileResultSyntaxWalker();
+
         if (!walker.HasRun)
             walker.Visit(root);
 

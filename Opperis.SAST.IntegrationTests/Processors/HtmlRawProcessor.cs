@@ -24,9 +24,8 @@ internal static class HtmlRawProcessor
             {
                 var root = syntaxTree.GetRoot();
 
-                var walker = new HtmlRawSyntaxWalker();
                 var analyzer = new HtmlRawAnalyzer();
-                retVal.AddRange(analyzer.FindXssIssues(walker, root));
+                retVal.AddRange(analyzer.FindXssIssues(root));
             }
         }
 

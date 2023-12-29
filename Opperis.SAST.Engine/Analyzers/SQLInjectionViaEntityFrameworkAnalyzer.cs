@@ -16,8 +16,10 @@ namespace Opperis.SAST.Engine.Analyzers;
 
 internal static class SQLInjectionViaEntityFrameworkAnalyzer
 {
-    internal static List<BaseFinding> GetSQLInjections(EntityFrameworkDbCallSyntaxWalker walker, SyntaxNode root)
+    internal static List<BaseFinding> GetSQLInjections(SyntaxNode root)
     {
+        var walker = new EntityFrameworkDbCallSyntaxWalker();
+
         if (!walker.HasRun)
             walker.Visit(root);
 

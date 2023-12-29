@@ -23,9 +23,7 @@ internal static class FileManipulationProcessor
             foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
             {
                 var root = syntaxTree.GetRoot();
-
-                var walker = new FileManipulationSyntaxWalker();
-                retVal.AddRange(FileManipulationAnalyzer.FindFileManipulations(walker, root));
+                retVal.AddRange(FileManipulationAnalyzer.FindFileManipulations(root));
             }
         }
 

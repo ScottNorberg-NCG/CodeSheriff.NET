@@ -23,9 +23,7 @@ internal static class CookieConfigurationProcessor
             foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
             {
                 var root = syntaxTree.GetRoot();
-
-                var walker = new CookieAppendSyntaxWalker();
-                retVal.AddRange(CookieConfigurationAnalyzer.FindMisconfiguredCookies(walker, root));
+                retVal.AddRange(CookieConfigurationAnalyzer.FindMisconfiguredCookies(root));
             }
         }
 

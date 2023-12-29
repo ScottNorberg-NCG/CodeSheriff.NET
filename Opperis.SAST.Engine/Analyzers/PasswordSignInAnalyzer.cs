@@ -16,8 +16,10 @@ namespace Opperis.SAST.Engine.Analyzers;
 
 internal static class PasswordSignInAnalyzer
 {
-    internal static List<BaseFinding> FindDisabledLockouts(PasswordSignInSyntaxWalker walker, SyntaxNode root)
+    internal static List<BaseFinding> FindDisabledLockouts(SyntaxNode root)
     {
+        var walker = new PasswordSignInSyntaxWalker();
+
         if (!walker.HasRun)
             walker.Visit(root);
 

@@ -15,8 +15,10 @@ namespace Opperis.SAST.Engine.Analyzers;
 
 internal static class CookieConfigurationAnalyzer
 {
-    internal static List<BaseFinding> FindMisconfiguredCookies(CookieAppendSyntaxWalker walker, SyntaxNode root)
+    internal static List<BaseFinding> FindMisconfiguredCookies(SyntaxNode root)
     {
+        var walker = new CookieAppendSyntaxWalker();
+
         if (!walker.HasRun)
             walker.Visit(root);
 

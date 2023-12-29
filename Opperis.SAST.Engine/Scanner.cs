@@ -119,40 +119,38 @@ namespace Opperis.SAST.Engine
             //return findings;
         }
 
-        private static void ParseJavaScriptTags(List<BaseFinding> findings, TextDocument? cshtmlFile)
-        {
-            var scripts = CSHtmlScriptTagParser.GetScriptTags(cshtmlFile.GetTextAsync().Result.ToString());
-            findings.AddRange(CSHtmlScriptTagParser.ParseJavaScriptFindings(scripts, cshtmlFile));
-        }
+        //private static void ParseJavaScriptTags(List<BaseFinding> findings, TextDocument? cshtmlFile)
+        //{
+        //    var scripts = CSHtmlScriptTagParser.GetScriptTags(cshtmlFile.GetTextAsync().Result.ToString());
+        //    findings.AddRange(CSHtmlScriptTagParser.ParseJavaScriptFindings(scripts, cshtmlFile));
+        //}
 
-        private static void ParseLinkTags(List<BaseFinding> findings, TextDocument? cshtmlFile)
-        {
-            var links = CSHtmlLinkTagParser.GetLinkTags(cshtmlFile.GetTextAsync().Result.ToString());
-            findings.AddRange(CSHtmlLinkTagParser.ParseLinkTagFindings(links, cshtmlFile));
-        }
+        //private static void ParseLinkTags(List<BaseFinding> findings, TextDocument? cshtmlFile)
+        //{
+        //    var links = CSHtmlLinkTagParser.GetLinkTags(cshtmlFile.GetTextAsync().Result.ToString());
+        //    findings.AddRange(CSHtmlLinkTagParser.ParseLinkTagFindings(links, cshtmlFile));
+        //}
 
-        private static void ParseStyleTags(List<BaseFinding> findings, TextDocument? cshtmlFile)
-        {
-            var styleTags = CSHtmlStyleTagParser.GetStyleTags(cshtmlFile.GetTextAsync().Result.ToString());
-            findings.AddRange(CSHtmlStyleTagParser.ParseStyleTagFindings(styleTags, cshtmlFile));
-        }
+        //private static void ParseStyleTags(List<BaseFinding> findings, TextDocument? cshtmlFile)
+        //{
+        //    var styleTags = CSHtmlStyleTagParser.GetStyleTags(cshtmlFile.GetTextAsync().Result.ToString());
+        //    findings.AddRange(CSHtmlStyleTagParser.ParseStyleTagFindings(styleTags, cshtmlFile));
+        //}
 
-        private static void SearchForCookieManipulations(List<BaseFinding> findings, SyntaxNode root)
-        {
-            var cookieConfigurationWalker = new CookieAppendSyntaxWalker();
-            findings.AddRange(CookieConfigurationAnalyzer.FindMisconfiguredCookies(cookieConfigurationWalker, root));
-        }
+        //private static void SearchForCookieManipulations(List<BaseFinding> findings, SyntaxNode root)
+        //{
+        //    findings.AddRange(CookieConfigurationAnalyzer.FindMisconfiguredCookies(root));
+        //}
 
-        private static void SearchForFileManipulations(List<BaseFinding> findings, SyntaxNode root)
-        {
-            var fileManipulationWalker = new FileManipulationSyntaxWalker();
-            findings.AddRange(FileManipulationAnalyzer.FindFileManipulations(fileManipulationWalker, root));
-        }
+        //private static void SearchForFileManipulations(List<BaseFinding> findings, SyntaxNode root)
+        //{
+        //    findings.AddRange(FileManipulationAnalyzer.FindFileManipulations(root));
+        //}
 
-        private static void SearchForSecrets(List<BaseFinding> findings, SyntaxNode root, List<GitLeaksRule> rules)
-        {
-            var stringLiteralWalker = new StringLiteralSyntaxWalker();
-            findings.AddRange(SecretStorageAnalyzer.GetStoredSecrets(stringLiteralWalker, root, rules));
-        }
+        //private static void SearchForSecrets(List<BaseFinding> findings, SyntaxNode root, List<GitLeaksRule> rules)
+        //{
+        //    var stringLiteralWalker = new StringLiteralSyntaxWalker();
+        //    findings.AddRange(SecretStorageAnalyzer.GetStoredSecrets(stringLiteralWalker, root, rules));
+        //}
     }
 }

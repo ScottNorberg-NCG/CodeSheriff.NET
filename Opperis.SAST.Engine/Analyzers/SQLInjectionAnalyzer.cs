@@ -16,8 +16,10 @@ namespace Opperis.SAST.Engine.Analyzers;
 
 internal static class SQLInjectionAnalyzer
 {
-    internal static List<BaseFinding> GetSQLInjections(DatabaseCommandTextSyntaxWalker walker, SyntaxNode root)
+    internal static List<BaseFinding> GetSQLInjections(SyntaxNode root)
     {
+        var walker = new DatabaseCommandTextSyntaxWalker();
+
         if (!walker.HasRun)
             walker.Visit(root);
 

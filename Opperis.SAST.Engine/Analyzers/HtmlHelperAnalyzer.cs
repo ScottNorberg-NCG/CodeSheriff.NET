@@ -10,8 +10,10 @@ namespace Opperis.SAST.Engine.Analyzers;
 
 internal class HtmlHelperAnalyzer : BaseCshtmlToCodeAnalyzer
 {
-    internal List<BaseFinding> FindXssIssues(HtmlHelperSyntaxWalker walker, SyntaxNode root)
+    internal List<BaseFinding> FindXssIssues(SyntaxNode root)
     {
+        var walker = new HtmlHelperSyntaxWalker();
+
         if (!walker.HasRun)
             walker.Visit(root);
 

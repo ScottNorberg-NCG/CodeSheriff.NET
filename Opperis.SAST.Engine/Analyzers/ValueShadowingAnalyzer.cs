@@ -14,8 +14,10 @@ namespace Opperis.SAST.Engine.Analyzers;
 
 internal class ValueShadowingAnalyzer
 {
-    internal static List<BaseFinding> FindValueShadowingPossibilities(UIProcessorMethodSyntaxWalker walker, SyntaxNode root)
+    internal static List<BaseFinding> FindValueShadowingPossibilities(SyntaxNode root)
     {
+        var walker = new UIProcessorMethodSyntaxWalker();
+
         if (!walker.HasRun)
             walker.Visit(root);
 

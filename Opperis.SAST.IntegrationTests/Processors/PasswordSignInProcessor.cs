@@ -23,9 +23,7 @@ internal static class PasswordSignInProcessor
             foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
             {
                 var root = syntaxTree.GetRoot();
-
-                var walker = new PasswordSignInSyntaxWalker();
-                retVal.AddRange(PasswordSignInAnalyzer.FindDisabledLockouts(walker, root));
+                retVal.AddRange(PasswordSignInAnalyzer.FindDisabledLockouts(root));
             }
         }
 

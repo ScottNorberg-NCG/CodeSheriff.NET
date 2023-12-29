@@ -23,9 +23,7 @@ internal static class HardCodedConnectionStringProcessor
             foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
             {
                 var root = syntaxTree.GetRoot();
-
-                var walker = new DatabaseConnectionStringSyntaxWalker();
-                retVal.AddRange(HardCodedConnectionStringAnalyzer.FindHardCodedConnectionStrings(walker, root));
+                retVal.AddRange(HardCodedConnectionStringAnalyzer.FindHardCodedConnectionStrings(root));
             }
         }
 

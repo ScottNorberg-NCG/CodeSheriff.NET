@@ -23,9 +23,7 @@ internal static class RedirectProcessor
             foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
             {
                 var root = syntaxTree.GetRoot();
-
-                var walker = new ExternalRedirectSyntaxWalker();
-                retVal.AddRange(ExternalRedirectAnalyzer.FindProblematicExternalRedirects(walker, root));
+                retVal.AddRange(ExternalRedirectAnalyzer.FindProblematicExternalRedirects(root));
             }
         }
 

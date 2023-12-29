@@ -23,9 +23,7 @@ internal static class RSAKeySizeInPropertyProcessor
             foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
             {
                 var root = syntaxTree.GetRoot();
-
-                var walker = new RSAKeySizeSyntaxWalker();
-                retVal.AddRange(RSAKeySizeInPropertyAnalyzer.FindInadequateKeyLengths(walker, root));
+                retVal.AddRange(RSAKeySizeInPropertyAnalyzer.FindInadequateKeyLengths(root));
             }
         }
 

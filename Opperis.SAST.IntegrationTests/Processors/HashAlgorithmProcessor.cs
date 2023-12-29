@@ -23,9 +23,7 @@ internal static class HashAlgorithmProcessor
             foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
             {
                 var root = syntaxTree.GetRoot();
-
-                var walker = new ComputeHashSyntaxWalker();
-                retVal.AddRange(HashAlgorithmAnalyzer.FindDeprecatedAlgorithms(walker, root));
+                retVal.AddRange(HashAlgorithmAnalyzer.FindDeprecatedAlgorithms(root));
             }
         }
 

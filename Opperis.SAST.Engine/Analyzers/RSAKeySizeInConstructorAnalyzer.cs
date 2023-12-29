@@ -15,8 +15,10 @@ namespace Opperis.SAST.Engine.Analyzers;
 
 internal static class RSAKeySizeInConstructorAnalyzer
 {
-    internal static List<BaseFinding> FindInadequateKeyLengths(RSAConstructorSyntaxWalker walker, SyntaxNode root)
+    internal static List<BaseFinding> FindInadequateKeyLengths(SyntaxNode root)
     {
+        var walker = new RSAConstructorSyntaxWalker();
+
         if (!walker.HasRun)
             walker.Visit(root);
 

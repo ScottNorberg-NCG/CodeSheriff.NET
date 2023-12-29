@@ -17,6 +17,18 @@ namespace Opperis.SAST.Engine.Analyzers;
 
 internal static class SymmetricAlgorithmPropertyAnalyzer
 {
+    internal static List<BaseFinding> GetMisconfiguredProperties(SyntaxNode root)
+    { 
+        var findings = new List<BaseFinding>();
+        var walker = new SymmetricCryptographyPropertySyntaxWalker();
+
+        findings.AddRange(FindHardCodedKeys(walker, root));
+        findings.AddRange(FindHardCodedIVs(walker, root));
+        findings.AddRange(FindECBUses(walker, root));
+
+        return findings;
+    }
+
     internal static List<BaseFinding> FindHardCodedKeys(SymmetricCryptographyPropertySyntaxWalker walker, SyntaxNode root)
     {
         if (!walker.HasRun)

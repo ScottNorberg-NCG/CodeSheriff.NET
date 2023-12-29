@@ -16,8 +16,10 @@ namespace Opperis.SAST.Engine.Analyzers;
 
 internal static class HashAlgorithmAnalyzer
 {
-    internal static List<BaseFinding> FindDeprecatedAlgorithms(ComputeHashSyntaxWalker walker, SyntaxNode root)
+    internal static List<BaseFinding> FindDeprecatedAlgorithms(SyntaxNode root)
     {
+        var walker = new ComputeHashSyntaxWalker();
+
         if (!walker.HasRun)
             walker.Visit(root);
 

@@ -18,8 +18,10 @@ namespace Opperis.SAST.Engine.Analyzers;
 
 internal static class ExternalRedirectAnalyzer
 {
-    internal static List<BaseFinding> FindProblematicExternalRedirects(ExternalRedirectSyntaxWalker walker, SyntaxNode root)
+    internal static List<BaseFinding> FindProblematicExternalRedirects(SyntaxNode root)
     {
+        var walker = new ExternalRedirectSyntaxWalker();
+
         if (!walker.HasRun)
             walker.Visit(root);
 

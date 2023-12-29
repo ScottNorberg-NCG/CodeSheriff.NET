@@ -23,9 +23,7 @@ internal static class SymmetricAlgorithmProcessor
             foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
             {
                 var root = syntaxTree.GetRoot();
-
-                var walker = new SymmetricAlgorithmSyntaxWalker();
-                retVal.AddRange(SymmetricAlgorithmAnalyzer.FindDeprecatedAlgorithms(walker, root));
+                retVal.AddRange(SymmetricAlgorithmAnalyzer.FindDeprecatedAlgorithms(root));
             }
         }
 

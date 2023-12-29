@@ -23,9 +23,7 @@ internal static class SqlInjectionProcessor
             foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
             {
                 var root = syntaxTree.GetRoot();
-
-                var walker = new DatabaseCommandTextSyntaxWalker();
-                retVal.AddRange(SQLInjectionAnalyzer.GetSQLInjections(walker, root));
+                retVal.AddRange(SQLInjectionAnalyzer.GetSQLInjections(root));
             }
         }
 

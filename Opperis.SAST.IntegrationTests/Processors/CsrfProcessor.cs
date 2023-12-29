@@ -23,9 +23,7 @@ internal static class CsrfProcessor
             foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
             {
                 var root = syntaxTree.GetRoot();
-
-                var walker = new UIProcessorMethodSyntaxWalker();
-                retVal.AddRange(CsrfAnalyzer.FindCsrfIssues(walker, root));
+                retVal.AddRange(CsrfAnalyzer.FindCsrfIssues(root));
             }
         }
 

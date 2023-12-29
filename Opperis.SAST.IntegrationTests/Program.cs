@@ -194,14 +194,14 @@ internal class Program
 
     private static void TestOverpostingInRazorPages()
     {
-        var efObjectsAsBindObjects = OverpostingProcessor.GetOverpostingIssues();
+        var efObjectsAsBindObjects = OverpostingViaBindObjectProcessor.GetOverpostingIssues();
         Assert.AreEqual(1, efObjectsAsBindObjects.Count, "Expected number of Overposting in razor pages");
         Assert.AllRootLocationsSet(efObjectsAsBindObjects, "TestOverpostingInRazorPages");
     }
 
     private static void TestOverpostingInControllers()
     {
-        var efObjectsAsParameters = OverpostingAnalyzer.FindEFObjectsAsParameters();
+        var efObjectsAsParameters = OverpostingViaControllerAnalyzer.FindEFObjectsAsParameters();
         Assert.AreEqual(1, efObjectsAsParameters.Count, "Expected number of Overposting in controllers");
         Assert.AllRootLocationsSet(efObjectsAsParameters, "TestOverpostingInControllers");
     }

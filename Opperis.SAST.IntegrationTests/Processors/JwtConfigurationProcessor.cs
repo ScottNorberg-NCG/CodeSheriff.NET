@@ -23,9 +23,7 @@ internal static class JwtConfigurationProcessor
             foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
             {
                 var root = syntaxTree.GetRoot();
-
-                var walker = new JwtTokenParameterSetSyntaxWalker();
-                retVal.AddRange(JwtTokenMisconfigurationAnalyzer.FindMisconfigurations(walker, root));
+                retVal.AddRange(JwtTokenMisconfigurationAnalyzer.FindMisconfigurations(root));
             }
         }
 

@@ -23,9 +23,7 @@ internal static class FileResultProcessor
             foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
             {
                 var root = syntaxTree.GetRoot();
-
-                var walker = new FileResultSyntaxWalker();
-                retVal.AddRange(FileResultAnalyzer.GetFileResults(walker, root));
+                retVal.AddRange(FileResultAnalyzer.GetFileResults(root));
             }
         }
 

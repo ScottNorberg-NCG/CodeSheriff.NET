@@ -14,8 +14,10 @@ namespace Opperis.SAST.Engine.Analyzers;
 
 internal static class IUserStoreAnalyzer
 {
-    internal static List<BaseFinding> FindMisconfiguredUserStores(IUserStoreSyntaxWalker walker, SyntaxNode root)
+    internal static List<BaseFinding> FindMisconfiguredUserStores(SyntaxNode root)
     {
+        var walker = new IUserStoreSyntaxWalker();
+
         if (!walker.HasRun)
             walker.Visit(root);
 

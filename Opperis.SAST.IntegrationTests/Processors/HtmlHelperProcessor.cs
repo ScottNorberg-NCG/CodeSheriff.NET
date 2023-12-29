@@ -25,9 +25,8 @@ internal static class HtmlHelperProcessor
             {
                 var root = syntaxTree.GetRoot();
 
-                var walker = new HtmlHelperSyntaxWalker();
                 var analyzer = new HtmlHelperAnalyzer();
-                retVal.AddRange(analyzer.FindXssIssues(walker, root));
+                retVal.AddRange(analyzer.FindXssIssues(root));
             }
         }
 

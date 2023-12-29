@@ -13,47 +13,12 @@ using System.Threading.Tasks;
 
 namespace Opperis.SAST.Engine.Analyzers;
 
-internal static class OverpostingAnalyzer
+internal static class OverpostingViaBindObjectAnalyzer
 {
-    internal static List<BaseFinding> FindEFObjectsAsParameters()
+    internal static List<BaseFinding> FindEFObjectsAsBindObjects(SyntaxNode root)
     {
-        var findings = new List<BaseFinding>();
+        var walker = new RazorPageBindObjectSyntaxWalker();
 
-        foreach (var method in Globals.SolutionControllerMethods)
-        {
-            try
-            {
-                foreach (var parameter in method.ParameterList.Parameters)
-                {
-                    foreach (var type in Globals.EntityFrameworkObjects)
-                    {
-                        if (type.Equals(parameter.Type.GetUnderlyingType()))
-                        {
-                            var finding = new OverpostingViaControllerMethod();
-
-                            finding.RootLocation = new SourceLocation(parameter);
-
-                            var callStack = new CallStack();
-                            callStack.AddLocation(parameter);
-                            callStack.AddLocation(method);
-                            finding.CallStacks.Add(callStack);
-
-                            findings.Add(finding);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex) 
-            { 
-                Globals.RuntimeErrors.Add(new UnknownSingleFindingError(method, ex));
-            }
-        }
-
-        return findings;
-    }
-
-    internal static List<BaseFinding> FindEFObjectsAsBindObjects(RazorPageBindObjectSyntaxWalker walker, SyntaxNode root)
-    {
         if (walker.RazorPageBindObjects.Count == 0)
             walker.Visit(root);
 

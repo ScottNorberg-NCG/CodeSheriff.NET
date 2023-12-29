@@ -18,8 +18,10 @@ namespace Opperis.SAST.Engine.Analyzers;
 
 internal static class ModelValidationAnalyzer
 {
-    internal static List<BaseFinding> FindMissingModelValidations(UIProcessorMethodSyntaxWalker walker, SyntaxNode root)
+    internal static List<BaseFinding> FindMissingModelValidations(SyntaxNode root)
     {
+        var walker = new UIProcessorMethodSyntaxWalker();
+
         if (!walker.HasRun)
             walker.Visit(root);
 

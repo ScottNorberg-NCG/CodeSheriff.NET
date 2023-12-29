@@ -8,8 +8,10 @@ namespace Opperis.SAST.Engine.Analyzers;
 
 internal class HtmlRawAnalyzer : BaseCshtmlToCodeAnalyzer
 {
-    internal List<BaseFinding> FindXssIssues(HtmlRawSyntaxWalker walker, SyntaxNode root)
+    internal List<BaseFinding> FindXssIssues(SyntaxNode root)
     {
+        var walker = new HtmlRawSyntaxWalker();
+
         if (!walker.HasRun)
             walker.Visit(root);
 

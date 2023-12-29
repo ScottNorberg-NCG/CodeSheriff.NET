@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Opperis.SAST.IntegrationTests.Processors;
 
-internal static class OverpostingProcessor
+internal static class OverpostingViaBindObjectProcessor
 {
     internal static List<BaseFinding> GetOverpostingIssues()
     {
@@ -23,9 +23,7 @@ internal static class OverpostingProcessor
             foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
             {
                 var root = syntaxTree.GetRoot();
-
-                var walker = new RazorPageBindObjectSyntaxWalker();
-                retVal.AddRange(OverpostingAnalyzer.FindEFObjectsAsBindObjects(walker, root));
+                retVal.AddRange(OverpostingViaBindObjectAnalyzer.FindEFObjectsAsBindObjects(root));
             }
         }
 

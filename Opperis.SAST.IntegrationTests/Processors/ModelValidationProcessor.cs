@@ -23,9 +23,7 @@ internal static class ModelValidationProcessor
             foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
             {
                 var root = syntaxTree.GetRoot();
-
-                var walker = new UIProcessorMethodSyntaxWalker();
-                retVal.AddRange(ModelValidationAnalyzer.FindMissingModelValidations(walker, root));
+                retVal.AddRange(ModelValidationAnalyzer.FindMissingModelValidations(root));
             }
         }
 

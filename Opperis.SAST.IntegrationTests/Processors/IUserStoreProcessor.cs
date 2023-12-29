@@ -23,9 +23,7 @@ internal static class IUserStoreProcessor
             foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
             {
                 var root = syntaxTree.GetRoot();
-
-                var walker = new IUserStoreSyntaxWalker();
-                retVal.AddRange(IUserStoreAnalyzer.FindMisconfiguredUserStores(walker, root));
+                retVal.AddRange(IUserStoreAnalyzer.FindMisconfiguredUserStores(root));
             }
         }
 

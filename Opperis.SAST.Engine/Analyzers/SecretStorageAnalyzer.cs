@@ -19,8 +19,10 @@ namespace Opperis.SAST.Engine.Analyzers;
 
 internal static class SecretStorageAnalyzer
 {
-    internal static List<BaseFinding> GetStoredSecrets(StringLiteralSyntaxWalker walker, SyntaxNode root, List<GitLeaksRule> rules)
+    internal static List<BaseFinding> GetStoredSecrets(SyntaxNode root, List<GitLeaksRule> rules)
     {
+        var walker = new StringLiteralSyntaxWalker();
+
         if (!walker.HasRun)
             walker.Visit(root);
 
