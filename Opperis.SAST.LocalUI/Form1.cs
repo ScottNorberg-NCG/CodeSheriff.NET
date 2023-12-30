@@ -174,8 +174,6 @@ public partial class Form1 : Form
         {
             Globals.Solution = workspace.OpenSolutionAsync(txtSolutionFile.Text).Result;
 
-            _findings.AddRange(OverpostingViaControllerAnalyzer.FindEFObjectsAsParameters());
-
             if (chkTrufflehog.Checked)
             {
                 lblStatusStep.UpdateText("Running Trufflehog scans");
@@ -214,6 +212,15 @@ public partial class Form1 : Form
                 RefreshFindingCount();
             }
 
+            _findings.AddRange(OverpostingViaControllerAnalyzer.FindEFObjectsAsParameters());
+            _findings.AddRange(CsrfAnalyzer.FindCsrfIssues());
+            _findings.AddRange(ValueShadowingAnalyzer.FindValueShadowingPossibilities());
+
+            lblStatusOverposting.UpdateText("100%");
+            lblStatusCsrf.UpdateText("100%");
+            lblStatusValueShadowing.UpdateText("100%");
+            RefreshFindingCount();
+
             var projectIndex = 1;
             var projectCount = Globals.Solution.Projects.Count();
 
@@ -245,13 +252,6 @@ public partial class Form1 : Form
 
                     _findings.AddRange(SQLInjectionAnalyzer.GetSQLInjections(root));
                     lblStatusSqlInjection.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
-                    RefreshFindingCount();
-
-                    //TODO: Refactor this so we go off the global list to avoid doing the analysis twice
-                    _findings.AddRange(CsrfAnalyzer.FindCsrfIssues(root));
-                    _findings.AddRange(ValueShadowingAnalyzer.FindValueShadowingPossibilities(root));
-                    lblStatusCsrf.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
-                    lblStatusValueShadowing.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 
                     _findings.AddRange(DatabaseConnectionOpenAnalyzer.FindUnsafeDatabaseConnectionOpens(root));
@@ -372,5 +372,10 @@ public partial class Form1 : Form
     {
         lblStatusFindings.Text = $"Findings: {_findings.Count}";
         lblStatusFindings.Refresh();
+    }
+
+    private void Form1_Load(object sender, EventArgs e)
+    {
+
     }
 }

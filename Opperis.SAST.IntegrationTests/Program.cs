@@ -3,12 +3,7 @@ using Microsoft.CodeAnalysis.MSBuild;
 using Opperis.SAST.Engine;
 using Opperis.SAST.Engine.Analyzers;
 using Opperis.SAST.Engine.Findings;
-using Opperis.SAST.Engine.SCA;
-using Opperis.SAST.Engine.SyntaxWalkers;
 using Opperis.SAST.IntegrationTests.Processors;
-using Opperis.SCA.Engine;
-using System.Diagnostics;
-using System.Xml.Linq;
 
 namespace Opperis.SAST.IntegrationTests;
 

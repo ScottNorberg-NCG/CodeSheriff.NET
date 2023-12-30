@@ -16,16 +16,11 @@ namespace Opperis.SAST.Engine.Analyzers;
 internal static class CsrfAnalyzer
 {
     //TODO: Refactor so this uses the global list
-    internal static List<BaseFinding> FindCsrfIssues(SyntaxNode root)
+    internal static List<BaseFinding> FindCsrfIssues()
     {
-        var walker = new UIProcessorMethodSyntaxWalker();
-
-        if (!walker.HasRun)
-            walker.Visit(root);
-
         var findings = new List<BaseFinding>();
 
-        foreach (var method in walker.ControllerMethods)
+        foreach (var method in Globals.SolutionControllerMethods)
         {
             try
             {
