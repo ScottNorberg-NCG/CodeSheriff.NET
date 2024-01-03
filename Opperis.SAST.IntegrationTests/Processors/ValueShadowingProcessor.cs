@@ -14,19 +14,6 @@ internal static class ValueShadowingProcessor
 {
     internal static List<BaseFinding> GetValueShadowingIssues()
     {
-        var retVal = new List<BaseFinding>();
-
-        foreach (var project in Globals.Solution.Projects)
-        {
-            Globals.Compilation = project.GetCompilationAsync().Result;
-
-            foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
-            {
-                var root = syntaxTree.GetRoot();
-                retVal.AddRange(ValueShadowingAnalyzer.FindValueShadowingPossibilities(root));
-            }
-        }
-
-        return retVal;
+        return ValueShadowingAnalyzer.FindValueShadowingPossibilities();
     }
 }
