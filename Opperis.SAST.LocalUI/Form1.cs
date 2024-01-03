@@ -303,7 +303,7 @@ public partial class Form1 : Form
                     RefreshFindingCount();
 
                     _findings.AddRange(ModelValidationAnalyzer.FindMissingModelValidations(root));
-                    lblStatusOverposting.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
+                    lblStatusInputValidation.UpdatePercentComplete(projectIndex, projectCount, syntaxTreeIndex, syntaxTreeCount);
                     RefreshFindingCount();
 
                     _findings.AddRange(JwtTokenMisconfigurationAnalyzer.FindMisconfigurations(root));
