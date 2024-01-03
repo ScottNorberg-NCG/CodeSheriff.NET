@@ -11,7 +11,7 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
     {
         internal static bool HasBindingSourceInfo(this ParameterSyntax parameter)
         {
-            var model = Globals.Compilation.GetSemanticModel(parameter.SyntaxTree);
+            var model = Globals.SearchForSemanticModel(parameter.SyntaxTree);
             return parameter.AttributeLists.Any(al => al.Attributes.Any(a => a.HasBindingSourceAttribute(model)));
         }
     }

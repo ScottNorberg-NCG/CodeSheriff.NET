@@ -66,7 +66,7 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions
         {
             var retVal = new List<HttpMethodInfo>();
 
-            var model = Globals.Compilation.GetSemanticModel(syntax.SyntaxTree);
+            var model = Globals.SearchForSemanticModel(syntax.SyntaxTree);
 
             if (syntax.AttributeLists.Any(al => al.Attributes.Any(a => model.GetTypeInfo(a).Type.ToString() == "Microsoft.AspNetCore.Mvc.HttpPostAttribute" ||
                                                                        model.GetTypeInfo(a).Type.ToString() == "System.Web.Mvc.HttpPostAttribute")))
