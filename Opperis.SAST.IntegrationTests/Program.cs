@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.MSBuild;
 using Opperis.SAST.Engine;
 using Opperis.SAST.Engine.Analyzers;
+using Opperis.SAST.Engine.DataAccessAnalysis;
 using Opperis.SAST.Engine.Findings;
 using Opperis.SAST.IntegrationTests.Processors;
 
@@ -23,6 +24,23 @@ internal class Program
         using (var workspace = MSBuildWorkspace.Create())
         {
             Globals.Solution = workspace.OpenSolutionAsync(solutionFilePath).Result;
+
+            var accessPoints = DataAccessAnalyzer.FindDataAccessPoints();
+
+            foreach (var accessPoint in accessPoints) 
+            {
+                Console.WriteLine($"Type: {accessPoint.GetType()}");
+                Console.WriteLine($"Method: {accessPoint.ContainingMethod.Identifier.Text}");
+                Console.WriteLine($"Property: {accessPoint.PropertyName}");
+                Console.WriteLine($"Is Authorized: {accessPoint.IsAuthorizedAccess}");
+                
+                if (accessPoint.Roles != null)
+                    Console.WriteLine($"Roles: {string.Join("|", accessPoint.Roles.ToArray())}");
+
+                Console.WriteLine("------------------------------");
+            }
+
+            int i = 1;
 
             var findings = new List<BaseFinding>();
             //foreach (var project in Globals.Solution.Projects)

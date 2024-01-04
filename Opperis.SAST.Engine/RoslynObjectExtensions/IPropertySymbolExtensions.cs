@@ -5,13 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.RoslynObjectExtensions
+namespace Opperis.SAST.Engine.RoslynObjectExtensions;
+
+internal static class IPropertySymbolExtensions
 {
-    internal static class IPropertySymbolExtensions
+    internal static bool HasValidatorAttribute(this IPropertySymbol symbol) 
     {
-        internal static bool HasValidatorAttribute(this IPropertySymbol symbol) 
-        {
-            return symbol.GetAttributes().Any(a => a.InheritsFrom("System.ComponentModel.DataAnnotations.ValidationAttribute"));
-        }
+        return symbol.GetAttributes().Any(a => a.InheritsFrom("System.ComponentModel.DataAnnotations.ValidationAttribute"));
     }
 }

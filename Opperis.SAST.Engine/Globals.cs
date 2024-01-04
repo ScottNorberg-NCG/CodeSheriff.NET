@@ -36,6 +36,21 @@ internal static class Globals
         }
     }
 
+    private static List<MethodDeclarationSyntax>? _razorPageMethods;
+
+    internal static List<MethodDeclarationSyntax> RazorPageMethods
+    {
+        get
+        {
+            if (_razorPageMethods == null)
+            {
+                LoadGlobalLists();
+            }
+
+            return _razorPageMethods;
+        }
+    }
+
     private static List<ITypeSymbol>? _entityFrameworkObjects;
 
     internal static List<ITypeSymbol> EntityFrameworkObjects
@@ -108,6 +123,7 @@ internal static class Globals
     private static void LoadGlobalLists()
     {
         _solutionControllerMethods = new List<MethodDeclarationSyntax>();
+        _razorPageMethods = new List<MethodDeclarationSyntax>();
         _entityFrameworkObjects = new List<ITypeSymbol>();
         _razorPageBindObjects = new List<RazorPageBindObjectSyntaxWalker.RazorPageBindObject>();
         _assemblies = new List<AssemblyVersionInfo>();
@@ -143,6 +159,11 @@ internal static class Globals
                 foreach (var method in methodFinder.ControllerMethods)
                 {
                     _solutionControllerMethods.Add(method);
+                }
+
+                foreach (var method in methodFinder.RazorPageMethods)
+                {
+                    _razorPageMethods.Add(method);
                 }
 
                 //Get Entity Framework Objects

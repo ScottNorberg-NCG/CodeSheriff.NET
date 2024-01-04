@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Opperis.SAST.Engine.RoslynObjectExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,18 +45,18 @@ internal class SymmetricAlgorithmSyntaxWalker : CSharpSyntaxWalker, ISyntaxWalke
         if (identifierName == null)
             return null;
 
-        var semanticModel = Globals.Compilation.GetSemanticModel(identifierName.SyntaxTree);
+        //var semanticModel = Globals.Compilation.GetSemanticModel(identifierName.SyntaxTree);
 
-        var symbol = semanticModel.GetSymbolInfo(identifierName).Symbol as ILocalSymbol;
-        if (symbol == null)
-            return null;
+        //var symbol = semanticModel.GetSymbolInfo(identifierName).Symbol as ILocalSymbol;
+        //if (symbol == null)
+        //    return null;
 
-        var type = symbol.Type;
+        var type = identifierName.GetUnderlyingType();
 
         while (type != null)
         {
-            if (type.ToString() == "System.Security.Cryptography.SymmetricAlgorithm")
-                return symbol.Type;
+            if (type.ToString().Replace("?", "") == "System.Security.Cryptography.SymmetricAlgorithm")
+                return identifierName.GetUnderlyingType(); //symbol.Type;
             else
                 type = type.BaseType;
         }

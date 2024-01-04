@@ -5,23 +5,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.RoslynObjectExtensions
+namespace Opperis.SAST.Engine.RoslynObjectExtensions;
+
+internal static class InterpolatedStringExpressionSyntaxExtensions
 {
-    internal static class InterpolatedStringExpressionSyntaxExtensions
+    internal static List<ExpressionSyntax> GetNonLiteralPortions(this InterpolatedStringExpressionSyntax interpolated)
     {
-        internal static List<ExpressionSyntax> GetNonLiteralPortions(this InterpolatedStringExpressionSyntax interpolated)
+        List<ExpressionSyntax> inputs = new List<ExpressionSyntax>();
+
+        foreach (var content in interpolated.Contents)
         {
-            List<ExpressionSyntax> inputs = new List<ExpressionSyntax>();
-
-            foreach (var content in interpolated.Contents)
+            if (content is InterpolationSyntax interpolation)
             {
-                if (content is InterpolationSyntax interpolation)
-                {
-                    inputs.Add(interpolation.Expression);
-                }
+                inputs.Add(interpolation.Expression);
             }
-
-            return inputs;
         }
+
+        return inputs;
     }
 }

@@ -5,21 +5,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.RoslynObjectExtensions
+namespace Opperis.SAST.Engine.RoslynObjectExtensions;
+
+internal static class INamedTypeSymbolExtensions
 {
-    internal static class INamedTypeSymbolExtensions
+    internal static bool MatchesType(this INamedTypeSymbol symbol, string typeName)
     {
-        internal static bool MatchesType(this INamedTypeSymbol symbol, string typeName)
-        {
-            if (symbol == null)
-                return false;
+        if (symbol == null)
+            return false;
 
-            var symbolTypeAsString = symbol.ToString().Replace("?", "");
+        var symbolTypeAsString = symbol.ToString().Replace("?", "");
 
-            if (symbol.IsGenericType)
-                return symbolTypeAsString.StartsWith(($"{typeName}<"));
-            else
-                return symbolTypeAsString == typeName;
-        }
+        if (symbol.IsGenericType)
+            return symbolTypeAsString.StartsWith(($"{typeName}<"));
+        else
+            return symbolTypeAsString == typeName;
     }
 }

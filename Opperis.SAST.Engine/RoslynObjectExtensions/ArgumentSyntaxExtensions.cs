@@ -5,18 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.RoslynObjectExtensions
+namespace Opperis.SAST.Engine.RoslynObjectExtensions;
+
+internal static class ArgumentSyntaxExtensions
 {
-    internal static class ArgumentSyntaxExtensions
+    internal static bool IsOfType(this ArgumentSyntax argument, string typeName)
     {
-        internal static bool IsOfType(this ArgumentSyntax argument, string typeName)
-        {
-            var underlyingType = argument.Expression.GetUnderlyingType();
+        var underlyingType = argument.Expression.GetUnderlyingType();
 
-            if (underlyingType == null)
-                return false;
+        if (underlyingType == null)
+            return false;
 
-            return underlyingType.ToString().Replace("?", "") == typeName;
-        }
+        return underlyingType.ToString().Replace("?", "") == typeName;
     }
 }

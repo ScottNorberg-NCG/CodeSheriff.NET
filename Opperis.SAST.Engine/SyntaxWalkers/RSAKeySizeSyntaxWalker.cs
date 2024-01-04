@@ -40,21 +40,19 @@ internal class RSAKeySizeSyntaxWalker : CSharpSyntaxWalker, ISyntaxWalker
         if (memberAccess.Name.Identifier.Text != "KeySize")
             return false;
 
-        var identifierName = memberAccess.Expression as IdentifierNameSyntax;
+        if (memberAccess.Expression is IdentifierNameSyntax identifierName)
+        {
+            var objectType = identifierName.GetUnderlyingType();
 
-        if (identifierName == null)
-            return false;
-
-        var objectType = identifierName.GetUnderlyingType();
-
-        if (objectType != null)
-        { 
-            var typeString = objectType.ToString().Replace("?", "");
-
-            if (typeString == "System.Security.Cryptography.RSACryptoServiceProvider")
+            if (objectType != null)
             {
-                return true;
-            }            
+                var typeString = objectType.ToString().Replace("?", "");
+
+                if (typeString == "System.Security.Cryptography.RSACryptoServiceProvider")
+                {
+                    return true;
+                }
+            }
         }
 
         return false;

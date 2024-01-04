@@ -5,30 +5,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.RoslynObjectExtensions
+namespace Opperis.SAST.Engine.RoslynObjectExtensions;
+
+internal static class BinaryExpressionSyntaxExtensions
 {
-    internal static class BinaryExpressionSyntaxExtensions
+    internal static List<ExpressionSyntax> GetNonLiteralPortions(this BinaryExpressionSyntax binaryExpression)
     {
-        internal static List<ExpressionSyntax> GetNonLiteralPortions(this BinaryExpressionSyntax binaryExpression)
-        {
-            List<ExpressionSyntax> inputs = new List<ExpressionSyntax>();
+        List<ExpressionSyntax> inputs = new List<ExpressionSyntax>();
 
-            GetNonLiteralPortions(binaryExpression, inputs);
+        GetNonLiteralPortions(binaryExpression, inputs);
 
-            return inputs;
-        }
+        return inputs;
+    }
 
-        private static void GetNonLiteralPortions(BinaryExpressionSyntax binaryExpression, List<ExpressionSyntax> list)
-        {
-            if (binaryExpression.Left is BinaryExpressionSyntax left)
-                GetNonLiteralPortions(left, list);
-            else if (!(binaryExpression.Left is LiteralExpressionSyntax))
-                list.Add(binaryExpression.Left);
+    private static void GetNonLiteralPortions(BinaryExpressionSyntax binaryExpression, List<ExpressionSyntax> list)
+    {
+        if (binaryExpression.Left is BinaryExpressionSyntax left)
+            GetNonLiteralPortions(left, list);
+        else if (!(binaryExpression.Left is LiteralExpressionSyntax))
+            list.Add(binaryExpression.Left);
 
-            if (binaryExpression.Right is BinaryExpressionSyntax right)
-                GetNonLiteralPortions(right, list);
-            else if (!(binaryExpression.Right is LiteralExpressionSyntax))
-                list.Add(binaryExpression.Right);
-        }
+        if (binaryExpression.Right is BinaryExpressionSyntax right)
+            GetNonLiteralPortions(right, list);
+        else if (!(binaryExpression.Right is LiteralExpressionSyntax))
+            list.Add(binaryExpression.Right);
     }
 }
