@@ -16,22 +16,30 @@ internal class BindObjectSyntaxWalker : CSharpSyntaxWalker, ISyntaxWalker
 
     public bool HasRun => BindObjectReferences.Any();
 
-    public override void VisitPropertyDeclaration(PropertyDeclarationSyntax node)
+    public override void VisitIdentifierName(IdentifierNameSyntax node)
     {
-        var model = Globals.Compilation.GetSemanticModel(node.Ancestors().Last().SyntaxTree);
-        if (!node.AttributeLists.SelectMany(a => a.Attributes).Any(a => a.IsOfType("Microsoft.AspNetCore.Mvc.BindPropertyAttribute", model)))
-            return;
+        var parentClass = node.FirstAncestorOrSelf<ClassDeclarationSyntax>();
 
-        if (node.Type.GetUnderlyingType() is INamedTypeSymbol type)
+        if (parentClass != null)
         {
-            if (type.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax() is ClassDeclarationSyntax classDeclaration)
+            if (node.GetDefinitionNode(parentClass) is PropertyDeclarationSyntax prop)
             {
-                if (!BindObjectReferences.Any(o => o.AsClass == classDeclaration))
-                    BindObjectReferences.Add(new BindObjectInfo() { AsClass = classDeclaration, AsType = type });
+                var model = Globals.Compilation.GetSemanticModel(parentClass.SyntaxTree);
+                if (!prop.AttributeLists.SelectMany(a => a.Attributes).Any(a => a.IsOfType("Microsoft.AspNetCore.Mvc.BindPropertyAttribute", model)))
+                    return;
+
+                if (node.GetUnderlyingType() is INamedTypeSymbol type)
+                {
+                    if (type.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax() is ClassDeclarationSyntax classDeclaration)
+                    {
+                        if (!BindObjectReferences.Any(o => o.AsClass == classDeclaration))
+                            BindObjectReferences.Add(new BindObjectInfo() { AsClass = classDeclaration, AsType = type });
+                    }
+                }
             }
         }
 
-        base.VisitPropertyDeclaration(node);
+        base.VisitIdentifierName(node);
     }
 
     //public override void VisitMemberAccessExpression(MemberAccessExpressionSyntax node)

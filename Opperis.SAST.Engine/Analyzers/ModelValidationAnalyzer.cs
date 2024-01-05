@@ -66,7 +66,7 @@ internal static class ModelValidationAnalyzer
             try
             {
                 var bindObjectWalker = new BindObjectSyntaxWalker();
-                bindObjectWalker.Visit(method.Ancestors().Last());
+                bindObjectWalker.Visit(method);
 
                 if (bindObjectWalker.BindObjectReferences.Any())
                 {

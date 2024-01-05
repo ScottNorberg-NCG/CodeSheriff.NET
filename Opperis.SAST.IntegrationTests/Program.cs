@@ -25,20 +25,20 @@ internal class Program
         {
             Globals.Solution = workspace.OpenSolutionAsync(solutionFilePath).Result;
 
-            //var accessPoints = DataAccessAnalyzer.FindDataAccessPoints();
+            var accessPoints = DataAccessAnalyzer.FindDataAccessPoints();
 
-            //foreach (var accessPoint in accessPoints) 
-            //{
-            //    Console.WriteLine($"Type: {accessPoint.GetType()}");
-            //    Console.WriteLine($"Method: {accessPoint.ContainingMethod.Identifier.Text}");
-            //    Console.WriteLine($"Property: {accessPoint.PropertyName}");
-            //    Console.WriteLine($"Is Authorized: {accessPoint.IsAuthorizedAccess}");
-                
-            //    if (accessPoint.Roles != null)
-            //        Console.WriteLine($"Roles: {string.Join("|", accessPoint.Roles.ToArray())}");
+            foreach (var accessPoint in accessPoints)
+            {
+                Console.WriteLine($"Type: {accessPoint.GetType()}");
+                Console.WriteLine($"Method: {accessPoint.ContainingMethod.Identifier.Text}");
+                Console.WriteLine($"Property: {accessPoint.PropertyName}");
+                Console.WriteLine($"Is Authorized: {accessPoint.IsAuthorizedAccess}");
 
-            //    Console.WriteLine("------------------------------");
-            //}
+                if (accessPoint.Roles != null)
+                    Console.WriteLine($"Roles: {string.Join("|", accessPoint.Roles.ToArray())}");
+
+                Console.WriteLine("------------------------------");
+            }
 
             int i = 1;
 
@@ -153,7 +153,7 @@ internal class Program
     private static void TestModelValidationIssues()
     {
         var modelErrors = ModelValidationProcessor.GetAllModelsMissingValidation();
-        Assert.AreEqual(40, modelErrors.Count, "Expected number of model validation issues");
+        Assert.AreEqual(24, modelErrors.Count, "Expected number of model validation issues");
         Assert.AreEqual(4, modelErrors.Select(c => c.GetType().ToString()).Distinct().Count(), "Number of distinct types of model validation issues");
         Assert.AllRootLocationsSet(modelErrors, "TestModelValidationIssues");
     }

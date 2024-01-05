@@ -116,7 +116,7 @@ internal static class DataAccessAnalyzer
                     //Now look to see if we have any objects that are both [BindObject] and an EF object (Value Shadowing)
                     //TODO: ensure that the bind object was attached to the DbContext object to know for sure whether the object was actually saved
                     var bindObjectWalker = new BindObjectSyntaxWalker();
-                    bindObjectWalker.Visit(method.Ancestors().Last());
+                    bindObjectWalker.Visit(method);
 
                     foreach (var bindObject in bindObjectWalker.BindObjectReferences)
                     {
