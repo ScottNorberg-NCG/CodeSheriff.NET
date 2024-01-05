@@ -1,16 +1,9 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis;
 using Opperis.SAST.Engine.ErrorHandling;
-using Opperis.SAST.Engine.Findings.Database;
 using Opperis.SAST.Engine.Findings;
 using Opperis.SAST.Engine.SyntaxWalkers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Opperis.SAST.Engine.RoslynObjectExtensions;
-using Opperis.SAST.Engine.Findings.ProgramFlow;
 
 namespace Opperis.SAST.Engine.DataAccessAnalysis;
 
@@ -46,7 +39,7 @@ internal static class DataAccessAnalyzer
                                 var properties = type.GetProperties() ?? new List<PropertyDeclarationSyntax>();
 
                                 foreach (var prop in properties)
-                                { 
+                                {
                                     accessPoints.Add(new DataWrite(method, type, prop.Identifier.Text, callStacks));
                                 }
                             }
@@ -54,48 +47,7 @@ internal static class DataAccessAnalyzer
                     }
                 }
 
-                foreach (var child in method.DescendantNodes().Where(c => c is MemberAccessExpressionSyntax).Select(c => c as MemberAccessExpressionSyntax))
-                {
-                    if (child.Expression is IdentifierNameSyntax identifier)
-                    {
-                        var objectType = identifier.GetUnderlyingType();
-
-                        if (objectType == null || !objectType.IsEntityFrameworkType())
-                            continue;
-
-                        var parentInvocations = child.Ancestors().Where(a => a is InvocationExpressionSyntax).Select(a => a as InvocationExpressionSyntax).ToList();
-
-                        if (parentInvocations.Any(i => i.IsIQueryable()))
-                        {
-                            //Read of some sort
-                            //TODO: later 
-                        }
-                        else if (child.Parent is AssignmentExpressionSyntax assignment)
-                        {
-                            if (assignment.Left.Equals(child))
-                            {
-                                var saveCallSyntaxWalker = new EntityFrameworkSaveSyntaxWalker();
-                                saveCallSyntaxWalker.Visit(method);
-
-                                if (saveCallSyntaxWalker.MethodCalls.Any(c => c.GetLocation().SourceSpan.Start > assignment.Left.Span.Start))
-                                {
-                                    var callStacks = assignment.Right.GetCallStacks();
-                                    accessPoints.Add(new DataWrite(method, objectType, child.Name.ToString(), callStacks));
-                                }
-                            }
-                            else
-                            { 
-                                //We're taking EF data and assigning it elsewhere. Probably to the UI?
-                            }
-                        }
-                        else
-                        {
-                            int temp = 1;
-                        }
-
-                        int i = 1;
-                    }
-                }
+                LookForTraditionalSaves(accessPoints, method);
             }
             catch (Exception ex)
             {
@@ -138,16 +90,7 @@ internal static class DataAccessAnalyzer
                     }
                 }
 
-                foreach (var child in method.DescendantNodes().Where(c => c is MemberAccessExpressionSyntax).Select(c => c as MemberAccessExpressionSyntax))
-                {
-                    if (child.Expression is IdentifierNameSyntax identifier)
-                    {
-                        var objectType = identifier.GetUnderlyingType();
-
-                        if (objectType == null || !objectType.IsEntityFrameworkType())
-                            continue;
-                    }
-                }
+                LookForTraditionalSaves(accessPoints, method);
             }
             catch (Exception ex)
             {
@@ -156,5 +99,49 @@ internal static class DataAccessAnalyzer
         }
 
         return accessPoints;
+    }
+
+    private static void LookForTraditionalSaves(List<DataAccessItem> accessPoints, MethodDeclarationSyntax method)
+    {
+        foreach (var child in method.DescendantNodes().Where(c => c is MemberAccessExpressionSyntax).Select(c => c as MemberAccessExpressionSyntax))
+        {
+            if (child.Expression is IdentifierNameSyntax identifier)
+            {
+                var objectType = identifier.GetUnderlyingType();
+
+                if (objectType == null || !objectType.IsEntityFrameworkType())
+                    continue;
+
+                var parentInvocations = child.Ancestors().Where(a => a is InvocationExpressionSyntax).Select(a => a as InvocationExpressionSyntax).ToList();
+
+                if (parentInvocations.Any(i => i.IsIQueryable()))
+                {
+                    //Read of some sort
+                    //TODO: later 
+                }
+                else if (child.Parent is AssignmentExpressionSyntax assignment)
+                {
+                    if (assignment.Left.Equals(child))
+                    {
+                        var saveCallSyntaxWalker = new EntityFrameworkSaveSyntaxWalker();
+                        saveCallSyntaxWalker.Visit(method);
+
+                        if (saveCallSyntaxWalker.MethodCalls.Any(c => c.GetLocation().SourceSpan.Start > assignment.Left.Span.Start))
+                        {
+                            var callStacks = assignment.Right.GetCallStacks();
+                            accessPoints.Add(new DataWrite(method, objectType, child.Name.ToString(), callStacks));
+                        }
+                    }
+                    else
+                    {
+                        //We're taking EF data and assigning it elsewhere. Probably to the UI?
+                    }
+                }
+                else
+                {
+
+                }
+            }
+        }
     }
 }

@@ -24,7 +24,7 @@ namespace Opperis.SAST.LocalUI
         {
             var primaryIncrementRate = 1.0 / (float)primaryDenominator;
             var secondaryAmount = primaryIncrementRate * (float)secondaryNumerator / (float)secondaryDenominator;
-            var amount = (((float)primaryNumerator / (float)secondaryDenominator) + secondaryAmount) * 100.0;
+            var amount = (((float)primaryNumerator / (float)primaryDenominator) + secondaryAmount) * 100.0;
 
             //Correct rounding error
             amount = amount > 100.0 ? 100.0 : amount;

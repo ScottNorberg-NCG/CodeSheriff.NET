@@ -12,45 +12,21 @@ using System.Windows.Forms;
 
 namespace Opperis.SAST.LocalUI;
 
-public partial class Form1 : Form
+public partial class ScanStatusForm : Form
 {
     private static readonly string COMPLETED = "100%";
     private static List<BaseFinding> _findings = new List<BaseFinding>();
 
-    public Form1()
+    public ScanStatusForm()
     {
         InitializeComponent();
-
-#if DEBUG
-        txtResultsFolder.Text = "C:\\temp\\ScanResults";
-        //txtSolutionFile.Text = "C:\\Users\\scott\\Downloads\\sentry-dotnet-main\\sentry-dotnet-main\\Sentry.NoMobile.sln";
-        txtSolutionFile.Text = "C:\\Users\\scott\\Source\\repos\\VulnerabilityBuffet2\\AspNetCore\\NCG.SecurityDetection.VulnerabilityBuffet.sln";
-        chkIncludeBindings.Checked = true;
-        chkTrufflehog.Checked = true;
-#endif
     }
 
-    private void btnChooseSolution_Click(object sender, EventArgs e)
+    public void RunScan(string solution, string folder, bool includeBindings, bool includeTrufflehog, bool includeNuGet)
     {
-        var result = openFileDialog1.ShowDialog();
-        if (result == DialogResult.OK)
-        {
-            txtSolutionFile.Text = openFileDialog1.FileName;
-        }
-    }
+        this.Show();
+        this.Refresh();
 
-    private void btnChooseFolder_Click(object sender, EventArgs e)
-    {
-        var result = folderBrowserDialog1.ShowDialog();
-
-        if (result == DialogResult.OK)
-        {
-            txtResultsFolder.Text = folderBrowserDialog1.SelectedPath;
-        }
-    }
-
-    private void btnScan_Click(object sender, EventArgs e)
-    {
         Globals.ClearErrors();
         _findings = new List<BaseFinding>();
 
@@ -58,7 +34,7 @@ public partial class Form1 : Form
         stopwatch.Start();
         //var findings = Scanner.Scan(txtSolutionFile.Text, chkNuGet.Checked, chkTrufflehog.Checked);
 
-        RunScan();
+        PerformScan(solution, includeTrufflehog, includeNuGet);
         stopwatch.Stop();
 
         var content = new StringBuilder();
@@ -67,7 +43,7 @@ public partial class Form1 : Form
         content.AppendLine("<head></head>");
         content.AppendLine("<body>");
 
-        var fileName = Path.GetFileName(txtSolutionFile.Text);
+        var fileName = Path.GetFileName(solution);
 
         content.AppendLine($"<h1>Findings for: {fileName}</h1>");
 
@@ -98,7 +74,7 @@ public partial class Form1 : Form
             content.AppendLine("</div>");
         }
 
-        if (chkIncludeBindings.Checked)
+        if (includeBindings)
         {
             content.AppendLine("<h2>Diagnostic info</h2>");
             foreach (var error in Globals.RuntimeErrors)
@@ -125,7 +101,8 @@ public partial class Form1 : Form
         content.AppendLine("</body>");
         content.AppendLine("</html>");
 
-        var findingsFilePath = $"{txtResultsFolder.Text}\\Scan Results {DateTime.Now.ToString("MM-dd-yyyy hh-mm")}.html";
+        var file = new FileInfo(solution);
+        var findingsFilePath = $"{folder}\\Findings: {file.Name} on {DateTime.Now.ToString("MM-dd-yyyy hh-mm")}.html";
 
         File.WriteAllText(findingsFilePath, content.ToString());
 
@@ -155,7 +132,7 @@ public partial class Form1 : Form
         MessageBox.Show("To run Trufflehog, you must have it installed on the machine running the scan. For more information about Trufflehog, please see https://github.com/trufflesecurity/trufflehog.");
     }
 
-    private void RunScan()
+    private void PerformScan(string solution, bool includeTrufflehog, bool runNuGetCheck)
     {
         lblStatusStep.UpdateText("Loading projects");
 
@@ -164,17 +141,17 @@ public partial class Form1 : Form
 
         _findings = new List<BaseFinding>();
 
-        if (!chkTrufflehog.Checked)
+        if (!includeTrufflehog)
             lblStatusTrufflehog.UpdateText("N/A");
 
-        if (!chkNuGet.Checked)
+        if (!runNuGetCheck)
             lblStatusNuGet.UpdateText("N/A");
 
         using (var workspace = MSBuildWorkspace.Create())
         {
-            Globals.Solution = workspace.OpenSolutionAsync(txtSolutionFile.Text).Result;
+            Globals.Solution = workspace.OpenSolutionAsync(solution).Result;
 
-            if (chkTrufflehog.Checked)
+            if (includeTrufflehog)
             {
                 lblStatusStep.UpdateText("Running Trufflehog scans");
 
@@ -203,7 +180,7 @@ public partial class Form1 : Form
 
             lblStatusTrufflehog.UpdateText("100%");
 
-            if (chkNuGet.Checked)
+            if (runNuGetCheck)
             {
                 lblStatusStep.UpdateText("Looking for vulnerable components (via NuGet)");
 

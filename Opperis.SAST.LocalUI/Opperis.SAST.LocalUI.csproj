@@ -13,4 +13,10 @@
     <ProjectReference Include="..\Opperis.SAST.Secrets\Opperis.SAST.Secrets.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="ScanStatusForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+
 </Project>
