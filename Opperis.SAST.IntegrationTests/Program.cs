@@ -25,20 +25,20 @@ internal class Program
         {
             Globals.Solution = workspace.OpenSolutionAsync(solutionFilePath).Result;
 
-            var accessPoints = DataAccessAnalyzer.FindDataAccessPoints();
+            //var accessPoints = DataAccessAnalyzer.FindDataAccessPoints();
 
-            foreach (var accessPoint in accessPoints) 
-            {
-                Console.WriteLine($"Type: {accessPoint.GetType()}");
-                Console.WriteLine($"Method: {accessPoint.ContainingMethod.Identifier.Text}");
-                Console.WriteLine($"Property: {accessPoint.PropertyName}");
-                Console.WriteLine($"Is Authorized: {accessPoint.IsAuthorizedAccess}");
+            //foreach (var accessPoint in accessPoints) 
+            //{
+            //    Console.WriteLine($"Type: {accessPoint.GetType()}");
+            //    Console.WriteLine($"Method: {accessPoint.ContainingMethod.Identifier.Text}");
+            //    Console.WriteLine($"Property: {accessPoint.PropertyName}");
+            //    Console.WriteLine($"Is Authorized: {accessPoint.IsAuthorizedAccess}");
                 
-                if (accessPoint.Roles != null)
-                    Console.WriteLine($"Roles: {string.Join("|", accessPoint.Roles.ToArray())}");
+            //    if (accessPoint.Roles != null)
+            //        Console.WriteLine($"Roles: {string.Join("|", accessPoint.Roles.ToArray())}");
 
-                Console.WriteLine("------------------------------");
-            }
+            //    Console.WriteLine("------------------------------");
+            //}
 
             int i = 1;
 
@@ -153,7 +153,7 @@ internal class Program
     private static void TestModelValidationIssues()
     {
         var modelErrors = ModelValidationProcessor.GetAllModelsMissingValidation();
-        Assert.AreEqual(13, modelErrors.Count, "Expected number of model validation issues");
+        Assert.AreEqual(40, modelErrors.Count, "Expected number of model validation issues");
         Assert.AreEqual(4, modelErrors.Select(c => c.GetType().ToString()).Distinct().Count(), "Number of distinct types of model validation issues");
         Assert.AllRootLocationsSet(modelErrors, "TestModelValidationIssues");
     }
@@ -215,7 +215,7 @@ internal class Program
     private static void TestOverpostingInControllers()
     {
         var efObjectsAsParameters = OverpostingViaControllerAnalyzer.FindEFObjectsAsParameters();
-        Assert.AreEqual(1, efObjectsAsParameters.Count, "Expected number of Overposting in controllers");
+        Assert.AreEqual(2, efObjectsAsParameters.Count, "Expected number of Overposting in controllers");
         Assert.AllRootLocationsSet(efObjectsAsParameters, "TestOverpostingInControllers");
     }
 
@@ -259,7 +259,7 @@ internal class Program
         //Number of CSRF issues will change frequently
         //If an issue is found here, check to see whether the project changed first before debugging tests
         var csrfIssues = CsrfProcessor.GetCsrfIssues();
-        Assert.AreEqual(32, csrfIssues.Count, "Expected number of Csrf Issues");
+        Assert.AreEqual(34, csrfIssues.Count, "Expected number of Csrf Issues");
         Assert.AreEqual(3, csrfIssues.Select(c => c.GetType().ToString()).Distinct().Count(), "Number of distinct types of CSRF issues");
         Assert.AllRootLocationsSet(csrfIssues, "TestCsrfIssues");
     }

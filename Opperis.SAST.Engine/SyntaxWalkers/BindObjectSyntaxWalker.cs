@@ -16,32 +16,50 @@ internal class BindObjectSyntaxWalker : CSharpSyntaxWalker, ISyntaxWalker
 
     public bool HasRun => BindObjectReferences.Any();
 
-    public override void VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
+    public override void VisitPropertyDeclaration(PropertyDeclarationSyntax node)
     {
-        if (node.Expression != null && node.Expression is IdentifierNameSyntax id)
+        var model = Globals.Compilation.GetSemanticModel(node.Ancestors().Last().SyntaxTree);
+        if (!node.AttributeLists.SelectMany(a => a.Attributes).Any(a => a.IsOfType("Microsoft.AspNetCore.Mvc.BindPropertyAttribute", model)))
+            return;
+
+        if (node.Type.GetUnderlyingType() is INamedTypeSymbol type)
         {
-            var parent = node.FirstAncestorOrSelf<ClassDeclarationSyntax>();
-
-            if (parent != null)
+            if (type.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax() is ClassDeclarationSyntax classDeclaration)
             {
-                if (id.GetDefinitionNode(parent) is PropertyDeclarationSyntax prop)
-                {
-                    var model = Globals.Compilation.GetSemanticModel(parent.SyntaxTree);
-                    if (!prop.AttributeLists.SelectMany(a => a.Attributes).Any(a => a.IsOfType("Microsoft.AspNetCore.Mvc.BindPropertyAttribute", model)))
-                        return;
-
-                    if (id.GetUnderlyingType() is INamedTypeSymbol type)
-                    {
-                        if (type.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax() is ClassDeclarationSyntax classDeclaration)
-                        {
-                            if (!BindObjectReferences.Any(o => o.AsClass == classDeclaration))
-                                BindObjectReferences.Add(new BindObjectInfo() { AsClass = classDeclaration, AsType = type });
-                        }
-                    }
-                }
+                if (!BindObjectReferences.Any(o => o.AsClass == classDeclaration))
+                    BindObjectReferences.Add(new BindObjectInfo() { AsClass = classDeclaration, AsType = type });
             }
         }
+
+        base.VisitPropertyDeclaration(node);
     }
+
+    //public override void VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
+    //{
+    //    if (node.Expression != null && node.Expression is IdentifierNameSyntax id)
+    //    {
+    //        var parent = node.FirstAncestorOrSelf<ClassDeclarationSyntax>();
+
+    //        if (parent != null)
+    //        {
+    //            if (id.GetDefinitionNode(parent) is PropertyDeclarationSyntax prop)
+    //            {
+    //                var model = Globals.Compilation.GetSemanticModel(parent.SyntaxTree);
+    //                if (!prop.AttributeLists.SelectMany(a => a.Attributes).Any(a => a.IsOfType("Microsoft.AspNetCore.Mvc.BindPropertyAttribute", model)))
+    //                    return;
+
+    //                if (id.GetUnderlyingType() is INamedTypeSymbol type)
+    //                {
+    //                    if (type.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax() is ClassDeclarationSyntax classDeclaration)
+    //                    {
+    //                        if (!BindObjectReferences.Any(o => o.AsClass == classDeclaration))
+    //                            BindObjectReferences.Add(new BindObjectInfo() { AsClass = classDeclaration, AsType = type });
+    //                    }
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
 
     public struct BindObjectInfo
     { 

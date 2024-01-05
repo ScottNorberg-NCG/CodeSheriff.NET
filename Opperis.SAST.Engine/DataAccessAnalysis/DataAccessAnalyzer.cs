@@ -107,7 +107,47 @@ internal static class DataAccessAnalyzer
         {
             try
             {
+                var saveCallSyntaxWalker = new EntityFrameworkSaveSyntaxWalker();
+                saveCallSyntaxWalker.Visit(method);
 
+                if (saveCallSyntaxWalker.MethodCalls.Any())
+                {
+                    //We have a method that calls DbContext.Save()
+                    //Now look to see if we have any objects that are both [BindObject] and an EF object (Value Shadowing)
+                    //TODO: ensure that the bind object was attached to the DbContext object to know for sure whether the object was actually saved
+                    var bindObjectWalker = new BindObjectSyntaxWalker();
+                    bindObjectWalker.Visit(method.Ancestors().Last());
+
+                    foreach (var bindObject in bindObjectWalker.BindObjectReferences)
+                    {
+                        if (Globals.EntityFrameworkObjects.Any(ef => ef.Equals(bindObject.AsType)))
+                        {
+                            var callStacks = new List<CallStack>();
+                            var callStack = new CallStack();
+                            callStack.AddLocation(method);
+                            callStack.AddLocation(bindObject.AsClass);
+                            callStacks.Add(callStack);
+
+                            var properties = bindObject.AsType.GetProperties() ?? new List<PropertyDeclarationSyntax>();
+
+                            foreach (var prop in properties)
+                            {
+                                accessPoints.Add(new DataWrite(method, bindObject.AsType, prop.Identifier.Text, callStacks));
+                            }
+                        }
+                    }
+                }
+
+                foreach (var child in method.DescendantNodes().Where(c => c is MemberAccessExpressionSyntax).Select(c => c as MemberAccessExpressionSyntax))
+                {
+                    if (child.Expression is IdentifierNameSyntax identifier)
+                    {
+                        var objectType = identifier.GetUnderlyingType();
+
+                        if (objectType == null || !objectType.IsEntityFrameworkType())
+                            continue;
+                    }
+                }
             }
             catch (Exception ex)
             {
