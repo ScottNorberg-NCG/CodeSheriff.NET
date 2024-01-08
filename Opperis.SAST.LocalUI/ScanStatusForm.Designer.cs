@@ -28,8 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            openFileDialog1 = new OpenFileDialog();
-            folderBrowserDialog1 = new FolderBrowserDialog();
             lblStatusTrufflehog = new Label();
             label0 = new Label();
             label9 = new Label();
@@ -94,17 +92,14 @@
             label34 = new Label();
             lblStatusIUserStore = new Label();
             label36 = new Label();
+            label1 = new Label();
+            lblStatusDBAnalysis = new Label();
             SuspendLayout();
-            // 
-            // openFileDialog1
-            // 
-            openFileDialog1.DefaultExt = "sln";
-            openFileDialog1.FileName = "openFileDialog1";
             // 
             // lblStatusTrufflehog
             // 
             lblStatusTrufflehog.AutoSize = true;
-            lblStatusTrufflehog.Location = new Point(10, 51);
+            lblStatusTrufflehog.Location = new Point(10, 67);
             lblStatusTrufflehog.Name = "lblStatusTrufflehog";
             lblStatusTrufflehog.Size = new Size(23, 15);
             lblStatusTrufflehog.TabIndex = 12;
@@ -114,7 +109,7 @@
             // label0
             // 
             label0.AutoSize = true;
-            label0.Location = new Point(59, 51);
+            label0.Location = new Point(59, 67);
             label0.Name = "label0";
             label0.Size = new Size(61, 15);
             label0.TabIndex = 13;
@@ -123,7 +118,7 @@
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(59, 66);
+            label9.Location = new Point(59, 82);
             label9.Name = "label9";
             label9.Size = new Size(113, 15);
             label9.TabIndex = 21;
@@ -132,7 +127,7 @@
             // lblStatusNuGet
             // 
             lblStatusNuGet.AutoSize = true;
-            lblStatusNuGet.Location = new Point(10, 66);
+            lblStatusNuGet.Location = new Point(10, 82);
             lblStatusNuGet.Name = "lblStatusNuGet";
             lblStatusNuGet.Size = new Size(23, 15);
             lblStatusNuGet.TabIndex = 20;
@@ -142,7 +137,7 @@
             // lblStatusValueShadowing
             // 
             lblStatusValueShadowing.AutoSize = true;
-            lblStatusValueShadowing.Location = new Point(10, 81);
+            lblStatusValueShadowing.Location = new Point(10, 97);
             lblStatusValueShadowing.Name = "lblStatusValueShadowing";
             lblStatusValueShadowing.Size = new Size(23, 15);
             lblStatusValueShadowing.TabIndex = 14;
@@ -152,7 +147,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(59, 81);
+            label3.Location = new Point(59, 97);
             label3.Name = "label3";
             label3.Size = new Size(97, 15);
             label3.TabIndex = 15;
@@ -161,7 +156,7 @@
             // lblStatusCsrf
             // 
             lblStatusCsrf.AutoSize = true;
-            lblStatusCsrf.Location = new Point(10, 96);
+            lblStatusCsrf.Location = new Point(10, 112);
             lblStatusCsrf.Name = "lblStatusCsrf";
             lblStatusCsrf.Size = new Size(23, 15);
             lblStatusCsrf.TabIndex = 16;
@@ -171,7 +166,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(59, 96);
+            label5.Location = new Point(59, 112);
             label5.Name = "label5";
             label5.Size = new Size(141, 15);
             label5.TabIndex = 17;
@@ -180,7 +175,7 @@
             // lblStatusSqlInjection
             // 
             lblStatusSqlInjection.AutoSize = true;
-            lblStatusSqlInjection.Location = new Point(10, 132);
+            lblStatusSqlInjection.Location = new Point(10, 145);
             lblStatusSqlInjection.Name = "lblStatusSqlInjection";
             lblStatusSqlInjection.Size = new Size(23, 15);
             lblStatusSqlInjection.TabIndex = 18;
@@ -190,7 +185,7 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(59, 132);
+            label7.Location = new Point(59, 145);
             label7.Name = "label7";
             label7.Size = new Size(77, 15);
             label7.TabIndex = 19;
@@ -199,7 +194,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(60, 230);
+            label4.Location = new Point(60, 243);
             label4.Name = "label4";
             label4.Size = new Size(167, 15);
             label4.TabIndex = 31;
@@ -208,7 +203,7 @@
             // lblStatusCryptoIVs
             // 
             lblStatusCryptoIVs.AutoSize = true;
-            lblStatusCryptoIVs.Location = new Point(11, 230);
+            lblStatusCryptoIVs.Location = new Point(11, 243);
             lblStatusCryptoIVs.Name = "lblStatusCryptoIVs";
             lblStatusCryptoIVs.Size = new Size(23, 15);
             lblStatusCryptoIVs.TabIndex = 30;
@@ -218,7 +213,7 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(60, 245);
+            label8.Location = new Point(60, 258);
             label8.Name = "label8";
             label8.Size = new Size(98, 15);
             label8.TabIndex = 29;
@@ -227,7 +222,7 @@
             // lblStatusCryptoECB
             // 
             lblStatusCryptoECB.AutoSize = true;
-            lblStatusCryptoECB.Location = new Point(11, 245);
+            lblStatusCryptoECB.Location = new Point(11, 258);
             lblStatusCryptoECB.Name = "lblStatusCryptoECB";
             lblStatusCryptoECB.Size = new Size(23, 15);
             lblStatusCryptoECB.TabIndex = 28;
@@ -237,7 +232,7 @@
             // label11
             // 
             label11.AutoSize = true;
-            label11.Location = new Point(60, 260);
+            label11.Location = new Point(60, 273);
             label11.Name = "label11";
             label11.Size = new Size(184, 15);
             label11.TabIndex = 27;
@@ -246,7 +241,7 @@
             // lblStatusDeprecatedCrypto
             // 
             lblStatusDeprecatedCrypto.AutoSize = true;
-            lblStatusDeprecatedCrypto.Location = new Point(11, 260);
+            lblStatusDeprecatedCrypto.Location = new Point(11, 273);
             lblStatusDeprecatedCrypto.Name = "lblStatusDeprecatedCrypto";
             lblStatusDeprecatedCrypto.Size = new Size(23, 15);
             lblStatusDeprecatedCrypto.TabIndex = 26;
@@ -275,7 +270,7 @@
             // label15
             // 
             label15.AutoSize = true;
-            label15.Location = new Point(60, 215);
+            label15.Location = new Point(60, 228);
             label15.Name = "label15";
             label15.Size = new Size(176, 15);
             label15.TabIndex = 23;
@@ -284,7 +279,7 @@
             // lblStatusCryptoKeys
             // 
             lblStatusCryptoKeys.AutoSize = true;
-            lblStatusCryptoKeys.Location = new Point(11, 215);
+            lblStatusCryptoKeys.Location = new Point(11, 228);
             lblStatusCryptoKeys.Name = "lblStatusCryptoKeys";
             lblStatusCryptoKeys.Size = new Size(23, 15);
             lblStatusCryptoKeys.TabIndex = 22;
@@ -446,7 +441,7 @@
             // label35
             // 
             label35.AutoSize = true;
-            label35.Location = new Point(59, 162);
+            label35.Location = new Point(59, 175);
             label35.Name = "label35";
             label35.Size = new Size(172, 15);
             label35.TabIndex = 33;
@@ -455,7 +450,7 @@
             // lblStatusConnectionString
             // 
             lblStatusConnectionString.AutoSize = true;
-            lblStatusConnectionString.Location = new Point(10, 162);
+            lblStatusConnectionString.Location = new Point(10, 175);
             lblStatusConnectionString.Name = "lblStatusConnectionString";
             lblStatusConnectionString.Size = new Size(23, 15);
             lblStatusConnectionString.TabIndex = 32;
@@ -476,7 +471,7 @@
             // 
             label10.AutoSize = true;
             label10.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label10.Location = new Point(10, 200);
+            label10.Location = new Point(10, 213);
             label10.Name = "label10";
             label10.Size = new Size(82, 15);
             label10.TabIndex = 53;
@@ -486,7 +481,7 @@
             // 
             label12.AutoSize = true;
             label12.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label12.Location = new Point(10, 117);
+            label12.Location = new Point(10, 130);
             label12.Name = "label12";
             label12.Size = new Size(85, 15);
             label12.TabIndex = 54;
@@ -545,7 +540,7 @@
             // 
             lblStatusFindings.AutoSize = true;
             lblStatusFindings.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lblStatusFindings.Location = new Point(11, 378);
+            lblStatusFindings.Location = new Point(12, 353);
             lblStatusFindings.Name = "lblStatusFindings";
             lblStatusFindings.Size = new Size(65, 15);
             lblStatusFindings.TabIndex = 60;
@@ -554,7 +549,7 @@
             // label22
             // 
             label22.AutoSize = true;
-            label22.Location = new Point(59, 177);
+            label22.Location = new Point(59, 190);
             label22.Name = "label22";
             label22.Size = new Size(177, 15);
             label22.TabIndex = 62;
@@ -563,7 +558,7 @@
             // lblStatusUnclosedConnection
             // 
             lblStatusUnclosedConnection.AutoSize = true;
-            lblStatusUnclosedConnection.Location = new Point(10, 177);
+            lblStatusUnclosedConnection.Location = new Point(10, 190);
             lblStatusUnclosedConnection.Name = "lblStatusUnclosedConnection";
             lblStatusUnclosedConnection.Size = new Size(23, 15);
             lblStatusUnclosedConnection.TabIndex = 61;
@@ -592,7 +587,7 @@
             // label26
             // 
             label26.AutoSize = true;
-            label26.Location = new Point(60, 325);
+            label26.Location = new Point(305, 288);
             label26.Name = "label26";
             label26.Size = new Size(127, 15);
             label26.TabIndex = 66;
@@ -601,7 +596,7 @@
             // lblStatusJWT
             // 
             lblStatusJWT.AutoSize = true;
-            lblStatusJWT.Location = new Point(11, 325);
+            lblStatusJWT.Location = new Point(256, 288);
             lblStatusJWT.Name = "lblStatusJWT";
             lblStatusJWT.Size = new Size(23, 15);
             lblStatusJWT.TabIndex = 65;
@@ -611,7 +606,7 @@
             // label28
             // 
             label28.AutoSize = true;
-            label28.Location = new Point(60, 290);
+            label28.Location = new Point(60, 303);
             label28.Name = "label28";
             label28.Size = new Size(95, 15);
             label28.TabIndex = 68;
@@ -620,7 +615,7 @@
             // lblStatusRSA
             // 
             lblStatusRSA.AutoSize = true;
-            lblStatusRSA.Location = new Point(11, 290);
+            lblStatusRSA.Location = new Point(11, 303);
             lblStatusRSA.Name = "lblStatusRSA";
             lblStatusRSA.Size = new Size(23, 15);
             lblStatusRSA.TabIndex = 67;
@@ -630,7 +625,7 @@
             // label30
             // 
             label30.AutoSize = true;
-            label30.Location = new Point(60, 275);
+            label30.Location = new Point(60, 288);
             label30.Name = "label30";
             label30.Size = new Size(171, 15);
             label30.TabIndex = 70;
@@ -639,7 +634,7 @@
             // lblStatusHashingAlgorithm
             // 
             lblStatusHashingAlgorithm.AutoSize = true;
-            lblStatusHashingAlgorithm.Location = new Point(11, 275);
+            lblStatusHashingAlgorithm.Location = new Point(11, 288);
             lblStatusHashingAlgorithm.Name = "lblStatusHashingAlgorithm";
             lblStatusHashingAlgorithm.Size = new Size(23, 15);
             lblStatusHashingAlgorithm.TabIndex = 69;
@@ -649,7 +644,7 @@
             // label32
             // 
             label32.AutoSize = true;
-            label32.Location = new Point(59, 147);
+            label32.Location = new Point(59, 160);
             label32.Name = "label32";
             label32.Size = new Size(190, 15);
             label32.TabIndex = 72;
@@ -658,7 +653,7 @@
             // lblStatusSQLiViaEF
             // 
             lblStatusSQLiViaEF.AutoSize = true;
-            lblStatusSQLiViaEF.Location = new Point(10, 147);
+            lblStatusSQLiViaEF.Location = new Point(10, 160);
             lblStatusSQLiViaEF.Name = "lblStatusSQLiViaEF";
             lblStatusSQLiViaEF.Size = new Size(23, 15);
             lblStatusSQLiViaEF.TabIndex = 71;
@@ -668,7 +663,7 @@
             // label33
             // 
             label33.AutoSize = true;
-            label33.Location = new Point(60, 340);
+            label33.Location = new Point(305, 303);
             label33.Name = "label33";
             label33.Size = new Size(143, 15);
             label33.TabIndex = 74;
@@ -677,7 +672,7 @@
             // lblStatusPasswordLockout
             // 
             lblStatusPasswordLockout.AutoSize = true;
-            lblStatusPasswordLockout.Location = new Point(11, 340);
+            lblStatusPasswordLockout.Location = new Point(256, 303);
             lblStatusPasswordLockout.Name = "lblStatusPasswordLockout";
             lblStatusPasswordLockout.Size = new Size(23, 15);
             lblStatusPasswordLockout.TabIndex = 73;
@@ -687,7 +682,7 @@
             // label34
             // 
             label34.AutoSize = true;
-            label34.Location = new Point(60, 355);
+            label34.Location = new Point(305, 318);
             label34.Name = "label34";
             label34.Size = new Size(159, 15);
             label34.TabIndex = 76;
@@ -696,7 +691,7 @@
             // lblStatusIUserStore
             // 
             lblStatusIUserStore.AutoSize = true;
-            lblStatusIUserStore.Location = new Point(11, 355);
+            lblStatusIUserStore.Location = new Point(256, 318);
             lblStatusIUserStore.Name = "lblStatusIUserStore";
             lblStatusIUserStore.Size = new Size(23, 15);
             lblStatusIUserStore.TabIndex = 75;
@@ -707,17 +702,38 @@
             // 
             label36.AutoSize = true;
             label36.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label36.Location = new Point(10, 310);
+            label36.Location = new Point(255, 273);
             label36.Name = "label36";
             label36.Size = new Size(171, 15);
             label36.TabIndex = 77;
             label36.Text = "Authentication/Authorization";
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(59, 51);
+            label1.Name = "label1";
+            label1.Size = new Size(140, 15);
+            label1.TabIndex = 79;
+            label1.Text = "Database Access Analysis";
+            // 
+            // lblStatusDBAnalysis
+            // 
+            lblStatusDBAnalysis.AutoSize = true;
+            lblStatusDBAnalysis.Location = new Point(10, 51);
+            lblStatusDBAnalysis.Name = "lblStatusDBAnalysis";
+            lblStatusDBAnalysis.Size = new Size(23, 15);
+            lblStatusDBAnalysis.TabIndex = 78;
+            lblStatusDBAnalysis.Text = "0%";
+            lblStatusDBAnalysis.TextAlign = ContentAlignment.MiddleRight;
+            // 
             // ScanStatusForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(494, 408);
+            ClientSize = new Size(494, 384);
+            Controls.Add(label1);
+            Controls.Add(lblStatusDBAnalysis);
             Controls.Add(label36);
             Controls.Add(label34);
             Controls.Add(lblStatusIUserStore);
@@ -790,8 +806,6 @@
         }
 
         #endregion
-        private OpenFileDialog openFileDialog1;
-        private FolderBrowserDialog folderBrowserDialog1;
         private Label lblStatusTrufflehog;
         private Label label0;
         private Label label9;
@@ -856,5 +870,7 @@
         private Label label34;
         private Label lblStatusIUserStore;
         private Label label36;
+        private Label label1;
+        private Label lblStatusDBAnalysis;
     }
 }

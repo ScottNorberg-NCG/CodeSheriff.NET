@@ -10,7 +10,7 @@ internal class UnprotectedPhysicalFileResultPath : BaseFinding
 {
     internal override Priority Priority => Priority.Medium;
 
-    internal override string FindingText => "A PhysicalFileResult ";
+    internal override string FindingText => "A PhysicalFileResult was found whose path includes user input.";
 
-    internal override string Description => throw new NotImplementedException();
+    internal override string Description => "Since the path includes user input, the PhysicalFileResult may be hijacked to include arbitrary files from elsewhere, including sensitive configuration or operating system files.";
 }

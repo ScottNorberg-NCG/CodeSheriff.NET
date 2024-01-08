@@ -14,4 +14,6 @@ internal class DataToUI : DataAccessItem
     public DataToUI(MethodDeclarationSyntax method, ITypeSymbol containingType, string propertyName) : base(method, containingType, propertyName)
     {
     }
+
+    internal override Direction DataDirection => Direction.ToUI;
 }

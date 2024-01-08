@@ -16,4 +16,6 @@ internal class DataWrite : DataAccessItem
     {
         _dataSourceCallStacks = dataSourceCallStacks;
     }
+
+    internal override Direction DataDirection => Direction.ToDatabase;
 }

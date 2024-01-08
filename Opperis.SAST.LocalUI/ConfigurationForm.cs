@@ -21,7 +21,8 @@ public partial class ConfigurationForm : Form
 #if DEBUG
         txtResultsFolder.Text = "C:\\temp\\ScanResults";
         //txtSolutionFile.Text = "C:\\Users\\scott\\Downloads\\sentry-dotnet-main\\sentry-dotnet-main\\Sentry.NoMobile.sln";
-        txtSolutionFile.Text = "C:\\Users\\scott\\Source\\repos\\VulnerabilityBuffet2\\AspNetCore\\NCG.SecurityDetection.VulnerabilityBuffet.sln";
+        //txtSolutionFile.Text = "C:\\Users\\scott\\Source\\repos\\VulnerabilityBuffet2\\AspNetCore\\NCG.SecurityDetection.VulnerabilityBuffet.sln";
+        txtSolutionFile.Text = "C:\\Users\\scott\\Source\\repos\\SASTTest\\SASTTest.sln";
         chkIncludeBindings.Checked = true;
         chkTrufflehog.Checked = true;
 #endif

@@ -3,9 +3,12 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
 using Opperis.SAST.Engine;
 using Opperis.SAST.Engine.Analyzers;
+using Opperis.SAST.Engine.DataAccessAnalysis;
 using Opperis.SAST.Engine.Findings;
 using Opperis.SAST.Engine.HtmlTagParsing;
 using Opperis.SAST.Engine.SyntaxWalkers;
+using Opperis.SAST.LocalUI.ExtensionMethods;
+using System.Data;
 using System.Diagnostics;
 using System.Text;
 using System.Windows.Forms;
@@ -34,7 +37,7 @@ public partial class ScanStatusForm : Form
         stopwatch.Start();
         //var findings = Scanner.Scan(txtSolutionFile.Text, chkNuGet.Checked, chkTrufflehog.Checked);
 
-        PerformScan(solution, includeTrufflehog, includeNuGet);
+        PerformScan(solution, folder, includeTrufflehog, includeNuGet);
         stopwatch.Stop();
 
         var content = new StringBuilder();
@@ -102,7 +105,7 @@ public partial class ScanStatusForm : Form
         content.AppendLine("</html>");
 
         var file = new FileInfo(solution);
-        var findingsFilePath = $"{folder}\\Findings: {file.Name} on {DateTime.Now.ToString("MM-dd-yyyy hh-mm")}.html";
+        var findingsFilePath = $"{folder}\\Findings for {file.Name} on {DateTime.Now.ToString("yyyy-MM-dd hh-mm")}.html";
 
         File.WriteAllText(findingsFilePath, content.ToString());
 
@@ -132,7 +135,7 @@ public partial class ScanStatusForm : Form
         MessageBox.Show("To run Trufflehog, you must have it installed on the machine running the scan. For more information about Trufflehog, please see https://github.com/trufflesecurity/trufflehog.");
     }
 
-    private void PerformScan(string solution, bool includeTrufflehog, bool runNuGetCheck)
+    private void PerformScan(string solution, string folder, bool includeTrufflehog, bool runNuGetCheck)
     {
         lblStatusStep.UpdateText("Loading projects");
 
@@ -150,6 +153,10 @@ public partial class ScanStatusForm : Form
         using (var workspace = MSBuildWorkspace.Create())
         {
             Globals.Solution = workspace.OpenSolutionAsync(solution).Result;
+
+            lblStatusStep.UpdateText("Running Database Access Analysis");
+            GenerateDatabaseAccessReport(solution, folder);
+            lblStatusDBAnalysis.UpdateText("100%");
 
             if (includeTrufflehog)
             {
@@ -198,7 +205,7 @@ public partial class ScanStatusForm : Form
             lblStatusValueShadowing.UpdateText("100%");
             RefreshFindingCount();
 
-            var projectIndex = 1;
+            var projectIndex = 0;
             var projectCount = Globals.Solution.Projects.Count();
 
             foreach (var project in Globals.Solution.Projects)
@@ -220,7 +227,7 @@ public partial class ScanStatusForm : Form
 
                 RefreshFindingCount();
 
-                var syntaxTreeIndex = 1;
+                var syntaxTreeIndex = 0;
                 var syntaxTreeCount = Globals.Compilation.SyntaxTrees.Count();
 
                 foreach (var syntaxTree in Globals.Compilation.SyntaxTrees)
@@ -314,6 +321,71 @@ public partial class ScanStatusForm : Form
 
             lblStatusStep.UpdateText("Scan complete, writing to HTML file");
         }
+    }
+
+    private static void GenerateDatabaseAccessReport(string solution, string folder)
+    {
+        var dataPoints = DataAccessAnalyzer.FindDataAccessPoints();
+
+        var roles = dataPoints.Where(dp => dp.Roles != null).SelectMany(dp => dp.Roles).Distinct().OrderBy(s => s).ToList();
+
+        var content = new StringBuilder();
+
+        content.AppendLine("<html>");
+        content.AppendLine("<head></head>");
+        content.AppendLine("<body>");
+
+        var fileName = Path.GetFileName(solution);
+
+        content.AppendLine($"<h1>EF Analysis for: {fileName}</h1>");
+        content.AppendLine("<h2>Writes via EF</h2>");
+        content.AppendLine("<table width=\"100%\">");
+        content.AppendLine("<tr>");
+        content.Append("<th>Object</th>");
+        content.Append("<th>Property</th>");
+        content.Append("<th># of Writes</th>");
+        content.Append("<th>% Unauthenticated</th>");
+        content.Append("<th>% Auth (No Role)</th>");
+
+        foreach (var role in roles)
+        { 
+            content.Append($"<th>% Auth, ({role})</th>");
+        }
+        
+        content.AppendLine("</tr>");
+
+        var writes = dataPoints.Where(dp => dp.DataDirection == DataAccessItem.Direction.ToDatabase).ToList();
+
+        var writeProperties = writes.Select(dp => new { dp.ContainingType, dp.PropertyName }).Distinct().ToList();
+
+        foreach (var access in writeProperties.OrderBy(dp => dp.ContainingType).ThenBy(dp => dp.PropertyName))
+        {
+            var localWrites = writes.Where(dp => dp.ContainingType == access.ContainingType && dp.PropertyName == access.PropertyName).ToList();
+
+            content.AppendLine("<tr>");
+
+            content.Append($"<td>{access.ContainingType}</td>");
+            content.Append($"<td>{access.PropertyName}</td>");
+            content.Append($"<td>{localWrites.Count}</td>");
+            content.Append($"<td>{localWrites.Count(w => !w.IsAuthorizedAccess).AsPercentage(localWrites.Count)}</td>");
+            content.Append($"<td>{localWrites.Count(w => w.IsAuthorizedAccess && w.Roles.Count == 0).AsPercentage(localWrites.Count)}</td>");
+
+            foreach (var role in roles)
+            {
+                content.Append($"<td>{localWrites.Count(w => w.Roles != null && w.Roles.Contains(role)).AsPercentage(localWrites.Count)}</td>");
+            }
+
+            content.AppendLine("</tr>");
+        }
+
+        content.AppendLine("</table>");
+        content.AppendLine("</body>");
+        content.AppendLine("</html>");
+
+        var file = new FileInfo(solution);
+        var findingsFilePath = $"{folder}\\EF Analysis for {file.Name} on {DateTime.Now.ToString("yyyy-MM-dd hh-mm")}.html";
+
+        File.WriteAllText(findingsFilePath, content.ToString());
     }
 
     private void ParseJavaScriptTags(TextDocument? cshtmlFile)

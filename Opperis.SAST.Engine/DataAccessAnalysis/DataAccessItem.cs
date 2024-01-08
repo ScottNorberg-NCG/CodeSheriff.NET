@@ -12,8 +12,16 @@ namespace Opperis.SAST.Engine.DataAccessAnalysis;
 
 internal abstract class DataAccessItem
 {
+    internal enum Direction
+    { 
+        ToUI,
+        ToDatabase
+    }
+
+    internal abstract Direction DataDirection { get; }
+
     internal MethodDeclarationSyntax ContainingMethod { get; set; }
-    internal ITypeSymbol ContainingType { get; set; }
+    internal string ContainingType { get; set; }
     internal string PropertyName { get; set; }
     internal bool IsAuthorizedAccess { get; private set; }
     internal List<string> Roles { get; private set; }
@@ -21,7 +29,7 @@ internal abstract class DataAccessItem
     public DataAccessItem(MethodDeclarationSyntax method, ITypeSymbol containingType, string propertyName)
     {
         this.ContainingMethod = method;
-        this.ContainingType = containingType;
+        this.ContainingType = containingType.ToString().Replace("?", "");
         this.PropertyName = propertyName;
 
         if (method.IsUIProcessor()) 
