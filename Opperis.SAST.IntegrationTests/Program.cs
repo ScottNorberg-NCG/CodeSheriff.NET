@@ -153,7 +153,7 @@ internal class Program
     private static void TestModelValidationIssues()
     {
         var modelErrors = ModelValidationProcessor.GetAllModelsMissingValidation();
-        Assert.AreEqual(24, modelErrors.Count, "Expected number of model validation issues");
+        Assert.AreEqual(25, modelErrors.Count, "Expected number of model validation issues");
         Assert.AreEqual(4, modelErrors.Select(c => c.GetType().ToString()).Distinct().Count(), "Number of distinct types of model validation issues");
         Assert.AllRootLocationsSet(modelErrors, "TestModelValidationIssues");
     }

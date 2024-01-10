@@ -11,6 +11,17 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions;
 
 internal static class IdentifierNameSyntaxExtensions
 {
+    internal static List<IdentifierNameSyntax> GetReferences(this IdentifierNameSyntax id)
+    {
+        var parentBlock = id.Ancestors().FirstOrDefault(a => a is BlockSyntax) as BlockSyntax;
+
+        if (parentBlock == null)
+            return new List<IdentifierNameSyntax>();
+
+        //We're in the same block, so we should not have different variables of the same name
+        return parentBlock.DescendantNodes().OfType<IdentifierNameSyntax>().Where(n => n.Identifier.Text == id.Identifier.Text).ToList();
+    }
+
     internal static T GetLiteralValue<T>(this IdentifierNameSyntax id)
     {
         var definition = id.GetDefinitionNode(id.Ancestors().Last());

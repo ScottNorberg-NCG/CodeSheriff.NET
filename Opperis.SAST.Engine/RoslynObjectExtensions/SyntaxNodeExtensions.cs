@@ -10,6 +10,20 @@ namespace Opperis.SAST.Engine.RoslynObjectExtensions;
 
 internal static class SyntaxNodeExtensions
 {
+    //Possible refactoring candidate - this is an oddly specific method for a very generic object type
+    internal static bool IsDataExposingInvocation(this SyntaxNode node)
+    {
+        if (node is InvocationExpressionSyntax invocation)
+        {
+            if (invocation.Expression is IdentifierNameSyntax id)
+                return id.Identifier.Text.In("Json", "ObjectResult", "Ok");
+            else //TODO: What else could this be?
+                return false;
+        }
+        else
+            return false;
+    }
+
     internal static string GetDisplayText(this SyntaxNode node)
     {
         if (node is NamespaceDeclarationSyntax namespaceDeclaration)

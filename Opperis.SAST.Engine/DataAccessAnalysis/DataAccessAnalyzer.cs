@@ -4,6 +4,7 @@ using Opperis.SAST.Engine.ErrorHandling;
 using Opperis.SAST.Engine.Findings;
 using Opperis.SAST.Engine.SyntaxWalkers;
 using Opperis.SAST.Engine.RoslynObjectExtensions;
+using Microsoft.CodeAnalysis.FindSymbols;
 
 namespace Opperis.SAST.Engine.DataAccessAnalysis;
 
@@ -47,7 +48,7 @@ internal static class DataAccessAnalyzer
                     }
                 }
 
-                LookForTraditionalSaves(accessPoints, method);
+                LookForInMethodAccesses(accessPoints, method);
             }
             catch (Exception ex)
             {
@@ -90,7 +91,7 @@ internal static class DataAccessAnalyzer
                     }
                 }
 
-                LookForTraditionalSaves(accessPoints, method);
+                LookForInMethodAccesses(accessPoints, method);
             }
             catch (Exception ex)
             {
@@ -101,7 +102,7 @@ internal static class DataAccessAnalyzer
         return accessPoints;
     }
 
-    private static void LookForTraditionalSaves(List<DataAccessItem> accessPoints, MethodDeclarationSyntax method)
+    private static void LookForInMethodAccesses(List<DataAccessItem> accessPoints, MethodDeclarationSyntax method)
     {
         foreach (var child in method.DescendantNodes().Where(c => c is MemberAccessExpressionSyntax).Select(c => c as MemberAccessExpressionSyntax))
         {
@@ -116,8 +117,71 @@ internal static class DataAccessAnalyzer
 
                 if (parentInvocations.Any(i => i.IsIQueryable()))
                 {
-                    //Read of some sort
-                    //TODO: later 
+                    var assignment = child.Ancestors().FirstOrDefault(a => a is AssignmentExpressionSyntax) as AssignmentExpressionSyntax;
+
+                    if (assignment != null)
+                    {
+                        if (assignment.Left is MemberAccessExpressionSyntax member)
+                        {
+                            //Using the ViewBag which makes object information available to the view
+                            if (member.Expression.GetUnderlyingType().ToString() == "dynamic")
+                            {
+                                var callStacks = new List<CallStack>();
+                                var callStack = new CallStack();
+                                callStack.AddLocation(member.Expression);
+                                callStack.AddLocation(method);
+                                callStacks.Add(callStack);
+
+                                var properties = objectType.GetProperties() ?? new List<PropertyDeclarationSyntax>();
+
+                                foreach (var prop in properties)
+                                {
+                                    accessPoints.Add(new DataInView(method, objectType, prop.Identifier.Text, callStacks));
+                                }
+                            }
+                            else
+                            {
+                                var resultAsSymbol = member.Expression.ToSymbol();
+
+                                if (resultAsSymbol != null)
+                                {
+                                    var references = SymbolFinder.FindReferencesAsync(resultAsSymbol, Globals.Solution).Result;
+
+                                    int i = 1;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var variable = child.Ancestors().FirstOrDefault(a => a is VariableDeclaratorSyntax) as VariableDeclaratorSyntax;
+
+                        if (variable != null)
+                        {
+                            var references = variable.GetReferences();
+                            if (references.Any(r => r.Ancestors().Any(a => a is ReturnStatementSyntax)))
+                            {
+                                var allReturns = references.SelectMany(r => r.Ancestors()).Where(a => a is ReturnStatementSyntax).Select(a => a as ReturnStatementSyntax);
+
+                                var callStacks = new List<CallStack>();
+                                var callStack = new CallStack();
+                                callStack.AddLocation(variable);
+                                callStack.AddLocation(method);
+                                callStacks.Add(callStack);
+
+                                if (allReturns.Any(r => r.DescendantNodes().Any(n => n.IsDataExposingInvocation())))
+                                {
+                                    accessPoints.Add(new DataToUI(method, objectType, variable.Identifier.Text, callStacks));
+                                }
+                                else
+                                {
+                                    accessPoints.Add(new DataInView(method, objectType, variable.Identifier.Text, callStacks));
+                                }
+                            }
+
+                            int q = 1;
+                        }
+                    }
                 }
                 else if (child.Parent is AssignmentExpressionSyntax assignment)
                 {

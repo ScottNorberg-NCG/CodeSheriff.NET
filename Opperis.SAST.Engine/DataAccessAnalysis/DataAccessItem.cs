@@ -15,6 +15,7 @@ internal abstract class DataAccessItem
     internal enum Direction
     { 
         ToUI,
+        ToView,
         ToDatabase
     }
 
@@ -25,12 +26,14 @@ internal abstract class DataAccessItem
     internal string PropertyName { get; set; }
     internal bool IsAuthorizedAccess { get; private set; }
     internal List<string> Roles { get; private set; }
+    internal readonly List<CallStack> DataSourceCallStacks;
 
-    public DataAccessItem(MethodDeclarationSyntax method, ITypeSymbol containingType, string propertyName)
+    public DataAccessItem(MethodDeclarationSyntax method, ITypeSymbol containingType, string propertyName, List<CallStack> dataSourceCallStacks)
     {
         this.ContainingMethod = method;
         this.ContainingType = containingType.ToString().Replace("?", "");
         this.PropertyName = propertyName;
+        this.DataSourceCallStacks = dataSourceCallStacks;
 
         if (method.IsUIProcessor()) 
         {

@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Opperis.SAST.Engine.DataAccessAnalysis;
 
-internal class DataToUI : DataAccessItem
+internal class DataInView : DataAccessItem
 {
-    public DataToUI(MethodDeclarationSyntax method, ITypeSymbol containingType, string propertyName, List<CallStack> callStacks) : base(method, containingType, propertyName, callStacks)
+    public DataInView(MethodDeclarationSyntax method, ITypeSymbol containingType, string propertyName, List<CallStack> callStacks) : base(method, containingType, propertyName, callStacks)
     {
     }
 
-    internal override Direction DataDirection => Direction.ToUI;
+    internal override Direction DataDirection => Direction.ToView;
 }

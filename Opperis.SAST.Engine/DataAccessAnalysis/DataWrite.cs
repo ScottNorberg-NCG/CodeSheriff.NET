@@ -11,10 +11,8 @@ namespace Opperis.SAST.Engine.DataAccessAnalysis;
 
 internal class DataWrite : DataAccessItem
 {
-    private readonly List<CallStack> _dataSourceCallStacks;
-    public DataWrite(MethodDeclarationSyntax method, ITypeSymbol containingType, string propertyName, List<CallStack> dataSourceCallStacks) : base(method, containingType, propertyName)
+    public DataWrite(MethodDeclarationSyntax method, ITypeSymbol containingType, string propertyName, List<CallStack> dataSourceCallStacks) : base(method, containingType, propertyName, dataSourceCallStacks)
     {
-        _dataSourceCallStacks = dataSourceCallStacks;
     }
 
     internal override Direction DataDirection => Direction.ToDatabase;
