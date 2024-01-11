@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Opperis.SAST.Engine.DataAccessAnalysis;
 
-internal class DataToUI : DataAccessItem
+internal class DataObjectExposedToUI : DataAccessItem
 {
-    public DataToUI(MethodDeclarationSyntax method, ITypeSymbol containingType, string propertyName, List<CallStack> callStacks) : base(method, containingType, propertyName, callStacks)
+    public DataObjectExposedToUI(MethodDeclarationSyntax method, ITypeSymbol containingType, string propertyName, List<CallStack> callStacks) : base(method, containingType, propertyName, callStacks)
     {
     }
 

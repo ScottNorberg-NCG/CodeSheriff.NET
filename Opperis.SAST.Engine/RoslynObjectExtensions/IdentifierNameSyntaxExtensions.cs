@@ -40,4 +40,30 @@ internal static class IdentifierNameSyntaxExtensions
         else
             return default;
     }
+
+    internal static bool IsAssignmentSourceInTree(this IdentifierNameSyntax id)
+    {
+        var assignment = id.Ancestors().FirstOrDefault(a => a is AssignmentExpressionSyntax) as AssignmentExpressionSyntax;
+
+        if (assignment == null)
+            return false;
+
+        if (assignment.Right is MemberAccessExpressionSyntax memberAccess)
+            return memberAccess.Expression.IsIncrementallyIdenticalTo(id);
+        else
+            return false;
+    }
+
+    internal static bool IsAssignmentDestinationInTree(this IdentifierNameSyntax id)
+    {
+        var assignment = id.Ancestors().FirstOrDefault(a => a is AssignmentExpressionSyntax) as AssignmentExpressionSyntax;
+
+        if (assignment == null)
+            return false;
+
+        if (assignment.Left is MemberAccessExpressionSyntax memberAccess)
+            return memberAccess.Expression.IsIncrementallyIdenticalTo(id);
+        else
+            return false;
+    }
 }

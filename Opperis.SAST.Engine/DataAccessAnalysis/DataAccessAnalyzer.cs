@@ -136,18 +136,26 @@ internal static class DataAccessAnalyzer
 
                                 foreach (var prop in properties)
                                 {
-                                    accessPoints.Add(new DataInView(method, objectType, prop.Identifier.Text, callStacks));
+                                    accessPoints.Add(new IndirectDataExposure(method, objectType, prop.Identifier.Text, callStacks));
                                 }
                             }
                             else
                             {
-                                var resultAsSymbol = member.Expression.ToSymbol();
-
-                                if (resultAsSymbol != null)
+                                if (member.Expression is IdentifierNameSyntax id)
                                 {
-                                    var references = SymbolFinder.FindReferencesAsync(resultAsSymbol, Globals.Solution).Result;
+                                    var references = id.GetReferences();
+                                    if (references.Any(r => r.Ancestors().Any(a => a is ReturnStatementSyntax)))
+                                    {
+                                        var allReturns = references.SelectMany(r => r.Ancestors()).Where(a => a is ReturnStatementSyntax).Select(a => a as ReturnStatementSyntax);
 
-                                    int i = 1;
+                                        var callStacks = new List<CallStack>();
+                                        var callStack = new CallStack();
+                                        callStack.AddLocation(id);
+                                        callStack.AddLocation(method);
+                                        callStacks.Add(callStack);
+
+                                        accessPoints.Add(new IndirectDataExposure(method, objectType, id.Identifier.Text, callStacks));
+                                    }
                                 }
                             }
                         }
@@ -171,15 +179,45 @@ internal static class DataAccessAnalyzer
 
                                 if (allReturns.Any(r => r.DescendantNodes().Any(n => n.IsDataExposingInvocation())))
                                 {
-                                    accessPoints.Add(new DataToUI(method, objectType, variable.Identifier.Text, callStacks));
+                                    var properties = objectType.GetProperties() ?? new List<PropertyDeclarationSyntax>();
+
+                                    foreach (var prop in properties)
+                                    {
+                                        accessPoints.Add(new DataObjectExposedToUI(method, objectType, prop.Identifier.Text, callStacks));
+                                    }
                                 }
                                 else
                                 {
-                                    accessPoints.Add(new DataInView(method, objectType, variable.Identifier.Text, callStacks));
+                                    accessPoints.Add(new IndirectDataExposure(method, objectType, variable.Identifier.Text, callStacks));
                                 }
                             }
 
-                            int q = 1;
+                            foreach (var reference in references.Where(r => r.IsAssignmentSourceInTree()))
+                            {
+                                var varAssignment = reference.Ancestors().Where(r => r is AssignmentExpressionSyntax).Select(r => r as AssignmentExpressionSyntax).First();
+                                var destination = varAssignment.Left;
+
+                                if (destination is MemberAccessExpressionSyntax memberAccess)
+                                {
+                                    if (memberAccess.Expression is IdentifierNameSyntax id)
+                                    {
+                                        var idReferences = id.GetReferences();
+
+                                        if (idReferences.Any(r => r.Ancestors().Any(a => a is ReturnStatementSyntax)))
+                                        {
+                                            var allReturns = references.SelectMany(r => r.Ancestors()).Where(a => a is ReturnStatementSyntax).Select(a => a as ReturnStatementSyntax);
+
+                                            var callStacks = new List<CallStack>();
+                                            var callStack = new CallStack();
+                                            callStack.AddLocation(variable);
+                                            callStack.AddLocation(method);
+                                            callStacks.Add(callStack);
+
+                                            accessPoints.Add(new IndirectDataExposure(method, objectType, id.Identifier.Text, callStacks));
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -199,6 +237,7 @@ internal static class DataAccessAnalyzer
                     else
                     {
                         //We're taking EF data and assigning it elsewhere. Probably to the UI?
+                        int i = 1;
                     }
                 }
                 else

@@ -338,7 +338,24 @@ public partial class ScanStatusForm : Form
         var fileName = Path.GetFileName(solution);
 
         content.AppendLine($"<h1>EF Analysis for: {fileName}</h1>");
-        content.AppendLine("<h2>Writes via EF</h2>");
+
+        AddDataAccessTable(dataPoints, roles, content, "EF Data Indirectly Sent to UI", "This is a list of all properties that were read from the database then sent to the UI indirectly, either via a View or a property of another object", DataAccessItem.Direction.ToView);
+        AddDataAccessTable(dataPoints, roles, content, "EF Data Directly Sent to UI", "This is a list of all properties that were sent directly to the UI, usually via a JSON-based API", DataAccessItem.Direction.ToUI);
+        AddDataAccessTable(dataPoints, roles, content, "Writes to the Database via EF", "This is a list of all properties that we detected had data from the UI saved to the database", DataAccessItem.Direction.ToDatabase);
+
+        content.AppendLine("</body>");
+        content.AppendLine("</html>");
+
+        var file = new FileInfo(solution);
+        var findingsFilePath = $"{folder}\\EF Analysis for {file.Name} on {DateTime.Now.ToString("yyyy-MM-dd hh-mm")}.html";
+
+        File.WriteAllText(findingsFilePath, content.ToString());
+    }
+
+    private static void AddDataAccessTable(List<DataAccessItem> dataPoints, List<string> roles, StringBuilder content, string title, string subTitle, DataAccessItem.Direction direction)
+    {
+        content.AppendLine($"<h2>{title}</h2>");
+        content.AppendLine($"<h3>{subTitle}</h3>");
         content.AppendLine("<table width=\"100%\">");
         content.AppendLine("<tr>");
         content.Append("<th>Object</th>");
@@ -348,13 +365,13 @@ public partial class ScanStatusForm : Form
         content.Append("<th>% Auth (No Role)</th>");
 
         foreach (var role in roles)
-        { 
+        {
             content.Append($"<th>% Auth, ({role})</th>");
         }
-        
+
         content.AppendLine("</tr>");
 
-        var writes = dataPoints.Where(dp => dp.DataDirection == DataAccessItem.Direction.ToDatabase).ToList();
+        var writes = dataPoints.Where(dp => dp.DataDirection == direction).ToList();
 
         var writeProperties = writes.Select(dp => new { dp.ContainingType, dp.PropertyName }).Distinct().ToList();
 
@@ -379,13 +396,6 @@ public partial class ScanStatusForm : Form
         }
 
         content.AppendLine("</table>");
-        content.AppendLine("</body>");
-        content.AppendLine("</html>");
-
-        var file = new FileInfo(solution);
-        var findingsFilePath = $"{folder}\\EF Analysis for {file.Name} on {DateTime.Now.ToString("yyyy-MM-dd hh-mm")}.html";
-
-        File.WriteAllText(findingsFilePath, content.ToString());
     }
 
     private void ParseJavaScriptTags(TextDocument? cshtmlFile)
