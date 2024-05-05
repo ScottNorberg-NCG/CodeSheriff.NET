@@ -51,7 +51,8 @@ internal class DatabaseCommandTextSyntaxWalker : CSharpSyntaxWalker, ISyntaxWalk
         { 
             var typeString = objectType.ToString().Replace("?", "");
 
-            if (typeString.In("Microsoft.Data.SqlClient.SqlCommand", "System.Data.SqlClient.SqlCommand", "System.Data.Common.DbCommand"))
+            if (typeString.In("Microsoft.Data.SqlClient.SqlCommand", "System.Data.SqlClient.SqlCommand", "System.Data.Common.DbCommand", 
+                "Microsoft.Data.Sqlite.SqliteCommand", "System.Data.OleDb.OleDbCommand", "System.Data.Odbc.OdbcCommand", "IBM.Data.DB2.DB2Command"))
             {
                 return true;
             }            

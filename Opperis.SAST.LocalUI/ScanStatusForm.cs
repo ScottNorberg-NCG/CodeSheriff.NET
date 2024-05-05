@@ -339,6 +339,9 @@ public partial class ScanStatusForm : Form
 
         content.AppendLine($"<h1>EF Analysis for: {fileName}</h1>");
 
+        //TODO: Properties whose data is exposed to the UI
+        //      Data Objects whose schema is exposed to the UI
+        //      Properties that accept user input (by role)
         AddDataAccessTable(dataPoints, roles, content, "EF Data Indirectly Sent to UI", "This is a list of all properties that were read from the database then sent to the UI indirectly, either via a View or a property of another object", DataAccessItem.Direction.ToView);
         AddDataAccessTable(dataPoints, roles, content, "EF Data Directly Sent to UI", "This is a list of all properties that were sent directly to the UI, usually via a JSON-based API", DataAccessItem.Direction.ToUI);
         AddDataAccessTable(dataPoints, roles, content, "Writes to the Database via EF", "This is a list of all properties that we detected had data from the UI saved to the database", DataAccessItem.Direction.ToDatabase);
