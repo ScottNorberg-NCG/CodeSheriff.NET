@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Opperis.SCA.Engine\CodeSheriff.SCA.Engine.csproj" />
+    <ProjectReference Include="..\CodeSheriff.SCA.Engine\CodeSheriff.SCA.Engine.csproj" />
   </ItemGroup>
 
 </Project>

@@ -12,9 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Opperis.SAST.Engine\CodeSheriff.SAST.Engine.csproj" />
-    <ProjectReference Include="..\Opperis.SAST.Secrets\CodeSheriff.Secrets.csproj" />
-    <ProjectReference Include="..\Opperis.SCA.Engine\CodeSheriff.SCA.Engine.csproj" />
+    <ProjectReference Include="..\CodeSheriff.SAST.Engine\CodeSheriff.SAST.Engine.csproj" />
+    <ProjectReference Include="..\CodeSheriff.SAST.Secrets\CodeSheriff.Secrets.csproj" />
+    <ProjectReference Include="..\CodeSheriff.SCA.Engine\CodeSheriff.SCA.Engine.csproj" />
   </ItemGroup>
 
 </Project>

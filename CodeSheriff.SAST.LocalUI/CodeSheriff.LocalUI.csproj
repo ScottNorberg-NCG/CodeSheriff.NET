@@ -9,8 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Opperis.SAST.Engine\CodeSheriff.SAST.Engine.csproj" />
-    <ProjectReference Include="..\Opperis.SAST.Secrets\CodeSheriff.Secrets.csproj" />
+    <ProjectReference Include="..\CodeSheriff.SAST.Engine\CodeSheriff.SAST.Engine.csproj" />
+    <ProjectReference Include="..\CodeSheriff.SAST.Secrets\CodeSheriff.Secrets.csproj" />
   </ItemGroup>
 
   <ItemGroup>
