@@ -1,11 +1,11 @@
-﻿using Opperis.SAST.Secrets;
+﻿using CodeSheriff.Secrets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.Findings.Secrets
+namespace CodeSheriff.SAST.Engine.Findings.Secrets
 {
     internal class SecretFound : BaseFinding
     {

@@ -1,8 +1,8 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Opperis.SAST.Engine.CompiledCSHtmlParsing;
-using Opperis.SAST.Engine.Findings.XSS;
-using Opperis.SAST.Engine.Findings;
-using Opperis.SAST.Engine.RoslynObjectExtensions;
+using CodeSheriff.SAST.Engine.CompiledCSHtmlParsing;
+using CodeSheriff.SAST.Engine.Findings.XSS;
+using CodeSheriff.SAST.Engine.Findings;
+using CodeSheriff.SAST.Engine.RoslynObjectExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 
-namespace Opperis.SAST.Engine.Analyzers;
+namespace CodeSheriff.SAST.Engine.Analyzers;
 
 //This class is kind of awkward. The other analyzers are all static classes, but because this is an abstract class it is not static.
 //A refactor is in order, but to what I'm not sure

@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Opperis.SCA.Engine.Data;
-using Opperis.SCA.Engine.NVD;
+using CodeSheriff.SCA.Engine.Data;
+using CodeSheriff.SCA.Engine.NVD;
 using System.Net.Http.Json;
 using System.Threading.RateLimiting;
 using System.Web;
 
-namespace Opperis.SCA.Engine;
+namespace CodeSheriff.SCA.Engine;
 
 public class NVDLoader
 {
@@ -15,7 +15,7 @@ public class NVDLoader
     private readonly HttpClient _client;
     private readonly SlidingWindowRateLimiter _rateLimiter;
 
-    public NVDLoader(string? apiKey = null, string userAgent = $"Opperis.SCA/{_version}")
+    public NVDLoader(string? apiKey = null, string userAgent = $"CodeSheriff.SCA/{_version}")
     {
         SlidingWindowRateLimiterOptions rateLimiterOptions = new()
         {

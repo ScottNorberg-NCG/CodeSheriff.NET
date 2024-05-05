@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.RateLimiting;
 using System.Threading.Tasks;
 
-namespace Opperis.SCA.Engine;
+namespace CodeSheriff.SCA.Engine;
 
 internal sealed class RateLimitingHandler : DelegatingHandler, IAsyncDisposable
 {

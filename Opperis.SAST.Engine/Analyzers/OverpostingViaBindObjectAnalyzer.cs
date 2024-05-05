@@ -1,9 +1,9 @@
 ﻿using Microsoft.CodeAnalysis;
-using Opperis.SAST.Engine.ErrorHandling;
-using Opperis.SAST.Engine.Findings;
-using Opperis.SAST.Engine.Findings.ProgramFlow;
-using Opperis.SAST.Engine.RoslynObjectExtensions;
-using Opperis.SAST.Engine.SyntaxWalkers;
+using CodeSheriff.SAST.Engine.ErrorHandling;
+using CodeSheriff.SAST.Engine.Findings;
+using CodeSheriff.SAST.Engine.Findings.ProgramFlow;
+using CodeSheriff.SAST.Engine.RoslynObjectExtensions;
+using CodeSheriff.SAST.Engine.SyntaxWalkers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,7 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.Analyzers;
+namespace CodeSheriff.SAST.Engine.Analyzers;
 
 internal static class OverpostingViaBindObjectAnalyzer
 {

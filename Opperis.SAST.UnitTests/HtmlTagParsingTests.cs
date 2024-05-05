@@ -1,4 +1,4 @@
-﻿using Opperis.SAST.Engine.HtmlTagParsing;
+﻿using CodeSheriff.SAST.Engine.HtmlTagParsing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.UnitTests
+namespace CodeSheriff.SAST.UnitTests
 {
     [TestClass]
     public class HtmlTagParsingTests
@@ -16,7 +16,7 @@ namespace Opperis.SAST.UnitTests
         {
             string content = "";
 
-            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Opperis.SAST.UnitTests.HtmlTestFiles.Layout.txt")))
+            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("CodeSheriff.SAST.UnitTests.HtmlTestFiles.Layout.txt")))
             {
                 content = reader.ReadToEnd();
             }
@@ -29,7 +29,7 @@ namespace Opperis.SAST.UnitTests
         {
             string content = "";
 
-            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Opperis.SAST.UnitTests.HtmlTestFiles.Layout.txt")))
+            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("CodeSheriff.SAST.UnitTests.HtmlTestFiles.Layout.txt")))
             {
                 content = reader.ReadToEnd();
             }
@@ -45,7 +45,7 @@ namespace Opperis.SAST.UnitTests
         {
             string content = "";
 
-            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Opperis.SAST.UnitTests.HtmlTestFiles.Layout.txt")))
+            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("CodeSheriff.SAST.UnitTests.HtmlTestFiles.Layout.txt")))
             {
                 content = reader.ReadToEnd();
             }
@@ -61,7 +61,7 @@ namespace Opperis.SAST.UnitTests
         {
             string content = "";
 
-            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Opperis.SAST.UnitTests.HtmlTestFiles.InternalExternal.txt")))
+            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("CodeSheriff.SAST.UnitTests.HtmlTestFiles.InternalExternal.txt")))
             {
                 content = reader.ReadToEnd();
             }
@@ -79,7 +79,7 @@ namespace Opperis.SAST.UnitTests
         {
             string content = "";
 
-            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Opperis.SAST.UnitTests.HtmlTestFiles.InternalExternal.txt")))
+            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("CodeSheriff.SAST.UnitTests.HtmlTestFiles.InternalExternal.txt")))
             {
                 content = reader.ReadToEnd();
             }
@@ -97,7 +97,7 @@ namespace Opperis.SAST.UnitTests
         {
             string content = "";
 
-            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Opperis.SAST.UnitTests.HtmlTestFiles.OpperisBlog.txt")))
+            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("CodeSheriff.SAST.UnitTests.HtmlTestFiles.OpperisBlog.txt")))
             {
                 content = reader.ReadToEnd();
             }
@@ -114,7 +114,7 @@ namespace Opperis.SAST.UnitTests
         {
             string content = "";
 
-            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Opperis.SAST.UnitTests.HtmlTestFiles.ValidationPartial.txt")))
+            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("CodeSheriff.SAST.UnitTests.HtmlTestFiles.ValidationPartial.txt")))
             {
                 content = reader.ReadToEnd();
             }
@@ -135,7 +135,7 @@ namespace Opperis.SAST.UnitTests
         {
             string content = "";
 
-            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Opperis.SAST.UnitTests.HtmlTestFiles.Layout.txt")))
+            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("CodeSheriff.SAST.UnitTests.HtmlTestFiles.Layout.txt")))
             {
                 content = reader.ReadToEnd();
             }
@@ -152,7 +152,7 @@ namespace Opperis.SAST.UnitTests
         {
             string content = "";
 
-            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Opperis.SAST.UnitTests.HtmlTestFiles.ValidationPartial.txt")))
+            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("CodeSheriff.SAST.UnitTests.HtmlTestFiles.ValidationPartial.txt")))
             {
                 content = reader.ReadToEnd();
             }
@@ -170,7 +170,7 @@ namespace Opperis.SAST.UnitTests
         {
             string content = "";
 
-            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Opperis.SAST.UnitTests.HtmlTestFiles.InternalExternal.txt")))
+            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("CodeSheriff.SAST.UnitTests.HtmlTestFiles.InternalExternal.txt")))
             {
                 content = reader.ReadToEnd();
             }

@@ -1,12 +1,12 @@
-﻿using Opperis.SAST.Engine.Findings;
-using Opperis.SAST.Engine.Findings.Html.JavaScriptTags;
+﻿using CodeSheriff.SAST.Engine.Findings;
+using CodeSheriff.SAST.Engine.Findings.Html.JavaScriptTags;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.HtmlTagParsing
+namespace CodeSheriff.SAST.Engine.HtmlTagParsing
 {
     internal static class CSHtmlScriptTagParser
     {

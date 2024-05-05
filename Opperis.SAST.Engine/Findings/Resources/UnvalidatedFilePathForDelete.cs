@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.Findings.Resources
+namespace CodeSheriff.SAST.Engine.Findings.Resources
 {
     internal class UnvalidatedFilePathForDelete : BaseFinding
     {

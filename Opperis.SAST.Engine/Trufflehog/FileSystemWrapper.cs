@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.Trufflehog;
+namespace CodeSheriff.SAST.Engine.Trufflehog;
 
 public class FileSystemWrapper
 {

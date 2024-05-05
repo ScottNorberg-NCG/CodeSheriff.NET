@@ -7,7 +7,7 @@ using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.RoslynObjectExtensions;
+namespace CodeSheriff.SAST.Engine.RoslynObjectExtensions;
 
 internal static class ClassDeclarationSyntaxExtensions
 {

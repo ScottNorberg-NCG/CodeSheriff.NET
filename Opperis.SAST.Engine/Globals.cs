@@ -1,10 +1,10 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Host;
-using Opperis.SAST.Engine.ErrorHandling;
-using Opperis.SAST.Engine.SCA;
-using Opperis.SAST.Engine.SyntaxWalkers;
-using Opperis.SCA.Engine;
+using CodeSheriff.SAST.Engine.ErrorHandling;
+using CodeSheriff.SAST.Engine.SCA;
+using CodeSheriff.SAST.Engine.SyntaxWalkers;
+using CodeSheriff.SCA.Engine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Opperis.SAST.Engine;
+namespace CodeSheriff.SAST.Engine;
 
 internal static class Globals
 {

@@ -1,11 +1,11 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.FindSymbols;
-using Opperis.SAST.Engine.ErrorHandling;
-using Opperis.SAST.Engine.Findings;
-using Opperis.SAST.Engine.Findings.Cryptography;
-using Opperis.SAST.Engine.RoslynObjectExtensions;
-using Opperis.SAST.Engine.SyntaxWalkers;
+using CodeSheriff.SAST.Engine.ErrorHandling;
+using CodeSheriff.SAST.Engine.Findings;
+using CodeSheriff.SAST.Engine.Findings.Cryptography;
+using CodeSheriff.SAST.Engine.RoslynObjectExtensions;
+using CodeSheriff.SAST.Engine.SyntaxWalkers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.Analyzers;
+namespace CodeSheriff.SAST.Engine.Analyzers;
 
 internal static class SymmetricAlgorithmPropertyAnalyzer
 {

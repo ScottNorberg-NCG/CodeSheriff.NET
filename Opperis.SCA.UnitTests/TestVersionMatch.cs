@@ -1,7 +1,7 @@
-using Opperis.SCA.Engine;
-using Opperis.SCA.Engine.Data;
+using CodeSheriff.SCA.Engine;
+using CodeSheriff.SCA.Engine.Data;
 
-namespace Opperis.SCA.UnitTests;
+namespace CodeSheriff.SCA.UnitTests;
 
 [TestClass]
 public class TestVersionMatch

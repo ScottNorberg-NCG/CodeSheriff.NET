@@ -1,12 +1,12 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Opperis.SAST.Engine.Trufflehog;
+using CodeSheriff.SAST.Engine.Trufflehog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.Findings.Secrets
+namespace CodeSheriff.SAST.Engine.Findings.Secrets
 {
     internal class TrufflehogSecret : BaseFinding
     {

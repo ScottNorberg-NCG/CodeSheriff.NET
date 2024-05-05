@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.Findings.Http
+namespace CodeSheriff.SAST.Engine.Findings.Http
 {
     internal class CookieAddedWithoutOptions : BaseFinding
     {

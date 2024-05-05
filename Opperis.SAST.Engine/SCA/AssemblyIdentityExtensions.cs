@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.SCA
+namespace CodeSheriff.SAST.Engine.SCA
 {
     internal static class AssemblyIdentityExtensions
     {

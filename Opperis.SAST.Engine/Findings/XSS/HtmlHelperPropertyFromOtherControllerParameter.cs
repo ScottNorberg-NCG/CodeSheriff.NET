@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.Findings.XSS
+namespace CodeSheriff.SAST.Engine.Findings.XSS
 {
     internal class HtmlHelperPropertyFromOtherControllerParameter : BaseFinding
     {

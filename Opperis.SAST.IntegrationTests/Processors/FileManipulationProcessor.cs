@@ -1,14 +1,14 @@
-﻿using Opperis.SAST.Engine.Analyzers;
-using Opperis.SAST.Engine.Findings;
-using Opperis.SAST.Engine.SyntaxWalkers;
-using Opperis.SAST.Engine;
+﻿using CodeSheriff.SAST.Engine.Analyzers;
+using CodeSheriff.SAST.Engine.Findings;
+using CodeSheriff.SAST.Engine.SyntaxWalkers;
+using CodeSheriff.SAST.Engine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.IntegrationTests.Processors;
+namespace CodeSheriff.IntegrationTests.Processors;
 
 internal static class FileManipulationProcessor
 {

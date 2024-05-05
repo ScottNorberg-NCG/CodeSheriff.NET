@@ -2,14 +2,14 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.FindSymbols;
-using Opperis.SAST.Engine.RoslynObjectExtensions;
+using CodeSheriff.SAST.Engine.RoslynObjectExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.SyntaxWalkers;
+namespace CodeSheriff.SAST.Engine.SyntaxWalkers;
 
 internal class ExternalRedirectSyntaxWalker : CSharpSyntaxWalker, ISyntaxWalker
 {

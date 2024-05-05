@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.CompiledCSHtmlParsing
+namespace CodeSheriff.SAST.Engine.CompiledCSHtmlParsing
 {
     internal class MethodCandidate
     {

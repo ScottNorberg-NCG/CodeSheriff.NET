@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.Findings
+namespace CodeSheriff.SAST.Engine.Findings
 {
     internal class Priority
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
-using Opperis.SAST.Engine;
-using Opperis.SAST.Engine.Analyzers;
-using Opperis.SAST.Engine.Findings;
+using CodeSheriff.SAST.Engine;
+using CodeSheriff.SAST.Engine.Analyzers;
+using CodeSheriff.SAST.Engine.Findings;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.IntegrationTests.Processors;
+namespace CodeSheriff.IntegrationTests.Processors;
 
 internal static class TrufflehogProcessor
 {

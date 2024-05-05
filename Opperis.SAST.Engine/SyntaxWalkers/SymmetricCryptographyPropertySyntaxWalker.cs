@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.SyntaxWalkers;
+namespace CodeSheriff.SAST.Engine.SyntaxWalkers;
 
 internal class SymmetricCryptographyPropertySyntaxWalker : CSharpSyntaxWalker, ISyntaxWalker
 {

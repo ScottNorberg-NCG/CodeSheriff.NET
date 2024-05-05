@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.Findings.Cryptography
+namespace CodeSheriff.SAST.Engine.Findings.Cryptography
 {
     internal class HardCodedCryptographyKey : BaseFinding
     {

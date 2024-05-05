@@ -1,14 +1,14 @@
 ﻿using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Opperis.SAST.Engine.RoslynObjectExtensions;
-using Opperis.SAST.Engine.SyntaxWalkers.BaseSyntaxWalkers;
+using CodeSheriff.SAST.Engine.RoslynObjectExtensions;
+using CodeSheriff.SAST.Engine.SyntaxWalkers.BaseSyntaxWalkers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.SyntaxWalkers;
+namespace CodeSheriff.SAST.Engine.SyntaxWalkers;
 
 internal class PasswordSignInSyntaxWalker : MethodInvocationSyntaxWalker
 {

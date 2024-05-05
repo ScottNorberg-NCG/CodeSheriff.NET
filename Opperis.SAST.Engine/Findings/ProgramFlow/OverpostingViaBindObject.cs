@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.Findings.ProgramFlow
+namespace CodeSheriff.SAST.Engine.Findings.ProgramFlow
 {
     internal class OverpostingViaBindObject : BaseFinding
     {

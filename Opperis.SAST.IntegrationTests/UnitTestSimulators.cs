@@ -1,11 +1,11 @@
-﻿using Opperis.SAST.Engine.Findings;
+﻿using CodeSheriff.SAST.Engine.Findings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.IntegrationTests;
+namespace CodeSheriff.IntegrationTests;
 
 internal static class Assert
 {

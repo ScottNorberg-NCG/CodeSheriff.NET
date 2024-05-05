@@ -1,11 +1,11 @@
-﻿using Opperis.SCA.Engine.NVD;
+﻿using CodeSheriff.SCA.Engine.NVD;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.Findings.SCA;
+namespace CodeSheriff.SAST.Engine.Findings.SCA;
 
 internal class VulnerableLibrary : BaseFinding
 {

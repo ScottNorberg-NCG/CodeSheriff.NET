@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.Findings.CSRF
+namespace CodeSheriff.SAST.Engine.Findings.CSRF
 {
     internal class ControllerParameterMissingBindingInfo : BaseFinding
     {

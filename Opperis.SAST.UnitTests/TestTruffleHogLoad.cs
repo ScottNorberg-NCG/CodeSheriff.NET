@@ -1,4 +1,4 @@
-﻿using Opperis.SAST.Engine.Trufflehog;
+﻿using CodeSheriff.SAST.Engine.Trufflehog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SCA.UnitTests;
+namespace CodeSheriff.SCA.UnitTests;
 
 [TestClass]
 public class TestTruffleHogLoad
@@ -16,7 +16,7 @@ public class TestTruffleHogLoad
     {
         string content = "";
 
-        using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Opperis.SAST.UnitTests.JsonTestFiles.trufflehog_linenumber.json")))
+        using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("CodeSheriff.SAST.UnitTests.JsonTestFiles.trufflehog_linenumber.json")))
         {
             content = reader.ReadToEnd();
         }
@@ -33,7 +33,7 @@ public class TestTruffleHogLoad
     {
         string content = "";
 
-        using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Opperis.SAST.UnitTests.JsonTestFiles.trufflehog_nolinenumber.json")))
+        using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("CodeSheriff.SAST.UnitTests.JsonTestFiles.trufflehog_nolinenumber.json")))
         {
             content = reader.ReadToEnd();
         }

@@ -3,19 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Opperis.SAST.Engine", "Opperis.SAST.Engine\Opperis.SAST.Engine.csproj", "{6994007B-8AEA-4A1B-BF91-9730845A306A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeSheriff.SAST.Engine", "Opperis.SAST.Engine\CodeSheriff.SAST.Engine.csproj", "{6994007B-8AEA-4A1B-BF91-9730845A306A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Opperis.SAST.LocalUI", "Opperis.SAST.LocalUI\Opperis.SAST.LocalUI.csproj", "{173844B8-40B7-4836-AF72-C21E8942B1DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeSheriff.LocalUI", "Opperis.SAST.LocalUI\CodeSheriff.LocalUI.csproj", "{173844B8-40B7-4836-AF72-C21E8942B1DA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Opperis.SAST.UnitTests", "Opperis.SAST.UnitTests\Opperis.SAST.UnitTests.csproj", "{BB96C780-6990-4445-87AB-07EC6AB78593}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeSheriff.SAST.UnitTests", "Opperis.SAST.UnitTests\CodeSheriff.SAST.UnitTests.csproj", "{BB96C780-6990-4445-87AB-07EC6AB78593}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Opperis.SAST.IntegrationTests", "Opperis.SAST.IntegrationTests\Opperis.SAST.IntegrationTests.csproj", "{638F216E-2A3D-4DD9-AFF0-24F4C7673A4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeSheriff.IntegrationTests", "Opperis.SAST.IntegrationTests\CodeSheriff.IntegrationTests.csproj", "{638F216E-2A3D-4DD9-AFF0-24F4C7673A4B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Opperis.SAST.Secrets", "Opperis.SAST.Secrets\Opperis.SAST.Secrets.csproj", "{FF9C1674-C964-43FC-B9CD-F4914FC134CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeSheriff.Secrets", "Opperis.SAST.Secrets\CodeSheriff.Secrets.csproj", "{FF9C1674-C964-43FC-B9CD-F4914FC134CF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Opperis.SCA.Engine", "Opperis.SCA.Engine\Opperis.SCA.Engine.csproj", "{568745C9-C45A-4FB7-A7E9-31C4FCFA682E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeSheriff.SCA.Engine", "Opperis.SCA.Engine\CodeSheriff.SCA.Engine.csproj", "{568745C9-C45A-4FB7-A7E9-31C4FCFA682E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Opperis.SCA.UnitTests", "Opperis.SCA.UnitTests\Opperis.SCA.UnitTests.csproj", "{4B21325B-8EB0-426D-9D79-E1D66B4992A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeSheriff.SCA.UnitTests", "Opperis.SCA.UnitTests\CodeSheriff.SCA.UnitTests.csproj", "{4B21325B-8EB0-426D-9D79-E1D66B4992A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

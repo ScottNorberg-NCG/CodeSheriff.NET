@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SCA.Engine;
+namespace CodeSheriff.SCA.Engine;
 
 public class SoftwareVersion : IComparable<SoftwareVersion>
 {

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SCA.Engine.Data;
+namespace CodeSheriff.SCA.Engine.Data;
 
 public class CveReference
 {

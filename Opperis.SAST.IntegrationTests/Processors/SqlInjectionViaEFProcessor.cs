@@ -1,8 +1,8 @@
-﻿using Opperis.SAST.Engine;
-using Opperis.SAST.Engine.Analyzers;
-using Opperis.SAST.Engine.Findings;
+﻿using CodeSheriff.SAST.Engine;
+using CodeSheriff.SAST.Engine.Analyzers;
+using CodeSheriff.SAST.Engine.Findings;
 
-namespace Opperis.SAST.IntegrationTests.Processors;
+namespace CodeSheriff.IntegrationTests.Processors;
 
 internal static class SqlInjectionViaEFProcessor
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.Findings.Authentication;
+namespace CodeSheriff.SAST.Engine.Findings.Authentication;
 
 internal class PasswordSignInMissingLockout : BaseFinding
 {

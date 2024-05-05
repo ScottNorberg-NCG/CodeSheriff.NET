@@ -1,4 +1,4 @@
-﻿using Opperis.SAST.Engine.CompiledCSHtmlParsing;
+﻿using CodeSheriff.SAST.Engine.CompiledCSHtmlParsing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.UnitTests
+namespace CodeSheriff.SAST.UnitTests
 {
     [TestClass]
     public class SyntaxTreeTests
@@ -16,7 +16,7 @@ namespace Opperis.SAST.UnitTests
         {
             string content = "";
 
-            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Opperis.SAST.UnitTests.Other.SyntaxTree.txt")))
+            using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("CodeSheriff.SAST.UnitTests.Other.SyntaxTree.txt")))
             {
                 content = reader.ReadToEnd();
             }

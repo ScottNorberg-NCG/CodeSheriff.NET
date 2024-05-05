@@ -1,14 +1,14 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Opperis.SAST.Engine.Findings;
-using Opperis.SAST.Engine.RoslynObjectExtensions;
+using CodeSheriff.SAST.Engine.Findings;
+using CodeSheriff.SAST.Engine.RoslynObjectExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.DataAccessAnalysis;
+namespace CodeSheriff.SAST.Engine.DataAccessAnalysis;
 
 internal abstract class DataAccessItem
 {

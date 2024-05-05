@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Secrets;
+namespace CodeSheriff.Secrets;
 
 public class RulesEngine
 {

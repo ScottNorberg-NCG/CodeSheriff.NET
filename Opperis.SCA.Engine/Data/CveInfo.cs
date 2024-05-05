@@ -1,11 +1,11 @@
-﻿using Opperis.SCA.Engine.NVD;
+﻿using CodeSheriff.SCA.Engine.NVD;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SCA.Engine.Data;
+namespace CodeSheriff.SCA.Engine.Data;
 
 public class CveInfo
 {

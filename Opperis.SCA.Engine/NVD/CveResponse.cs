@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Opperis.SCA.Engine.NVD;
+namespace CodeSheriff.SCA.Engine.NVD;
 
 public class CveResponse
 {

@@ -1,5 +1,5 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Opperis.SAST.Engine.Findings.Cryptography;
+using CodeSheriff.SAST.Engine.Findings.Cryptography;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.RoslynObjectExtensions;
+namespace CodeSheriff.SAST.Engine.RoslynObjectExtensions;
 
 internal static class IdentifierNameSyntaxExtensions
 {

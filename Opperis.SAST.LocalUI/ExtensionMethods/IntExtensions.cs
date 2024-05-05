@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.LocalUI.ExtensionMethods;
+namespace CodeSheriff.LocalUI.ExtensionMethods;
 
 internal static class IntExtensions
 {

@@ -1,11 +1,11 @@
-﻿using Opperis.SAST.Engine.Findings;
+﻿using CodeSheriff.SAST.Engine.Findings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.HtmlTagParsing
+namespace CodeSheriff.SAST.Engine.HtmlTagParsing
 {
     internal class BaseHtmlInfo
     {

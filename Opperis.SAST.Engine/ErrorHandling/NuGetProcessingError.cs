@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.ErrorHandling;
+namespace CodeSheriff.SAST.Engine.ErrorHandling;
 
 internal class NuGetProcessingError : BaseError
 {

@@ -1,6 +1,6 @@
-using Opperis.SAST.Engine.DataCleaning;
+using CodeSheriff.SAST.Engine.DataCleaning;
 
-namespace Opperis.SAST.UnitTests
+namespace CodeSheriff.SAST.UnitTests
 {
     [TestClass]
     public class StringRedactorTests

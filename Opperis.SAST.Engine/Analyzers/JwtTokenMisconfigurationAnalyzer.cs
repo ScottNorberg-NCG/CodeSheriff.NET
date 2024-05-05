@@ -1,17 +1,17 @@
 ﻿using Microsoft.CodeAnalysis;
-using Opperis.SAST.Engine.ErrorHandling;
-using Opperis.SAST.Engine.Findings.Cryptography;
-using Opperis.SAST.Engine.Findings;
-using Opperis.SAST.Engine.SyntaxWalkers;
+using CodeSheriff.SAST.Engine.ErrorHandling;
+using CodeSheriff.SAST.Engine.Findings.Cryptography;
+using CodeSheriff.SAST.Engine.Findings;
+using CodeSheriff.SAST.Engine.SyntaxWalkers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Opperis.SCA.Engine.NVD;
-using Opperis.SAST.Engine.Findings.Authentication;
+using CodeSheriff.SCA.Engine.NVD;
+using CodeSheriff.SAST.Engine.Findings.Authentication;
 
-namespace Opperis.SAST.Engine.Analyzers;
+namespace CodeSheriff.SAST.Engine.Analyzers;
 
 internal static class JwtTokenMisconfigurationAnalyzer
 {

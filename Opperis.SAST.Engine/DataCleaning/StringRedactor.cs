@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.DataCleaning
+namespace CodeSheriff.SAST.Engine.DataCleaning
 {
     internal static class StringRedactor
     {

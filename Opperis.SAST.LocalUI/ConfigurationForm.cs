@@ -1,16 +1,16 @@
 using Microsoft.Build.Locator;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
-using Opperis.SAST.Engine;
-using Opperis.SAST.Engine.Analyzers;
-using Opperis.SAST.Engine.Findings;
-using Opperis.SAST.Engine.HtmlTagParsing;
-using Opperis.SAST.Engine.SyntaxWalkers;
+using CodeSheriff.SAST.Engine;
+using CodeSheriff.SAST.Engine.Analyzers;
+using CodeSheriff.SAST.Engine.Findings;
+using CodeSheriff.SAST.Engine.HtmlTagParsing;
+using CodeSheriff.SAST.Engine.SyntaxWalkers;
 using System.Diagnostics;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Opperis.SAST.LocalUI;
+namespace CodeSheriff.LocalUI;
 
 public partial class ConfigurationForm : Form
 {

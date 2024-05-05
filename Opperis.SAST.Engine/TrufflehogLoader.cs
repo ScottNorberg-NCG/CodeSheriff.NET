@@ -1,7 +1,7 @@
-﻿using Opperis.SAST.Engine.Trufflehog;
+﻿using CodeSheriff.SAST.Engine.Trufflehog;
 using System.Diagnostics;
 
-namespace Opperis.SAST.Engine;
+namespace CodeSheriff.SAST.Engine;
 
 public class TrufflehogLoader
 {

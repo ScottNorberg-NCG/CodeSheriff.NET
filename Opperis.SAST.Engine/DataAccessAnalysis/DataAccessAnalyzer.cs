@@ -1,12 +1,12 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis;
-using Opperis.SAST.Engine.ErrorHandling;
-using Opperis.SAST.Engine.Findings;
-using Opperis.SAST.Engine.SyntaxWalkers;
-using Opperis.SAST.Engine.RoslynObjectExtensions;
+using CodeSheriff.SAST.Engine.ErrorHandling;
+using CodeSheriff.SAST.Engine.Findings;
+using CodeSheriff.SAST.Engine.SyntaxWalkers;
+using CodeSheriff.SAST.Engine.RoslynObjectExtensions;
 using Microsoft.CodeAnalysis.FindSymbols;
 
-namespace Opperis.SAST.Engine.DataAccessAnalysis;
+namespace CodeSheriff.SAST.Engine.DataAccessAnalysis;
 
 internal static class DataAccessAnalyzer
 {

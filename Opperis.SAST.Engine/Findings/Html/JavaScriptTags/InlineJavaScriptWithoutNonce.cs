@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.Findings.Html.JavaScriptTags
+namespace CodeSheriff.SAST.Engine.Findings.Html.JavaScriptTags
 {
     internal class InlineJavaScriptWithoutNonce : BaseFinding
     {

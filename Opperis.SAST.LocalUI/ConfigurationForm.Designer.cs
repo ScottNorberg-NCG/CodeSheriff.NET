@@ -1,4 +1,4 @@
-﻿namespace Opperis.SAST.LocalUI
+﻿namespace CodeSheriff.LocalUI
 {
     partial class ConfigurationForm
     {

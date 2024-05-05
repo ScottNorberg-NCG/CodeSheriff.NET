@@ -6,9 +6,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Opperis.SAST.Engine.Findings.SourceLocation;
+using static CodeSheriff.SAST.Engine.Findings.SourceLocation;
 
-namespace Opperis.SAST.Engine.Findings
+namespace CodeSheriff.SAST.Engine.Findings
 {
     internal class CallStack
     {

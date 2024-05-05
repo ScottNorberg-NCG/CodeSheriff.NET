@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.Operations;
-using Opperis.SAST.Engine.RoslynObjectExtensions;
+using CodeSheriff.SAST.Engine.RoslynObjectExtensions;
 
-namespace Opperis.SAST.Engine.Findings
+namespace CodeSheriff.SAST.Engine.Findings
 {
     internal class SourceLocation
     {

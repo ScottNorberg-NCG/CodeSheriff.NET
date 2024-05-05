@@ -1,12 +1,12 @@
 ﻿using Microsoft.Build.Locator;
 using Microsoft.CodeAnalysis.MSBuild;
-using Opperis.SAST.Engine;
-using Opperis.SAST.Engine.Analyzers;
-using Opperis.SAST.Engine.DataAccessAnalysis;
-using Opperis.SAST.Engine.Findings;
-using Opperis.SAST.IntegrationTests.Processors;
+using CodeSheriff.SAST.Engine;
+using CodeSheriff.SAST.Engine.Analyzers;
+using CodeSheriff.SAST.Engine.DataAccessAnalysis;
+using CodeSheriff.SAST.Engine.Findings;
+using CodeSheriff.IntegrationTests.Processors;
 
-namespace Opperis.SAST.IntegrationTests;
+namespace CodeSheriff.IntegrationTests;
 
 internal class Program
 {
@@ -15,7 +15,7 @@ internal class Program
         //var solutionFilePath = "C:\\Users\\scott\\Source\\repos\\VulnerabilityBuffet2\\AspNetCore\\NCG.SecurityDetection.VulnerabilityBuffet.sln";
         //var solutionFilePath = "C:\\Users\\scott\\Downloads\\WebGoat.NETCore-master\\WebGoat.NET-master\\WebGoat.NET.sln";
         //var solutionFilePath = "C:\\Users\\scott\\Downloads\\sentry-dotnet-main\\sentry-dotnet-main\\Sentry.NoMobile.sln";
-        //var solutionFilePath = "C:\\Users\\scott\\Source\\repos\\Opperis.IAST\\Opperis.IAST.sln";
+        //var solutionFilePath = "C:\\Users\\scott\\Source\\repos\\CodeSheriff.IAST\\CodeSheriff.IAST.sln";
         var solutionFilePath = "C:\\Users\\scott\\Source\\repos\\SASTTest\\SASTTest.sln";
 
         if (!MSBuildLocator.IsRegistered)
@@ -268,8 +268,8 @@ internal class Program
     {
         var opens = DatabaseConnectionOpenProcessor.GetDanglingConnectionOpens();
         Assert.AreEqual(2, opens.Count, "Expected number of Unsafe Database Connection Opens");
-        Assert.AreEqual(1, opens.Count(r => r.GetType().ToString() == "Opperis.SAST.Engine.Findings.Database.SqlConnectionNotClosedInTryFinally"), "Number of connections opened without a using or finally block");
-        Assert.AreEqual(1, opens.Count(r => r.GetType().ToString() == "Opperis.SAST.Engine.Findings.Database.SqlConnectionNotClosed"), "Number of connections opened without being closed");
+        Assert.AreEqual(1, opens.Count(r => r.GetType().ToString() == "CodeSheriff.SAST.Engine.Findings.Database.SqlConnectionNotClosedInTryFinally"), "Number of connections opened without a using or finally block");
+        Assert.AreEqual(1, opens.Count(r => r.GetType().ToString() == "CodeSheriff.SAST.Engine.Findings.Database.SqlConnectionNotClosed"), "Number of connections opened without being closed");
         Assert.AllRootLocationsSet(opens, "TestDanglingConnectionOpens");
     }
 
@@ -277,7 +277,7 @@ internal class Program
     {
         var ecbModes = SymmetricAlgorithmPropertyProcessor.GetAllECBUses();
         Assert.AreEqual(4, ecbModes.Count, "Expected number of ECB Modes");
-        Assert.AreEqual(4, ecbModes.Count(r => r.GetType().ToString() == "Opperis.SAST.Engine.Findings.Cryptography.UseOfECBMode"), "All cryptography ECB mode findings are the correct type");
+        Assert.AreEqual(4, ecbModes.Count(r => r.GetType().ToString() == "CodeSheriff.SAST.Engine.Findings.Cryptography.UseOfECBMode"), "All cryptography ECB mode findings are the correct type");
         Assert.AllRootLocationsSet(ecbModes, "TestGetUseOfECBMode");
     }
 
@@ -285,7 +285,7 @@ internal class Program
     {
         var hardCodedIVs = SymmetricAlgorithmPropertyProcessor.GetAllHardCodedIVs();
         Assert.AreEqual(4, hardCodedIVs.Count, "Expected number of hard-coded IVs");
-        Assert.AreEqual(4, hardCodedIVs.Count(r => r.GetType().ToString() == "Opperis.SAST.Engine.Findings.Cryptography.HardCodedCryptographyIV"), "All cryptography IV findings are the correct type");
+        Assert.AreEqual(4, hardCodedIVs.Count(r => r.GetType().ToString() == "CodeSheriff.SAST.Engine.Findings.Cryptography.HardCodedCryptographyIV"), "All cryptography IV findings are the correct type");
         Assert.AreEqual(0, hardCodedIVs.Count(k => k.RootLocation.Text.Contains(",")), "No texts should include a comma (proxy for checking whether sensitive keys were removed)");
         Assert.AreEqual(0, hardCodedIVs.SelectMany(k => k.CallStacks).SelectMany(c => c.Locations).Count(l => l.Text.Contains(",")), "No call stack texts should include a comma (proxy for checking whether sensitive keys were removed)");
         Assert.AllRootLocationsSet(hardCodedIVs, "TestGetHardCodedIVs");
@@ -295,7 +295,7 @@ internal class Program
     {
         var hardCodedKeys = SymmetricAlgorithmPropertyProcessor.GetAllHardCodedKeys();
         Assert.AreEqual(4, hardCodedKeys.Count, "Expected number of hard-coded keys");
-        Assert.AreEqual(4, hardCodedKeys.Count(r => r.GetType().ToString() == "Opperis.SAST.Engine.Findings.Cryptography.HardCodedCryptographyKey"), "All cryptography key findings are the correct type");
+        Assert.AreEqual(4, hardCodedKeys.Count(r => r.GetType().ToString() == "CodeSheriff.SAST.Engine.Findings.Cryptography.HardCodedCryptographyKey"), "All cryptography key findings are the correct type");
         Assert.AreEqual(0, hardCodedKeys.Count(k => k.RootLocation.Text.Contains(",")), "No texts should include a comma (proxy for checking whether sensitive keys were removed)");
         Assert.AreEqual(0, hardCodedKeys.SelectMany(k => k.CallStacks).SelectMany(c => c.Locations).Count(l => l.Text.Contains(",")), "No call stack texts should include a comma (proxy for checking whether sensitive keys were removed)");
         Assert.AllRootLocationsSet(hardCodedKeys, "TestGetHardCodedKeys");
@@ -313,7 +313,7 @@ internal class Program
         var deprecatedAlgorithms = SymmetricAlgorithmProcessor.GetAllDeprecatedAlgorithms();
 
         Assert.AreEqual(4, deprecatedAlgorithms.Count, "Number of deprecated algorithms");
-        Assert.AreEqual(4, deprecatedAlgorithms.Count(a => a.GetType().ToString() == "Opperis.SAST.Engine.Findings.Cryptography.UseOfDeprecatedSymmetricAlgorithm"), "All deprecated algorithms have the correct object type");
+        Assert.AreEqual(4, deprecatedAlgorithms.Count(a => a.GetType().ToString() == "CodeSheriff.SAST.Engine.Findings.Cryptography.UseOfDeprecatedSymmetricAlgorithm"), "All deprecated algorithms have the correct object type");
         Assert.AreEqual(2, deprecatedAlgorithms.Count(d => d.AdditionalInformation == "Algorithm found: DESCryptoServiceProvider"), "Number of DES algorithms");
         Assert.AreEqual(2, deprecatedAlgorithms.Count(d => d.AdditionalInformation == "Algorithm found: RC2CryptoServiceProvider"), "Number of RC2 algorithms");
         Assert.AllRootLocationsSet(deprecatedAlgorithms, "TestSymmetricAlgorithms");

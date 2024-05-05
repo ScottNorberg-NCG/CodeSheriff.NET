@@ -1,5 +1,5 @@
-﻿using Opperis.SCA.Engine.NuGet;
-using Opperis.SCA.Engine.NVD;
+﻿using CodeSheriff.SCA.Engine.NuGet;
+using CodeSheriff.SCA.Engine.NVD;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Opperis.SCA.Engine;
+namespace CodeSheriff.SCA.Engine;
 
 public static class NuGetLoader
 {
@@ -20,7 +20,7 @@ public static class NuGetLoader
         handler.AutomaticDecompression = System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate;
 
         var client = new HttpClient(handler);
-        client.DefaultRequestHeaders.Add("User-Agent", "Opperis SAST");
+        client.DefaultRequestHeaders.Add("User-Agent", "CodeSheriff SAST");
   
         var url = string.Format(_baseUri, assembly.ToLower());
 

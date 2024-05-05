@@ -14,17 +14,17 @@
   </ItemGroup>
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-      <_Parameter1>Opperis.SAST.LocalUI</_Parameter1>
+      <_Parameter1>CodeSheriff.LocalUI</_Parameter1>
     </AssemblyAttribute>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-      <_Parameter1>Opperis.SAST.IntegrationTests</_Parameter1>
+      <_Parameter1>CodeSheriff.IntegrationTests</_Parameter1>
     </AssemblyAttribute>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-      <_Parameter1>Opperis.SAST.UnitTests</_Parameter1>
+      <_Parameter1>CodeSheriff.SAST.UnitTests</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Opperis.SAST.Secrets\Opperis.SAST.Secrets.csproj" />
-    <ProjectReference Include="..\Opperis.SCA.Engine\Opperis.SCA.Engine.csproj" />
+    <ProjectReference Include="..\Opperis.SAST.Secrets\CodeSheriff.Secrets.csproj" />
+    <ProjectReference Include="..\Opperis.SCA.Engine\CodeSheriff.SCA.Engine.csproj" />
   </ItemGroup>
 </Project>

@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.HtmlTagParsing
+namespace CodeSheriff.SAST.Engine.HtmlTagParsing
 {
     internal class ScriptInfo : BaseHtmlInfo
     {

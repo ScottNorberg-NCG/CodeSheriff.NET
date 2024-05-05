@@ -1,14 +1,14 @@
 ﻿using Microsoft.CodeAnalysis;
-using Opperis.SAST.Engine.Findings;
-using Opperis.SAST.Engine.Findings.Secrets;
-using Opperis.SAST.Engine.SyntaxWalkers;
+using CodeSheriff.SAST.Engine.Findings;
+using CodeSheriff.SAST.Engine.Findings.Secrets;
+using CodeSheriff.SAST.Engine.SyntaxWalkers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.Analyzers;
+namespace CodeSheriff.SAST.Engine.Analyzers;
 
 internal static class TrufflehogAnalyzer
 {

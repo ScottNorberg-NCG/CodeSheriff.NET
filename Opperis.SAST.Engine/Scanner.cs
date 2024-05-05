@@ -1,19 +1,19 @@
 ﻿using Microsoft.Build.Locator;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
-using Opperis.SAST.Engine.Analyzers;
-using Opperis.SAST.Engine.ErrorHandling;
-using Opperis.SAST.Engine.Findings;
-using Opperis.SAST.Engine.HtmlTagParsing;
-using Opperis.SAST.Engine.SyntaxWalkers;
-using Opperis.SAST.Secrets;
+using CodeSheriff.SAST.Engine.Analyzers;
+using CodeSheriff.SAST.Engine.ErrorHandling;
+using CodeSheriff.SAST.Engine.Findings;
+using CodeSheriff.SAST.Engine.HtmlTagParsing;
+using CodeSheriff.SAST.Engine.SyntaxWalkers;
+using CodeSheriff.Secrets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine
+namespace CodeSheriff.SAST.Engine
 {
     internal static class Scanner
     {
@@ -51,7 +51,7 @@ namespace Opperis.SAST.Engine
             //    List<GitLeaksRule> rules = new List<GitLeaksRule>();
                 
             //    //if (includeSecrets)
-            //    //    rules = Opperis.SAST.Secrets.RulesEngine.GetGitLeaksRules();
+            //    //    rules = CodeSheriff.SAST.Secrets.RulesEngine.GetGitLeaksRules();
 
             //    if (includeNuGet)
             //        findings.AddRange(ScaAnalyzer.GetVulnerableNuGetPackages());

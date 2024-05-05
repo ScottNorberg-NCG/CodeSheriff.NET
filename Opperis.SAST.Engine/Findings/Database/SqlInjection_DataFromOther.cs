@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.Findings.Database
+namespace CodeSheriff.SAST.Engine.Findings.Database
 {
     internal class SqlInjection_DataFromOther : BaseFinding
     {

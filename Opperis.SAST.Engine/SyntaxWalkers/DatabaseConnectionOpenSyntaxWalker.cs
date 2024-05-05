@@ -1,13 +1,13 @@
 ﻿using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Opperis.SAST.Engine.ErrorHandling;
+using CodeSheriff.SAST.Engine.ErrorHandling;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.SyntaxWalkers;
+namespace CodeSheriff.SAST.Engine.SyntaxWalkers;
 
 internal class DatabaseConnectionOpenSyntaxWalker : CSharpSyntaxWalker, ISyntaxWalker
 {

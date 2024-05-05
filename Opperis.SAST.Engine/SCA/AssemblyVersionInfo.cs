@@ -1,12 +1,12 @@
 ﻿using Microsoft.CodeAnalysis;
-using Opperis.SCA.Engine;
+using CodeSheriff.SCA.Engine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.SCA;
+namespace CodeSheriff.SAST.Engine.SCA;
 
 public class AssemblyVersionInfo
 {

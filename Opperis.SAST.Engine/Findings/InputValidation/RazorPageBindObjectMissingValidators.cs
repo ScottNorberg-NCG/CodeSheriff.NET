@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Opperis.SAST.Engine.Findings.InputValidation
+namespace CodeSheriff.SAST.Engine.Findings.InputValidation
 {
     internal class RazorPageBindObjectMissingValidators : BaseFinding
     {

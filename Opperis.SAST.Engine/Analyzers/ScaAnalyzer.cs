@@ -1,17 +1,17 @@
-﻿using Opperis.SAST.Engine.ErrorHandling;
-using Opperis.SAST.Engine.Findings.ProgramFlow;
-using Opperis.SAST.Engine.Findings;
-using Opperis.SAST.Engine.RoslynObjectExtensions;
+﻿using CodeSheriff.SAST.Engine.ErrorHandling;
+using CodeSheriff.SAST.Engine.Findings.ProgramFlow;
+using CodeSheriff.SAST.Engine.Findings;
+using CodeSheriff.SAST.Engine.RoslynObjectExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
-using Opperis.SAST.Engine.Findings.SCA;
-using Opperis.SCA.Engine;
+using CodeSheriff.SAST.Engine.Findings.SCA;
+using CodeSheriff.SCA.Engine;
 
-namespace Opperis.SAST.Engine.Analyzers;
+namespace CodeSheriff.SAST.Engine.Analyzers;
 
 internal static class ScaAnalyzer
 {
