@@ -2,9 +2,9 @@
 using Microsoft.CodeAnalysis.MSBuild;
 using CodeSheriff.SAST.Engine;
 using CodeSheriff.SAST.Engine.Analyzers;
-using CodeSheriff.SAST.Engine.DataAccessAnalysis;
 using CodeSheriff.SAST.Engine.Findings;
 using CodeSheriff.IntegrationTests.Processors;
+using Microsoft.CodeAnalysis;
 
 namespace CodeSheriff.IntegrationTests;
 
@@ -12,10 +12,6 @@ internal class Program
 {
     static void Main(string[] args)
     {
-        //var solutionFilePath = "C:\\Users\\scott\\Source\\repos\\VulnerabilityBuffet2\\AspNetCore\\NCG.SecurityDetection.VulnerabilityBuffet.sln";
-        //var solutionFilePath = "C:\\Users\\scott\\Downloads\\WebGoat.NETCore-master\\WebGoat.NET-master\\WebGoat.NET.sln";
-        //var solutionFilePath = "C:\\Users\\scott\\Downloads\\sentry-dotnet-main\\sentry-dotnet-main\\Sentry.NoMobile.sln";
-        //var solutionFilePath = "C:\\Users\\scott\\Source\\repos\\CodeSheriff.IAST\\CodeSheriff.IAST.sln";
         var solutionFilePath = "C:\\Users\\scott\\Source\\repos\\SASTTest\\SASTTest.sln";
 
         if (!MSBuildLocator.IsRegistered)
@@ -25,22 +21,20 @@ internal class Program
         {
             Globals.Solution = workspace.OpenSolutionAsync(solutionFilePath).Result;
 
-            var accessPoints = DataAccessAnalyzer.FindDataAccessPoints();
+            //var accessPoints = DataAccessAnalyzer.FindDataAccessPoints();
 
-            foreach (var accessPoint in accessPoints)
-            {
-                Console.WriteLine($"Type: {accessPoint.GetType()}");
-                Console.WriteLine($"Method: {accessPoint.ContainingMethod.Identifier.Text}");
-                Console.WriteLine($"Property: {accessPoint.PropertyName}");
-                Console.WriteLine($"Is Authorized: {accessPoint.IsAuthorizedAccess}");
+            //foreach (var accessPoint in accessPoints)
+            //{
+            //    Console.WriteLine($"Type: {accessPoint.GetType()}");
+            //    Console.WriteLine($"Method: {accessPoint.ContainingMethod.Identifier.Text}");
+            //    Console.WriteLine($"Property: {accessPoint.PropertyName}");
+            //    Console.WriteLine($"Is Authorized: {accessPoint.IsAuthorizedAccess}");
 
-                if (accessPoint.Roles != null)
-                    Console.WriteLine($"Roles: {string.Join("|", accessPoint.Roles.ToArray())}");
+            //    if (accessPoint.Roles != null)
+            //        Console.WriteLine($"Roles: {string.Join("|", accessPoint.Roles.ToArray())}");
 
-                Console.WriteLine("------------------------------");
-            }
-
-            int i = 1;
+            //    Console.WriteLine("------------------------------");
+            //}
 
             var findings = new List<BaseFinding>();
             //foreach (var project in Globals.Solution.Projects)

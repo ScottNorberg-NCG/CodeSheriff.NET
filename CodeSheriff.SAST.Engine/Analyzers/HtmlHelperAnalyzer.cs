@@ -5,6 +5,7 @@ using CodeSheriff.SAST.Engine.Findings;
 using CodeSheriff.SAST.Engine.Findings.XSS;
 using CodeSheriff.SAST.Engine.RoslynObjectExtensions;
 using CodeSheriff.SAST.Engine.SyntaxWalkers;
+using Microsoft.CodeAnalysis.FindSymbols;
 
 namespace CodeSheriff.SAST.Engine.Analyzers;
 
