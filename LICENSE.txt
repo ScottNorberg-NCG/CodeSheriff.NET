@@ -1,6 +1,7 @@
 If you are using this software as-is, e.g. running a scan on software you 
-own or software that you have been hired to assess, then this software is 
-licensed under the AGPL version 3 license, text found below.
+own or software that you have been hired to assess (regardless of license 
+of the software itself), then this software is licensed under the AGPL 
+version 3 license, text found below.
 
 If instead you wish to embed this product, in whole or in part, into 
 another security product, you must obtain another license. Please contact 
