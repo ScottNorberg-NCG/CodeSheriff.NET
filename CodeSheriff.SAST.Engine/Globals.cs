@@ -143,7 +143,10 @@ internal static class Globals
                 info = _assemblies.SingleOrDefault(a => a.UniqueIdentifier == id);
 
                 if (info == null)
+                {
                     info = new AssemblyVersionInfo(reference.Attribute("Include").Value, reference.Attribute("Version").Value);
+                    _assemblies.Add(info);
+                }
 
                 info.ProjectsUsedIn.Add(project.Name);
             }
