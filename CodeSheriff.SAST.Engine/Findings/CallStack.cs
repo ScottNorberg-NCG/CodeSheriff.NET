@@ -8,73 +8,72 @@ using System.Text;
 using System.Threading.Tasks;
 using static CodeSheriff.SAST.Engine.Findings.SourceLocation;
 
-namespace CodeSheriff.SAST.Engine.Findings
+namespace CodeSheriff.SAST.Engine.Findings;
+
+public class CallStack
 {
-    internal class CallStack
+    private List<SourceLocation> _locations = new List<SourceLocation>();
+    public ReadOnlyCollection<SourceLocation> Locations
     {
-        private List<SourceLocation> _locations = new List<SourceLocation>();
-        public ReadOnlyCollection<SourceLocation> Locations
+        get 
         {
-            get 
-            {
-                return _locations.AsReadOnly();
-            }
+            return _locations.AsReadOnly();
+        }
+    }
+
+    public CallStack Clone()
+    {
+        var newCallStack = new CallStack();
+
+        foreach (var location in this.Locations)
+        {
+            newCallStack._locations.Add(location);
         }
 
-        public CallStack Clone()
-        {
-            var newCallStack = new CallStack();
+        return newCallStack;
+    }
 
-            foreach (var location in this.Locations)
-            {
-                newCallStack._locations.Add(location);
-            }
+    public bool AddLocation(ExpressionSyntax syntax)
+    {
+        if (_locations.Count >= Globals.MaxCallStackDepth)
+            return false;
 
-            return newCallStack;
-        }
+        var newLocation = new SourceLocation(syntax);
+        _locations.Add(newLocation);
 
-        public bool AddLocation(ExpressionSyntax syntax)
-        {
-            if (_locations.Count >= Globals.MaxCallStackDepth)
-                return false;
+        return true;
+    }
 
-            var newLocation = new SourceLocation(syntax);
-            _locations.Add(newLocation);
+    public bool AddLocation(MethodDeclarationSyntax symbol)
+    {
+        if (_locations.Count >= Globals.MaxCallStackDepth)
+            return false;
 
-            return true;
-        }
+        var newLocation = new SourceLocation(symbol);
+        _locations.Add(newLocation);
 
-        public bool AddLocation(MethodDeclarationSyntax symbol)
-        {
-            if (_locations.Count >= Globals.MaxCallStackDepth)
-                return false;
+        return true;
+    }
 
-            var newLocation = new SourceLocation(symbol);
-            _locations.Add(newLocation);
+    public bool AddLocation(SyntaxNode symbol)
+    {
+        if (_locations.Count >= Globals.MaxCallStackDepth)
+            return false;
 
-            return true;
-        }
+        var newLocation = new SourceLocation(symbol);
+        _locations.Add(newLocation);
 
-        public bool AddLocation(SyntaxNode symbol)
-        {
-            if (_locations.Count >= Globals.MaxCallStackDepth)
-                return false;
+        return true;
+    }
 
-            var newLocation = new SourceLocation(symbol);
-            _locations.Add(newLocation);
+    public bool AddLocation(ISymbol symbol)
+    {
+        if (_locations.Count >= Globals.MaxCallStackDepth)
+            return false;
 
-            return true;
-        }
+        var newLocation = new SourceLocation(symbol);
+        _locations.Add(newLocation);
 
-        public bool AddLocation(ISymbol symbol)
-        {
-            if (_locations.Count >= Globals.MaxCallStackDepth)
-                return false;
-
-            var newLocation = new SourceLocation(symbol);
-            _locations.Add(newLocation);
-
-            return true;
-        }
+        return true;
     }
 }

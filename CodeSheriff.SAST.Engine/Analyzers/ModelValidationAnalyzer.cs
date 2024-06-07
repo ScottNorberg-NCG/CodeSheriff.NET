@@ -16,9 +16,9 @@ using System.Threading.Tasks;
 
 namespace CodeSheriff.SAST.Engine.Analyzers;
 
-internal static class ModelValidationAnalyzer
+public static class ModelValidationAnalyzer
 {
-    internal static List<BaseFinding> FindMissingModelValidations(SyntaxNode root)
+    public static List<BaseFinding> FindMissingModelValidations(SyntaxNode root)
     {
         var walker = new UIProcessorMethodSyntaxWalker();
 

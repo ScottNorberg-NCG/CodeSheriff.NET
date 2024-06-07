@@ -5,23 +5,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeSheriff.SAST.Engine.Findings.CSRF
+namespace CodeSheriff.SAST.Engine.Findings.CSRF;
+
+internal class RequestWithBodyMissingCsrfProtection : BaseFinding
 {
-    internal class RequestWithBodyMissingCsrfProtection : BaseFinding
+    public override Priority Priority
     {
-        internal override Priority Priority
+        get
         {
-            get
-            {
-                if (_priority == null)
-                    _priority = Priority.MediumLow;
+            if (_priority == null)
+                _priority = Priority.MediumLow;
 
-                return _priority;
-            }
+            return _priority;
         }
-
-        internal override string FindingText { get { return "Missing CSRF Protection"; } }
-
-        internal override string Description { get { return "A Controller action was found without CSRF protection, such as a [ValidateAntiforgeryToken] attribute on either the Controller class or the Action method."; } }
     }
+
+    public override string FindingText { get { return "Missing CSRF Protection"; } }
+
+    public override string Description { get { return "A Controller action was found without CSRF protection, such as a [ValidateAntiforgeryToken] attribute on either the Controller class or the Action method."; } }
 }

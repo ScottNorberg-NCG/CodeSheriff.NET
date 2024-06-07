@@ -9,9 +9,9 @@ using Microsoft.CodeAnalysis.FindSymbols;
 
 namespace CodeSheriff.SAST.Engine.Analyzers;
 
-internal class HtmlHelperAnalyzer : BaseCshtmlToCodeAnalyzer
+public class HtmlHelperAnalyzer : BaseCshtmlToCodeAnalyzer
 {
-    internal List<BaseFinding> FindXssIssues(SyntaxNode root)
+    public List<BaseFinding> FindXssIssues(SyntaxNode root)
     {
         var walker = new HtmlHelperSyntaxWalker();
 

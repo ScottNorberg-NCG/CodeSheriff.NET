@@ -5,23 +5,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeSheriff.SAST.Engine.Findings.CSRF
+namespace CodeSheriff.SAST.Engine.Findings.CSRF;
+
+internal class ControllerActionMixingBodyAndNonBodyMethods : BaseFinding
 {
-    internal class ControllerActionMixingBodyAndNonBodyMethods : BaseFinding
+    public override Priority Priority
     {
-        internal override Priority Priority
+        get
         {
-            get
-            {
-                if (_priority == null)
-                    _priority = Priority.MediumLow;
+            if (_priority == null)
+                _priority = Priority.MediumLow;
 
-                return _priority;
-            }
+            return _priority;
         }
-
-        internal override string FindingText { get { return "Controller Action Has Multiple Methods"; } }
-
-        internal override string Description { get { return "A Controller action was with multiple method attributes, such as having both an [HttpGet] and [HttpPost]. If this endpoint is intended for methods without bodies (such as GETs) only this is likely not a security concern. If it is used for methods with bodies (such as POSTs or PUTs), this can be used to bypass CSRF checks."; } }
     }
+
+    public override string FindingText { get { return "Controller Action Has Multiple Methods"; } }
+
+    public override string Description { get { return "A Controller action was with multiple method attributes, such as having both an [HttpGet] and [HttpPost]. If this endpoint is intended for methods without bodies (such as GETs) only this is likely not a security concern. If it is used for methods with bodies (such as POSTs or PUTs), this can be used to bypass CSRF checks."; } }
 }

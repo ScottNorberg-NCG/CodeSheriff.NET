@@ -6,9 +6,9 @@ using CodeSheriff.SAST.Engine.SyntaxWalkers;
 
 namespace CodeSheriff.SAST.Engine.Analyzers;
 
-internal class HtmlRawAnalyzer : BaseCshtmlToCodeAnalyzer
+public class HtmlRawAnalyzer : BaseCshtmlToCodeAnalyzer
 {
-    internal List<BaseFinding> FindXssIssues(SyntaxNode root)
+    public List<BaseFinding> FindXssIssues(SyntaxNode root)
     {
         var walker = new HtmlRawSyntaxWalker();
 

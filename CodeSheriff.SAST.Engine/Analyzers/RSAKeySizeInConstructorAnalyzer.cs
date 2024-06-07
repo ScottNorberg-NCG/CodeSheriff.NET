@@ -13,9 +13,9 @@ using System.Threading.Tasks;
 
 namespace CodeSheriff.SAST.Engine.Analyzers;
 
-internal static class RSAKeySizeInConstructorAnalyzer
+public static class RSAKeySizeInConstructorAnalyzer
 {
-    internal static List<BaseFinding> FindInadequateKeyLengths(SyntaxNode root)
+    public static List<BaseFinding> FindInadequateKeyLengths(SyntaxNode root)
     {
         var walker = new RSAConstructorSyntaxWalker();
 

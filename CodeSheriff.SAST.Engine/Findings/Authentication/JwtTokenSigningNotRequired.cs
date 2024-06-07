@@ -9,11 +9,11 @@ namespace CodeSheriff.SAST.Engine.Findings.Authentication;
 
 internal class JwtTokenSigningNotRequired : BaseFinding
 {
-    internal override Priority Priority => Priority.Medium;
+    public override Priority Priority => Priority.Medium;
 
-    internal override string FindingText => "JWTs configured to allow unsigned tokens";
+    public override string FindingText => "JWTs configured to allow unsigned tokens";
 
-    internal override string Description => "Setting this to false allows attackers to tamper or forge tokens, leading to unauthorized access and worse.";
+    public override string Description => "Setting this to false allows attackers to tamper or forge tokens, leading to unauthorized access and worse.";
 
     internal JwtTokenSigningNotRequired(AssignmentExpressionSyntax assignment)
     {

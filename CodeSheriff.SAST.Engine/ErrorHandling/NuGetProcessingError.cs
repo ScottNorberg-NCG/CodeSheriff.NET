@@ -8,7 +8,7 @@ namespace CodeSheriff.SAST.Engine.ErrorHandling;
 
 internal class NuGetProcessingError : BaseError
 {
-    internal override ErrorCategory Category => ErrorCategory.NuGetProcessingError;
+    public override ErrorCategory Category => ErrorCategory.NuGetProcessingError;
 
     internal NuGetProcessingError(string assemblyName, Exception ex) 
     {

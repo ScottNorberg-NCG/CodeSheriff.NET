@@ -8,12 +8,12 @@ namespace CodeSheriff.SAST.Engine.Findings.SCA;
 
 internal class OutdatedLibrary : BaseFinding
 {
-    internal override Priority Priority => Priority.Info;
+    public override Priority Priority => Priority.Info;
 
-    internal override string FindingText => "Outdated library found";
+    public override string FindingText => "Outdated library found";
 
     private string _description;
-    internal override string Description => _description;
+    public override string Description => _description;
 
     internal OutdatedLibrary(string libraryName, List<string> projects)
     { 

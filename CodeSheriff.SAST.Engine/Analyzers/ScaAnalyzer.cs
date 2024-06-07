@@ -13,9 +13,9 @@ using CodeSheriff.SCA.Engine;
 
 namespace CodeSheriff.SAST.Engine.Analyzers;
 
-internal static class ScaAnalyzer
+public static class ScaAnalyzer
 {
-    internal static List<BaseFinding> GetVulnerableNuGetPackages()
+    public static List<BaseFinding> GetVulnerableNuGetPackages()
     {
         var findings = new List<BaseFinding>();
 

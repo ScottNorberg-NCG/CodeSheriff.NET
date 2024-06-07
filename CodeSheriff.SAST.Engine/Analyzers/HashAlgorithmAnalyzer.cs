@@ -14,9 +14,9 @@ using System.Threading.Tasks;
 
 namespace CodeSheriff.SAST.Engine.Analyzers;
 
-internal static class HashAlgorithmAnalyzer
+public static class HashAlgorithmAnalyzer
 {
-    internal static List<BaseFinding> FindDeprecatedAlgorithms(SyntaxNode root)
+    public static List<BaseFinding> FindDeprecatedAlgorithms(SyntaxNode root)
     {
         var walker = new ComputeHashSyntaxWalker();
 

@@ -5,28 +5,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeSheriff.SAST.Engine.Findings.Http
+namespace CodeSheriff.SAST.Engine.Findings.Http;
+
+internal class CookieAddedWithoutOptions : BaseFinding
 {
-    internal class CookieAddedWithoutOptions : BaseFinding
+    public override Priority Priority
     {
-        internal override Priority Priority
+        get
         {
-            get
-            {
-                if (_priority == null)
-                    _priority = Priority.Medium;
+            if (_priority == null)
+                _priority = Priority.Medium;
 
-                return _priority;
-            }
+            return _priority;
         }
+    }
 
-        internal override string FindingText { get { return "Cookie created without CookieOptions set"; } }
+    public override string FindingText { get { return "Cookie created without CookieOptions set"; } }
 
-        internal override string Description { get { return "A cookie was appended to the HTTP Response without being configured via a CookieOptions object. By default, cookies in .NET are allowed to be sent over both HTTP and HTTPS and are accessible via JavaScript, making the cookie more likely to be discovered by malicious actors."; } }
+    public override string Description { get { return "A cookie was appended to the HTTP Response without being configured via a CookieOptions object. By default, cookies in .NET are allowed to be sent over both HTTP and HTTPS and are accessible via JavaScript, making the cookie more likely to be discovered by malicious actors."; } }
 
-        public CookieAddedWithoutOptions(InvocationExpressionSyntax cookie)
-        {
-            base.RootLocation = new SourceLocation(cookie);
-        }
+    public CookieAddedWithoutOptions(InvocationExpressionSyntax cookie)
+    {
+        base.RootLocation = new SourceLocation(cookie);
     }
 }

@@ -14,9 +14,9 @@ using CodeSheriff.SAST.Engine.Findings.Authentication;
 
 namespace CodeSheriff.SAST.Engine.Analyzers;
 
-internal static class PasswordSignInAnalyzer
+public static class PasswordSignInAnalyzer
 {
-    internal static List<BaseFinding> FindDisabledLockouts(SyntaxNode root)
+    public static List<BaseFinding> FindDisabledLockouts(SyntaxNode root)
     {
         var walker = new PasswordSignInSyntaxWalker();
 

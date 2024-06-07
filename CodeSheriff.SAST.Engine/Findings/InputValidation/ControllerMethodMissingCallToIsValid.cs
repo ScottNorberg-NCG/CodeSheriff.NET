@@ -5,35 +5,34 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeSheriff.SAST.Engine.Findings.InputValidation
+namespace CodeSheriff.SAST.Engine.Findings.InputValidation;
+
+internal class ControllerMethodMissingCallToIsValid : BaseFinding
 {
-    internal class ControllerMethodMissingCallToIsValid : BaseFinding
+    public override Priority Priority => Priority.MediumLow;
+
+    public override string FindingText => "A Controller method is missing a call to ModelState.IsValid";
+
+    public override string Description => "By skipping a call to ModelState.IsValid, any input validation done on model objects may be missed and bad input may be processed by your system.";
+
+    internal ControllerMethodMissingCallToIsValid(MethodDeclarationSyntax method)
     {
-        internal override Priority Priority => Priority.MediumLow;
+        this.RootLocation = new SourceLocation(method);
 
-        internal override string FindingText => "A Controller method is missing a call to ModelState.IsValid";
+        var callStack = new CallStack();
+        callStack.AddLocation(method);
 
-        internal override string Description => "By skipping a call to ModelState.IsValid, any input validation done on model objects may be missed and bad input may be processed by your system.";
-
-        internal ControllerMethodMissingCallToIsValid(MethodDeclarationSyntax method)
+        var classDeclaration = method.Parent;
+        while (classDeclaration != null)
         {
-            this.RootLocation = new SourceLocation(method);
-
-            var callStack = new CallStack();
-            callStack.AddLocation(method);
-
-            var classDeclaration = method.Parent;
-            while (classDeclaration != null)
+            if (classDeclaration is ClassDeclarationSyntax)
             {
-                if (classDeclaration is ClassDeclarationSyntax)
-                {
-                    callStack.AddLocation(classDeclaration);
-                }
-
-                classDeclaration = classDeclaration.Parent;
+                callStack.AddLocation(classDeclaration);
             }
 
-            this.CallStacks.Add(callStack);
+            classDeclaration = classDeclaration.Parent;
         }
+
+        this.CallStacks.Add(callStack);
     }
 }

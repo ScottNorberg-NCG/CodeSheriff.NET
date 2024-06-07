@@ -13,9 +13,9 @@ using CodeSheriff.SAST.Engine.Findings.Authentication;
 
 namespace CodeSheriff.SAST.Engine.Analyzers;
 
-internal static class JwtTokenMisconfigurationAnalyzer
+public static class JwtTokenMisconfigurationAnalyzer
 {
-    internal static List<BaseFinding> FindMisconfigurations(SyntaxNode root)
+    public static List<BaseFinding> FindMisconfigurations(SyntaxNode root)
     {
         var walker = new JwtTokenParameterSetSyntaxWalker();
 

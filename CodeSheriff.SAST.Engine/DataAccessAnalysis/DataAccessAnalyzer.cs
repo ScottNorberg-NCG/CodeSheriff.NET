@@ -8,9 +8,9 @@ using Microsoft.CodeAnalysis.FindSymbols;
 
 namespace CodeSheriff.SAST.Engine.DataAccessAnalysis;
 
-internal static class DataAccessAnalyzer
+public static class DataAccessAnalyzer
 {
-    internal static List<DataAccessItem> FindDataAccessPoints()
+    public static List<DataAccessItem> FindDataAccessPoints()
     {
         var accessPoints = new List<DataAccessItem>();
 

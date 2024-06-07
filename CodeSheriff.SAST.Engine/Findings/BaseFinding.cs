@@ -6,29 +6,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeSheriff.SAST.Engine.Findings
+namespace CodeSheriff.SAST.Engine.Findings;
+
+public abstract class BaseFinding
 {
-    internal abstract class BaseFinding
+    protected Priority? _priority;
+    public abstract Priority Priority { get; }
+    public abstract string FindingText { get; }
+    public abstract string Description { get; }
+    public string AdditionalInformation { get; set; } = "(None)";
+
+    public List<CallStack> CallStacks { get; } = new List<CallStack>();
+    public SourceLocation RootLocation { get; set; }
+
+    public void RedactAllByteArrays()
     {
-        protected Priority? _priority;
-        internal abstract Priority Priority { get; }
-        internal abstract string FindingText { get; }
-        internal abstract string Description { get; }
-        internal string AdditionalInformation { get; set; } = "(None)";
+        RootLocation.Text = StringRedactor.RedactByteArray(RootLocation.Text);
 
-        internal List<CallStack> CallStacks { get; } = new List<CallStack>();
-        internal SourceLocation RootLocation { get; set; }
-
-        internal void RedactAllByteArrays()
+        foreach (var callStack in CallStacks) 
         {
-            RootLocation.Text = StringRedactor.RedactByteArray(RootLocation.Text);
-
-            foreach (var callStack in CallStacks) 
-            {
-                foreach (var location in callStack.Locations)
-                { 
-                    location.Text = StringRedactor.RedactByteArray(location.Text);
-                }
+            foreach (var location in callStack.Locations)
+            { 
+                location.Text = StringRedactor.RedactByteArray(location.Text);
             }
         }
     }

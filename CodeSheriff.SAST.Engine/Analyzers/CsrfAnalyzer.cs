@@ -13,10 +13,10 @@ using System.Threading.Tasks;
 
 namespace CodeSheriff.SAST.Engine.Analyzers;
 
-internal static class CsrfAnalyzer
+public static class CsrfAnalyzer
 {
     //TODO: Refactor so this uses the global list
-    internal static List<BaseFinding> FindCsrfIssues()
+    public static List<BaseFinding> FindCsrfIssues()
     {
         var findings = new List<BaseFinding>();
 

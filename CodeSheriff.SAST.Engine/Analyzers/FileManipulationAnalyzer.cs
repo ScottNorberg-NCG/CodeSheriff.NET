@@ -8,9 +8,9 @@ using CodeSheriff.SAST.Engine.SyntaxWalkers;
 
 namespace CodeSheriff.SAST.Engine.Analyzers;
 
-internal static class FileManipulationAnalyzer
+public static class FileManipulationAnalyzer
 {
-    internal static List<BaseFinding> FindFileManipulations(SyntaxNode root)
+    public static List<BaseFinding> FindFileManipulations(SyntaxNode root)
     {
         var walker = new FileManipulationSyntaxWalker();
 

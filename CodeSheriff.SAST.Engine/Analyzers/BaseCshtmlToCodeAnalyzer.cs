@@ -14,7 +14,7 @@ namespace CodeSheriff.SAST.Engine.Analyzers;
 
 //This class is kind of awkward. The other analyzers are all static classes, but because this is an abstract class it is not static.
 //A refactor is in order, but to what I'm not sure
-internal abstract class BaseCshtmlToCodeAnalyzer
+public abstract class BaseCshtmlToCodeAnalyzer
 {
     protected abstract BaseFinding GetNewFindingForControllerAndGet();
     protected abstract BaseFinding GetNewFindingForControllerAndPost();

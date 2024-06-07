@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace CodeSheriff.SAST.Engine.Analyzers;
 
-internal static class TrufflehogAnalyzer
+public static class TrufflehogAnalyzer
 {
-    internal static List<BaseFinding> RunTrufflehogScan(string filePath)
+    public static List<BaseFinding> RunTrufflehogScan(string filePath)
     {
         var findings = new List<BaseFinding>();
 

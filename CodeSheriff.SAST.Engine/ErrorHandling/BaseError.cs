@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace CodeSheriff.SAST.Engine.ErrorHandling;
 
-internal abstract class BaseError
+public abstract class BaseError
 {
-    internal enum ErrorCategory
+    public enum ErrorCategory
     { 
         CannotFindUnderlyingType,
         InvalidRegex,
@@ -19,9 +19,9 @@ internal abstract class BaseError
         VariableMissingIdentifier
     }
 
-    internal abstract ErrorCategory Category { get; }
+    public abstract ErrorCategory Category { get; }
 
-    internal string ErrorMessage { get; }
+    public string ErrorMessage { get; }
     public Exception? BaseException { get; protected set; }
     public SourceLocation? CodeLocation { get; protected set; }
 }

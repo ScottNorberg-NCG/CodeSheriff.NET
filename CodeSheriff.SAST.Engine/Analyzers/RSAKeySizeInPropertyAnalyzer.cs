@@ -13,9 +13,9 @@ using CodeSheriff.SAST.Engine.RoslynObjectExtensions;
 
 namespace CodeSheriff.SAST.Engine.Analyzers;
 
-internal class RSAKeySizeInPropertyAnalyzer
+public class RSAKeySizeInPropertyAnalyzer
 {
-    internal static List<BaseFinding> FindInadequateKeyLengths(SyntaxNode root)
+    public static List<BaseFinding> FindInadequateKeyLengths(SyntaxNode root)
     {
         var walker = new RSAKeySizeSyntaxWalker();
 

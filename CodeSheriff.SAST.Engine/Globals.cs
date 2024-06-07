@@ -14,7 +14,7 @@ using System.Xml.Linq;
 
 namespace CodeSheriff.SAST.Engine;
 
-internal static class Globals
+public static class Globals
 {
     public static Solution Solution { get; set; }
     public static Compilation Compilation { get; set; }
@@ -96,7 +96,7 @@ internal static class Globals
         }
     }
 
-    internal static void ClearErrors()
+    public static void ClearErrors()
     {
         RuntimeErrors = new List<BaseError>();
     }

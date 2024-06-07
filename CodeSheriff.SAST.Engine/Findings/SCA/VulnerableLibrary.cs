@@ -10,7 +10,7 @@ namespace CodeSheriff.SAST.Engine.Findings.SCA;
 internal class VulnerableLibrary : BaseFinding
 {
     private string? _nuGetPriority;
-    internal override Priority Priority
+    public override Priority Priority
     {
         get
         { 
@@ -35,10 +35,10 @@ internal class VulnerableLibrary : BaseFinding
         }
     }
 
-    internal override string FindingText => "Vulnerable Library Found";
+    public override string FindingText => "Vulnerable Library Found";
 
     private string _description;
-    internal override string Description => _description;
+    public override string Description => _description;
 
     internal VulnerableLibrary(string priority, string libraryName, List<string> projects)
     {

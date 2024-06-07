@@ -15,5 +15,5 @@ internal class DataObjectExposedToUI : DataAccessItem
     {
     }
 
-    internal override Direction DataDirection => Direction.ToUI;
+    public override Direction DataDirection => Direction.ToUI;
 }

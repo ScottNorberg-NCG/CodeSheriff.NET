@@ -5,22 +5,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeSheriff.SAST.Engine.Findings.Cryptography
+namespace CodeSheriff.SAST.Engine.Findings.Cryptography;
+
+internal class UseOfDeprecatedHashAlgorithm : BaseFinding
 {
-    internal class UseOfDeprecatedHashAlgorithm : BaseFinding
+    public override Priority Priority
     {
-        internal override Priority Priority
+        get
         {
-            get
-            {
-                if (_priority == null)
-                    _priority = Priority.MediumLow;
+            if (_priority == null)
+                _priority = Priority.MediumLow;
 
-                return _priority;
-            }
+            return _priority;
         }
-
-        internal override string FindingText { get { return "Use of Deprecated Hashing Algorithm"; } }
-        internal override string Description { get { return "Use of a deprecated hashing algorithm was found. Algorithms in the SHA3 family are the best choice of algorithm in most cases."; } }
     }
+
+    public override string FindingText { get { return "Use of Deprecated Hashing Algorithm"; } }
+    public override string Description { get { return "Use of a deprecated hashing algorithm was found. Algorithms in the SHA3 family are the best choice of algorithm in most cases."; } }
 }

@@ -8,9 +8,9 @@ namespace CodeSheriff.SAST.Engine.Findings.Authentication;
 
 internal class PasswordSignInMissingLockout : BaseFinding
 {
-    internal override Priority Priority => Priority.Medium;
+    public override Priority Priority => Priority.Medium;
 
-    internal override string FindingText => "Login found with Lockout on Failure set to false";
+    public override string FindingText => "Login found with Lockout on Failure set to false";
 
-    internal override string Description => "Attackers may try to guess passwords in a brute force attack. Setting lockoutOnFailure = true will reduce the likelihood that an attacker will get in.";
+    public override string Description => "Attackers may try to guess passwords in a brute force attack. Setting lockoutOnFailure = true will reduce the likelihood that an attacker will get in.";
 }

@@ -8,9 +8,9 @@ using CodeSheriff.SAST.Engine.SyntaxWalkers;
 
 namespace CodeSheriff.SAST.Engine.Analyzers;
 
-internal static class HardCodedConnectionStringAnalyzer
+public static class HardCodedConnectionStringAnalyzer
 {
-    internal static List<BaseFinding> FindHardCodedConnectionStrings(SyntaxNode root)
+    public static List<BaseFinding> FindHardCodedConnectionStrings(SyntaxNode root)
     {
         var walker = new DatabaseConnectionStringSyntaxWalker();
 

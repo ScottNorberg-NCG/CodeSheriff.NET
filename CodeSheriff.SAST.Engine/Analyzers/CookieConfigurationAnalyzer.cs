@@ -13,9 +13,9 @@ using System.Threading.Tasks;
 
 namespace CodeSheriff.SAST.Engine.Analyzers;
 
-internal static class CookieConfigurationAnalyzer
+public static class CookieConfigurationAnalyzer
 {
-    internal static List<BaseFinding> FindMisconfiguredCookies(SyntaxNode root)
+    public static List<BaseFinding> FindMisconfiguredCookies(SyntaxNode root)
     {
         var walker = new CookieAppendSyntaxWalker();
 

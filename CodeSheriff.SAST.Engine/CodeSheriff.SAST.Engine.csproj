@@ -14,13 +14,10 @@
   </ItemGroup>
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-      <_Parameter1>CodeSheriff.LocalUI</_Parameter1>
+      <_Parameter1>CodeSheriff.SAST.UnitTests</_Parameter1>
     </AssemblyAttribute>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
       <_Parameter1>CodeSheriff.IntegrationTests</_Parameter1>
-    </AssemblyAttribute>
-    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-      <_Parameter1>CodeSheriff.SAST.UnitTests</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
   <ItemGroup>

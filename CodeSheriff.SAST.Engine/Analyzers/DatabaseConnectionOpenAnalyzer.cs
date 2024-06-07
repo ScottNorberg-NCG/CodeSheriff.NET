@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 
 namespace CodeSheriff.SAST.Engine.Analyzers;
 
-internal static class DatabaseConnectionOpenAnalyzer
+public static class DatabaseConnectionOpenAnalyzer
 {
-    internal static List<BaseFinding> FindUnsafeDatabaseConnectionOpens(SyntaxNode root)
+    public static List<BaseFinding> FindUnsafeDatabaseConnectionOpens(SyntaxNode root)
     {
         var walker = new DatabaseConnectionOpenSyntaxWalker();
 

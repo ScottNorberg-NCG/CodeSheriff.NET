@@ -5,35 +5,34 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeSheriff.SAST.Engine.Findings.InputValidation
+namespace CodeSheriff.SAST.Engine.Findings.InputValidation;
+
+internal class RazorPageBindObjectMissingValidators : BaseFinding
 {
-    internal class RazorPageBindObjectMissingValidators : BaseFinding
+    public override Priority Priority => Priority.MediumLow;
+
+    public override string FindingText => "A Razor Page BindObject is missing validators";
+
+    public override string Description => "A BindObject was found that is missing validation attributes. This may lead to your application processing bad data, both security-related and not.";
+
+    internal RazorPageBindObjectMissingValidators(MethodDeclarationSyntax method)
     {
-        internal override Priority Priority => Priority.MediumLow;
+        this.RootLocation = new SourceLocation(method);
 
-        internal override string FindingText => "A Razor Page BindObject is missing validators";
+        var callStack = new CallStack();
+        callStack.AddLocation(method);
 
-        internal override string Description => "A BindObject was found that is missing validation attributes. This may lead to your application processing bad data, both security-related and not.";
-
-        internal RazorPageBindObjectMissingValidators(MethodDeclarationSyntax method)
+        var classDeclaration = method.Parent;
+        while (classDeclaration != null)
         {
-            this.RootLocation = new SourceLocation(method);
-
-            var callStack = new CallStack();
-            callStack.AddLocation(method);
-
-            var classDeclaration = method.Parent;
-            while (classDeclaration != null)
+            if (classDeclaration is ClassDeclarationSyntax)
             {
-                if (classDeclaration is ClassDeclarationSyntax)
-                {
-                    callStack.AddLocation(classDeclaration);
-                }
-
-                classDeclaration = classDeclaration.Parent;
+                callStack.AddLocation(classDeclaration);
             }
 
-            this.CallStacks.Add(callStack);
+            classDeclaration = classDeclaration.Parent;
         }
+
+        this.CallStacks.Add(callStack);
     }
 }

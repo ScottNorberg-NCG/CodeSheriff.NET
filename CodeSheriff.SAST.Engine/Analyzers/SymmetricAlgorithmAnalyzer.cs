@@ -13,9 +13,9 @@ using System.Threading.Tasks;
 
 namespace CodeSheriff.SAST.Engine.Analyzers;
 
-internal static class SymmetricAlgorithmAnalyzer
+public static class SymmetricAlgorithmAnalyzer
 {
-    internal static List<BaseFinding> FindDeprecatedAlgorithms(SyntaxNode root)
+    public static List<BaseFinding> FindDeprecatedAlgorithms(SyntaxNode root)
     {
         var walker = new SymmetricAlgorithmSyntaxWalker();
 

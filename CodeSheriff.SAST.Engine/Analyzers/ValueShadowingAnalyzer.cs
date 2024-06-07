@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 
 namespace CodeSheriff.SAST.Engine.Analyzers;
 
-internal class ValueShadowingAnalyzer
+public class ValueShadowingAnalyzer
 {
-    internal static List<BaseFinding> FindValueShadowingPossibilities()
+    public static List<BaseFinding> FindValueShadowingPossibilities()
     {
         var findings = new List<BaseFinding>();
 

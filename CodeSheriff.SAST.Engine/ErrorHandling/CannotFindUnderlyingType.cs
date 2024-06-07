@@ -9,7 +9,7 @@ namespace CodeSheriff.SAST.Engine.ErrorHandling;
 
 internal class CannotFindUnderlyingType : BaseError
 {
-    internal override ErrorCategory Category => ErrorCategory.CannotFindUnderlyingType;
+    public override ErrorCategory Category => ErrorCategory.CannotFindUnderlyingType;
 
     internal CannotFindUnderlyingType(ExpressionSyntax syntax)
     {

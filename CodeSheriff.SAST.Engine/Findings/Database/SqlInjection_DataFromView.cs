@@ -5,23 +5,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeSheriff.SAST.Engine.Findings.Database
+namespace CodeSheriff.SAST.Engine.Findings.Database;
+
+internal class SqlInjection_DataFromView : BaseFinding
 {
-    internal class SqlInjection_DataFromView : BaseFinding
+    public override Priority Priority
     {
-        internal override Priority Priority
+        get
         {
-            get
-            {
-                if (_priority == null)
-                    _priority = Priority.VeryHigh;
+            if (_priority == null)
+                _priority = Priority.VeryHigh;
 
-                return _priority;
-            }
+            return _priority;
         }
-
-        internal override string FindingText { get { return "SQL Injection - Data From View"; } }
-
-        internal override string Description { get { return "A database query was found that includes text that appears to come directly from the user via request data. This may lead to attackers hijacking the database connection and steal, modify, or delete data."; } }
     }
+
+    public override string FindingText { get { return "SQL Injection - Data From View"; } }
+
+    public override string Description { get { return "A database query was found that includes text that appears to come directly from the user via request data. This may lead to attackers hijacking the database connection and steal, modify, or delete data."; } }
 }

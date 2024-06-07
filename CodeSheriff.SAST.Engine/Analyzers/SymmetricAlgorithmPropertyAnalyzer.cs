@@ -15,9 +15,9 @@ using System.Threading.Tasks;
 
 namespace CodeSheriff.SAST.Engine.Analyzers;
 
-internal static class SymmetricAlgorithmPropertyAnalyzer
+public static class SymmetricAlgorithmPropertyAnalyzer
 {
-    internal static List<BaseFinding> GetMisconfiguredProperties(SyntaxNode root)
+    public static List<BaseFinding> GetMisconfiguredProperties(SyntaxNode root)
     { 
         var findings = new List<BaseFinding>();
         var walker = new SymmetricCryptographyPropertySyntaxWalker();

@@ -12,9 +12,9 @@ using CodeSheriff.SAST.Engine.Findings.Authentication;
 
 namespace CodeSheriff.SAST.Engine.Analyzers;
 
-internal static class IUserStoreAnalyzer
+public static class IUserStoreAnalyzer
 {
-    internal static List<BaseFinding> FindMisconfiguredUserStores(SyntaxNode root)
+    public static List<BaseFinding> FindMisconfiguredUserStores(SyntaxNode root)
     {
         var walker = new IUserStoreSyntaxWalker();
 

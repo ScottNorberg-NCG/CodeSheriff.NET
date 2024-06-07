@@ -16,9 +16,9 @@ using System.Threading.Tasks;
 
 namespace CodeSheriff.SAST.Engine.Analyzers;
 
-internal static class FileResultAnalyzer
+public static class FileResultAnalyzer
 {
-    internal static List<BaseFinding> GetFileResults(SyntaxNode root)
+    public static List<BaseFinding> GetFileResults(SyntaxNode root)
     {
         var walker = new FileResultSyntaxWalker();
 

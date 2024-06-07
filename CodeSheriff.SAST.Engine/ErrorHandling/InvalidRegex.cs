@@ -8,7 +8,7 @@ namespace CodeSheriff.SAST.Engine.ErrorHandling;
 
 internal class InvalidRegex : BaseError
 {
-    internal override ErrorCategory Category => ErrorCategory.InvalidRegex;
+    public override ErrorCategory Category => ErrorCategory.InvalidRegex;
 
     public InvalidRegex(string regex, Exception ex)
     {

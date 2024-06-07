@@ -14,9 +14,9 @@ using System.Threading.Tasks;
 
 namespace CodeSheriff.SAST.Engine.Analyzers;
 
-internal static class SQLInjectionAnalyzer
+public static class SQLInjectionAnalyzer
 {
-    internal static List<BaseFinding> GetSQLInjections(SyntaxNode root)
+    public static List<BaseFinding> GetSQLInjections(SyntaxNode root)
     {
         var walker = new DatabaseCommandTextSyntaxWalker();
 

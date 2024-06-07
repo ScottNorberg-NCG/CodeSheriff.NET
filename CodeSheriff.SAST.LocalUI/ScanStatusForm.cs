@@ -56,8 +56,12 @@ public partial class ScanStatusForm : Form
             GetPRow(content, "Priority", finding.Priority.Text);
             GetPRow(content, "Finding", finding.FindingText);
             GetPRow(content, "Description", finding.Description);
-            GetPRow(content, "File", finding.RootLocation.FilePath);
-            GetPRow(content, "Text", finding.RootLocation.Text);
+
+            if (finding.RootLocation != null)
+            {
+                GetPRow(content, "File", finding.RootLocation.FilePath);
+                GetPRow(content, "Text", finding.RootLocation.Text);
+            }
 
             content.AppendLine("<p>");
             content.AppendLine("<div style='font-weight: bold;'>Call Stacks</div><div>");

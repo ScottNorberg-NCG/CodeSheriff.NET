@@ -6,83 +6,82 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeSheriff.SAST.Engine.HtmlTagParsing
+namespace CodeSheriff.SAST.Engine.HtmlTagParsing;
+
+public static class CSHtmlScriptTagParser
 {
-    internal static class CSHtmlScriptTagParser
+    public static List<ScriptInfo> GetScriptTags(string cshtmlContent)
     {
-        internal static List<ScriptInfo> GetScriptTags(string cshtmlContent)
+        var scripts = new List<ScriptInfo>();
+
+        string scriptTag = "<script";
+
+        int startIndex = 0;
+        int scriptStartIndex;
+
+        // Loop through the content to find script tags
+        while ((scriptStartIndex = cshtmlContent.IndexOf(scriptTag, startIndex, StringComparison.OrdinalIgnoreCase)) != -1)
         {
-            var scripts = new List<ScriptInfo>();
+            // Find the end of the script tag
+            int scriptEndIndex = cshtmlContent.IndexOf(">", scriptStartIndex);
 
-            string scriptTag = "<script";
-
-            int startIndex = 0;
-            int scriptStartIndex;
-
-            // Loop through the content to find script tags
-            while ((scriptStartIndex = cshtmlContent.IndexOf(scriptTag, startIndex, StringComparison.OrdinalIgnoreCase)) != -1)
+            if (scriptEndIndex != -1)
             {
-                // Find the end of the script tag
-                int scriptEndIndex = cshtmlContent.IndexOf(">", scriptStartIndex);
+                string script = cshtmlContent.Substring(scriptStartIndex, scriptEndIndex - scriptStartIndex + 1);
 
-                if (scriptEndIndex != -1)
-                {
-                    string script = cshtmlContent.Substring(scriptStartIndex, scriptEndIndex - scriptStartIndex + 1);
+                var newScript = new ScriptInfo(script);
 
-                    var newScript = new ScriptInfo(script);
+                newScript.LineNumberStart = cshtmlContent.Substring(0, scriptStartIndex).Where(s => s == '\n').Count() + 1;
 
-                    newScript.LineNumberStart = cshtmlContent.Substring(0, scriptStartIndex).Where(s => s == '\n').Count() + 1;
+                scripts.Add(newScript);
 
-                    scripts.Add(newScript);
-
-                    startIndex = scriptEndIndex + 1;
-                }
-                else
-                {
-                    // Handle cases where the script tag is not properly closed
-                    break;
-                }
+                startIndex = scriptEndIndex + 1;
             }
-
-            return scripts;
+            else
+            {
+                // Handle cases where the script tag is not properly closed
+                break;
+            }
         }
 
-        internal static List<BaseFinding> ParseJavaScriptFindings(List<ScriptInfo> scripts, Microsoft.CodeAnalysis.TextDocument cshtmlFile)
+        return scripts;
+    }
+
+    public static List<BaseFinding> ParseJavaScriptFindings(List<ScriptInfo> scripts, Microsoft.CodeAnalysis.TextDocument cshtmlFile)
+    {
+        var findings = new List<BaseFinding>();
+
+        foreach (var script in scripts)
         {
-            var findings = new List<BaseFinding>();
-
-            foreach (var script in scripts)
+            if (!script.ContainsBody)
             {
-                if (!script.ContainsBody)
-                {
-                    if (string.IsNullOrEmpty(script.Integrity))
-                    {
-                        BaseFinding finding;
-
-                        if (script.IsExternal)
-                            finding = new ExternalJavaScriptMissingIntegrityHash();
-                        else
-                            finding = new InternalJavaScriptMissingIntegrityHash();
-
-                        finding.RootLocation = script.GetLocation(cshtmlFile.FilePath);
-                        findings.Add(finding);
-                    }
-                }
-                else
+                if (string.IsNullOrEmpty(script.Integrity))
                 {
                     BaseFinding finding;
 
-                    if (string.IsNullOrEmpty(script.Nonce))
-                        finding = new InlineJavaScriptWithoutNonce();
+                    if (script.IsExternal)
+                        finding = new ExternalJavaScriptMissingIntegrityHash();
                     else
-                        finding = new InlineJavaScriptWithNonce();
+                        finding = new InternalJavaScriptMissingIntegrityHash();
 
                     finding.RootLocation = script.GetLocation(cshtmlFile.FilePath);
                     findings.Add(finding);
                 }
             }
+            else
+            {
+                BaseFinding finding;
 
-            return findings;
+                if (string.IsNullOrEmpty(script.Nonce))
+                    finding = new InlineJavaScriptWithoutNonce();
+                else
+                    finding = new InlineJavaScriptWithNonce();
+
+                finding.RootLocation = script.GetLocation(cshtmlFile.FilePath);
+                findings.Add(finding);
+            }
         }
+
+        return findings;
     }
 }

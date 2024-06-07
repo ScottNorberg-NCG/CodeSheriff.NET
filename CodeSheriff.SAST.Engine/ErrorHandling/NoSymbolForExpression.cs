@@ -9,7 +9,7 @@ namespace CodeSheriff.SAST.Engine.ErrorHandling;
 
 internal class NoSymbolForExpression : BaseError
 {
-    internal override ErrorCategory Category => ErrorCategory.NoSymbolForExpression;
+    public override ErrorCategory Category => ErrorCategory.NoSymbolForExpression;
 
     internal NoSymbolForExpression(ExpressionSyntax syntax)
     { 

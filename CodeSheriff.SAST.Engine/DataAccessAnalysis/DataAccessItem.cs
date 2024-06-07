@@ -10,22 +10,22 @@ using System.Threading.Tasks;
 
 namespace CodeSheriff.SAST.Engine.DataAccessAnalysis;
 
-internal abstract class DataAccessItem
+public abstract class DataAccessItem
 {
-    internal enum Direction
+    public enum Direction
     { 
         ToUI,
         ToView,
         ToDatabase
     }
 
-    internal abstract Direction DataDirection { get; }
+    public abstract Direction DataDirection { get; }
 
     internal MethodDeclarationSyntax ContainingMethod { get; set; }
-    internal string ContainingType { get; set; }
-    internal string PropertyName { get; set; }
-    internal bool IsAuthorizedAccess { get; private set; }
-    internal List<string> Roles { get; private set; }
+    public string ContainingType { get; set; }
+    public string PropertyName { get; set; }
+    public bool IsAuthorizedAccess { get; private set; }
+    public List<string> Roles { get; private set; }
     internal readonly List<CallStack> DataSourceCallStacks;
 
     public DataAccessItem(MethodDeclarationSyntax method, ITypeSymbol containingType, string propertyName, List<CallStack> dataSourceCallStacks)

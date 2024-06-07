@@ -5,23 +5,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeSheriff.SAST.Engine.Findings.Cryptography
+namespace CodeSheriff.SAST.Engine.Findings.Cryptography;
+
+internal class UseOfECBMode : BaseFinding
 {
-    internal class UseOfECBMode : BaseFinding
+    public override Priority Priority
     {
-        internal override Priority Priority
+        get
         {
-            get
-            {
-                if (_priority == null)
-                    _priority = Priority.High;
+            if (_priority == null)
+                _priority = Priority.High;
 
-                return _priority;
-            }
+            return _priority;
         }
-
-        internal override string FindingText { get { return "Use of ECB Mode"; } }
-
-        internal override string Description { get { return "A symmetric encryption algorithm that uses ECB mode was detected. This is the least safe of all modes because repeated text can lead to repeated ciphertext, potentially leaking information to attackers."; } }
     }
+
+    public override string FindingText { get { return "Use of ECB Mode"; } }
+
+    public override string Description { get { return "A symmetric encryption algorithm that uses ECB mode was detected. This is the least safe of all modes because repeated text can lead to repeated ciphertext, potentially leaking information to attackers."; } }
 }

@@ -5,9 +5,9 @@ using CodeSheriff.SAST.Engine.RoslynObjectExtensions;
 
 namespace CodeSheriff.SAST.Engine.Analyzers;
 
-internal static class OverpostingViaControllerAnalyzer
+public static class OverpostingViaControllerAnalyzer
 {
-    internal static List<BaseFinding> FindEFObjectsAsParameters()
+    public static List<BaseFinding> FindEFObjectsAsParameters()
     {
         var findings = new List<BaseFinding>();
 

@@ -5,19 +5,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeSheriff.SAST.Engine.Findings.Cryptography
+namespace CodeSheriff.SAST.Engine.Findings.Cryptography;
+
+internal class RSAWithInadequateKeyLength : BaseFinding
 {
-    internal class RSAWithInadequateKeyLength : BaseFinding
+    public override Priority Priority => Priority.Medium;
+
+    public override string FindingText => "An instance of RSA was found with an inadequate key length";
+
+    public override string Description => "RSA allows for many different key lengths, but shorter key lengths are easier for criminals to break. Key lengths of at least 2048 bits are recommended.";
+
+    public RSAWithInadequateKeyLength(ExpressionSyntax syntax)
     {
-        internal override Priority Priority => Priority.Medium;
-
-        internal override string FindingText => "An instance of RSA was found with an inadequate key length";
-
-        internal override string Description => "RSA allows for many different key lengths, but shorter key lengths are easier for criminals to break. Key lengths of at least 2048 bits are recommended.";
-
-        public RSAWithInadequateKeyLength(ExpressionSyntax syntax)
-        {
-            this.RootLocation = new SourceLocation(syntax);
-        }
+        this.RootLocation = new SourceLocation(syntax);
     }
 }

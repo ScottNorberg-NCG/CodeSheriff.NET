@@ -15,5 +15,5 @@ internal class IndirectDataExposure : DataAccessItem
     {
     }
 
-    internal override Direction DataDirection => Direction.ToView;
+    public override Direction DataDirection => Direction.ToView;
 }

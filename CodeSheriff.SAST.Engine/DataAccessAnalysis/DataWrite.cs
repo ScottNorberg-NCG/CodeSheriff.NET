@@ -15,5 +15,5 @@ internal class DataWrite : DataAccessItem
     {
     }
 
-    internal override Direction DataDirection => Direction.ToDatabase;
+    public override Direction DataDirection => Direction.ToDatabase;
 }

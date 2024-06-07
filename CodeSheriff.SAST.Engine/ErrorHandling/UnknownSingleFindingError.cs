@@ -12,7 +12,7 @@ internal class UnknownSingleFindingError : BaseError
 {
     private Exception ex;
 
-    internal override ErrorCategory Category => ErrorCategory.UnknownForSingleFinding;
+    public override ErrorCategory Category => ErrorCategory.UnknownForSingleFinding;
 
     internal UnknownSingleFindingError(ISymbol symbol, Exception exception)
     {

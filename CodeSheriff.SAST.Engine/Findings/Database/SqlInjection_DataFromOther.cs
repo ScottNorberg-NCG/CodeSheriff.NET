@@ -5,23 +5,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeSheriff.SAST.Engine.Findings.Database
+namespace CodeSheriff.SAST.Engine.Findings.Database;
+
+internal class SqlInjection_DataFromOther : BaseFinding
 {
-    internal class SqlInjection_DataFromOther : BaseFinding
+    public override Priority Priority
     {
-        internal override Priority Priority
+        get
         {
-            get
-            {
-                if (_priority == null)
-                    _priority = Priority.High;
+            if (_priority == null)
+                _priority = Priority.High;
 
-                return _priority;
-            }
+            return _priority;
         }
-
-        internal override string FindingText { get { return "Possible SQL Injection (Data Sources Not Identified)"; } }
-
-        internal override string Description { get { return "A database query was found that includes text that is not hard-coded. If this comes from an untrusted source, this may lead to attackers hijacking the database connection and steal, modify, or delete data."; } }
     }
+
+    public override string FindingText { get { return "Possible SQL Injection (Data Sources Not Identified)"; } }
+
+    public override string Description { get { return "A database query was found that includes text that is not hard-coded. If this comes from an untrusted source, this may lead to attackers hijacking the database connection and steal, modify, or delete data."; } }
 }

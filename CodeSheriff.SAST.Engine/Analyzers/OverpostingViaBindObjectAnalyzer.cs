@@ -13,9 +13,9 @@ using System.Threading.Tasks;
 
 namespace CodeSheriff.SAST.Engine.Analyzers;
 
-internal static class OverpostingViaBindObjectAnalyzer
+public static class OverpostingViaBindObjectAnalyzer
 {
-    internal static List<BaseFinding> FindEFObjectsAsBindObjects(SyntaxNode root)
+    public static List<BaseFinding> FindEFObjectsAsBindObjects(SyntaxNode root)
     {
         var walker = new RazorPageBindObjectSyntaxWalker();
 

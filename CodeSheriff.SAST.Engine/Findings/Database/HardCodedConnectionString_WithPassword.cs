@@ -5,23 +5,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CodeSheriff.SAST.Engine.Findings.Database
+namespace CodeSheriff.SAST.Engine.Findings.Database;
+
+internal class HardCodedConnectionStringWithPassword : BaseFinding
 {
-    internal class HardCodedConnectionStringWithPassword : BaseFinding
+    public override Priority Priority
     {
-        internal override Priority Priority
+        get
         {
-            get
-            {
-                if (_priority == null)
-                    _priority = Priority.Medium;
+            if (_priority == null)
+                _priority = Priority.Medium;
 
-                return _priority;
-            }
+            return _priority;
         }
-
-        internal override string FindingText { get { return "A hard-coded connection string was found containing a password"; } }
-
-        internal override string Description { get { return "If an attacker is able to get access to source code, with the hard-coded connection string they may be able to access the database without the help of any other vulnerabilities (such as a SQL injection vulnerability)."; } }
     }
+
+    public override string FindingText { get { return "A hard-coded connection string was found containing a password"; } }
+
+    public override string Description { get { return "If an attacker is able to get access to source code, with the hard-coded connection string they may be able to access the database without the help of any other vulnerabilities (such as a SQL injection vulnerability)."; } }
 }

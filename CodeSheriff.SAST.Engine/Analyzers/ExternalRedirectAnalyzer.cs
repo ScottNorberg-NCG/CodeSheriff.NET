@@ -16,9 +16,9 @@ using System.Threading.Tasks;
 
 namespace CodeSheriff.SAST.Engine.Analyzers;
 
-internal static class ExternalRedirectAnalyzer
+public static class ExternalRedirectAnalyzer
 {
-    internal static List<BaseFinding> FindProblematicExternalRedirects(SyntaxNode root)
+    public static List<BaseFinding> FindProblematicExternalRedirects(SyntaxNode root)
     {
         var walker = new ExternalRedirectSyntaxWalker();
 
