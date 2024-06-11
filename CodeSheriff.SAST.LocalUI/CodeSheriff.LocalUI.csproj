@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CodeSheriff.Formatting\CodeSheriff.Formatting.csproj" />
     <ProjectReference Include="..\CodeSheriff.SAST.Engine\CodeSheriff.SAST.Engine.csproj" />
     <ProjectReference Include="..\CodeSheriff.SAST.Secrets\CodeSheriff.Secrets.csproj" />
   </ItemGroup>

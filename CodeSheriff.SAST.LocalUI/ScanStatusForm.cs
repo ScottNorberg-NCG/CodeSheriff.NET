@@ -25,7 +25,7 @@ public partial class ScanStatusForm : Form
         InitializeComponent();
     }
 
-    public void RunScan(string solution, string folder, bool includeBindings, bool includeTrufflehog, bool includeNuGet)
+    public void RunScan(string solution, string folder, bool includeBindings, bool includeTrufflehog, bool includeNuGet, bool includeHtmlOutput, bool includeSarifOutput)
     {
         this.Show();
         this.Refresh();
@@ -40,98 +40,30 @@ public partial class ScanStatusForm : Form
         PerformScan(solution, folder, includeTrufflehog, includeNuGet);
         stopwatch.Stop();
 
-        var content = new StringBuilder();
-
-        content.AppendLine("<html>");
-        content.AppendLine("<head></head>");
-        content.AppendLine("<body>");
-
         var fileName = Path.GetFileName(solution);
 
-        content.AppendLine($"<h1>Findings for: {fileName}</h1>");
-
-        foreach (var finding in _findings.OrderBy(f => f.Priority.Sort))
+        if (includeHtmlOutput)
         {
-            content.AppendLine("<div style='border: 1px solid black; margin-bottom: 10px; padding-left: 10px;'>");
-            GetPRow(content, "Priority", finding.Priority.Text);
-            GetPRow(content, "Finding", finding.FindingText);
-            GetPRow(content, "Description", finding.Description);
+            string content = CodeSheriff.Formatting.Html.Generate(_findings, fileName, includeBindings, stopwatch);
 
-            if (finding.RootLocation != null)
-            {
-                GetPRow(content, "File", finding.RootLocation.FilePath);
-                GetPRow(content, "Text", finding.RootLocation.Text);
-            }
+            var file = new FileInfo(solution);
+            var findingsFilePath = $"{folder}\\Scan {file.Name} on {DateTime.Now.ToString("yyyy-MM-dd hh-mm")}.html";
 
-            content.AppendLine("<p>");
-            content.AppendLine("<div style='font-weight: bold;'>Call Stacks</div><div>");
-
-            foreach (var cs in finding.CallStacks)
-            {
-                foreach (var location in cs.Locations)
-                {
-                    content.Append(System.Web.HttpUtility.HtmlEncode(location.ToString()));
-                    content.AppendLine("<br />");
-                }
-
-                content.AppendLine("<hr />");
-            }
-
-            content.AppendLine("</div></p>");
-            content.AppendLine("</div>");
+            File.WriteAllText(findingsFilePath, content);
         }
 
-        if (includeBindings)
+        if (includeSarifOutput)
         {
-            content.AppendLine("<h2>Diagnostic info</h2>");
-            foreach (var error in Globals.RuntimeErrors)
-            {
-                string message;
+            string content = CodeSheriff.Formatting.Sarif.Generate(_findings);
 
-                if (error.CodeLocation != null)
-                    message = error.CodeLocation.ToString();
-                else
-                    message = error.BaseException.Message;
+            var file = new FileInfo(solution);
+            var findingsFilePath = $"{folder}\\Scan {file.Name} on {DateTime.Now.ToString("yyyy-MM-dd hh-mm")}.sarif";
 
-                var stackTrace = error.BaseException != null ? error.BaseException.ToString() : "N/A";
-
-                content.AppendLine("<div>");
-                content.AppendLine($"<div>Type: {error.Category.ToString()}</div>");
-                content.AppendLine($"<div>Source Code Location: {System.Web.HttpUtility.HtmlEncode(message)}</div>");
-                content.AppendLine($"<div><pre>Stack trace: {System.Web.HttpUtility.HtmlEncode(stackTrace)}</pre></div>");
-                content.AppendLine("<hr />");
-                content.AppendLine("</div>");
-            }
+            File.WriteAllText(findingsFilePath, content);
         }
-
-        content.AppendLine($"<p>Scan completed in {stopwatch.Elapsed.Minutes} minutes and {stopwatch.Elapsed.Seconds} seconds</p>");
-        content.AppendLine("</body>");
-        content.AppendLine("</html>");
-
-        var file = new FileInfo(solution);
-        var findingsFilePath = $"{folder}\\Findings for {file.Name} on {DateTime.Now.ToString("yyyy-MM-dd hh-mm")}.html";
-
-        File.WriteAllText(findingsFilePath, content.ToString());
 
         lblStatusStep.UpdateText(COMPLETED);
         MessageBox.Show("Completed");
-    }
-
-    private static void GetPRow(StringBuilder sb, string label, string content)
-    {
-        GetPRow(sb, label, new string[] { content });
-    }
-
-    private static void GetPRow(StringBuilder sb, string label, string[] content)
-    {
-        sb.AppendLine("<p>");
-        sb.AppendLine("<div style='font-weight: bold;'>");
-        sb.AppendLine(System.Web.HttpUtility.HtmlEncode(label));
-        sb.AppendLine("</div>");
-        sb.AppendLine("<div>");
-        sb.AppendLine(string.Join("<hr>", content.Select(c => System.Web.HttpUtility.HtmlEncode(c))));
-        sb.AppendLine("</div>");
-        sb.AppendLine("</p>");
     }
 
     private void lblTrufflehog_Click(object sender, EventArgs e)

@@ -50,7 +50,7 @@ public partial class ConfigurationForm : Form
     private void btnScan_Click(object sender, EventArgs e)
     {
         var scanForm = new ScanStatusForm();
-        scanForm.RunScan(txtSolutionFile.Text, txtResultsFolder.Text, chkIncludeBindings.Checked, chkTrufflehog.Checked, chkNuGet.Checked);
+        scanForm.RunScan(txtSolutionFile.Text, txtResultsFolder.Text, chkIncludeBindings.Checked, chkTrufflehog.Checked, chkNuGet.Checked, chkHtmlOutput.Checked, chkSarifOutput.Checked);
     }
 
     private void lblTrufflehog_Click(object sender, EventArgs e)

@@ -41,6 +41,8 @@
             chkNuGet = new CheckBox();
             chkTrufflehog = new CheckBox();
             lblTrufflehog = new Label();
+            chkHtmlOutput = new CheckBox();
+            chkSarifOutput = new CheckBox();
             SuspendLayout();
             // 
             // label1
@@ -157,11 +159,37 @@
             lblTrufflehog.Text = "(?)";
             lblTrufflehog.Click += lblTrufflehog_Click;
             // 
+            // chkHtmlOutput
+            // 
+            chkHtmlOutput.AutoSize = true;
+            chkHtmlOutput.Checked = true;
+            chkHtmlOutput.CheckState = CheckState.Checked;
+            chkHtmlOutput.Location = new Point(269, 115);
+            chkHtmlOutput.Name = "chkHtmlOutput";
+            chkHtmlOutput.Size = new Size(113, 19);
+            chkHtmlOutput.TabIndex = 12;
+            chkHtmlOutput.Text = "Output as HTML";
+            chkHtmlOutput.TextAlign = ContentAlignment.MiddleRight;
+            chkHtmlOutput.UseVisualStyleBackColor = true;
+            // 
+            // chkSarifOutput
+            // 
+            chkSarifOutput.AutoSize = true;
+            chkSarifOutput.Location = new Point(269, 140);
+            chkSarifOutput.Name = "chkSarifOutput";
+            chkSarifOutput.Size = new Size(111, 19);
+            chkSarifOutput.TabIndex = 13;
+            chkSarifOutput.Text = "Output as SARIF";
+            chkSarifOutput.TextAlign = ContentAlignment.MiddleRight;
+            chkSarifOutput.UseVisualStyleBackColor = true;
+            // 
             // ConfigurationForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(494, 252);
+            Controls.Add(chkSarifOutput);
+            Controls.Add(chkHtmlOutput);
             Controls.Add(lblTrufflehog);
             Controls.Add(chkTrufflehog);
             Controls.Add(chkNuGet);
@@ -195,5 +223,7 @@
         private CheckBox chkNuGet;
         private CheckBox chkTrufflehog;
         private Label lblTrufflehog;
+        private CheckBox chkHtmlOutput;
+        private CheckBox chkSarifOutput;
     }
 }

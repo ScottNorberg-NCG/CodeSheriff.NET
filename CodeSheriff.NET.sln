@@ -18,9 +18,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeSheriff.SCA.UnitTests", "CodeSheriff.SCA.UnitTests\CodeSheriff.SCA.UnitTests.csproj", "{4B21325B-8EB0-426D-9D79-E1D66B4992A3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EBCE68BE-437C-4A8D-84BE-74E30EA36899}"
-	ProjectSection(SolutionItems) = preProject
-		LICENSE.txt = LICENSE.txt
-	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeSheriff.Formatting", "CodeSheriff.Formatting\CodeSheriff.Formatting.csproj", "{BF74BD12-8A91-4678-AB7A-D96CAB02432D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,6 +55,10 @@ Global
 		{4B21325B-8EB0-426D-9D79-E1D66B4992A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B21325B-8EB0-426D-9D79-E1D66B4992A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B21325B-8EB0-426D-9D79-E1D66B4992A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF74BD12-8A91-4678-AB7A-D96CAB02432D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF74BD12-8A91-4678-AB7A-D96CAB02432D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF74BD12-8A91-4678-AB7A-D96CAB02432D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF74BD12-8A91-4678-AB7A-D96CAB02432D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
